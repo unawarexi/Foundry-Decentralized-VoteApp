@@ -1,0 +1,1 @@
+// Pure logic, reusable across contracts
