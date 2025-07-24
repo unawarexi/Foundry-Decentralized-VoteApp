@@ -15,6 +15,7 @@ dependencies:
     sdk: flutter
   camera: ^0.11.2
   chewie: ^1.12.1
+  carousel_slider: ^5.0.0
   dio: ^5.8.0+1
   # eip55: ^1.0.3
   ethereum_addresses: ^1.0.2
@@ -23,6 +24,7 @@ dependencies:
   flutter_riverpod: ^2.6.1
   flutter_secure_storage: ^9.2.4
   flutter_launcher_icons: ^0.14.4
+  form_validator: ^2.1.1
   freezed_annotation: ^3.1.0
   image_picker: ^1.1.2
   intl: ^0.20.2
@@ -31,13 +33,16 @@ dependencies:
   google_mlkit_object_detection: ^0.15.0
   google_mlkit_text_recognition: ^0.15.0
   flutter_face_api: ^7.1.298
+  flutter_slidable: ^4.0.0
   local_auth: ^2.3.0
   permission_handler: ^12.0.1
   percent_indicator: ^4.2.5
   syncfusion_flutter_charts: ^30.1.41
+  smooth_page_indicator: ^1.2.0+3
   walletconnect_dart: ^0.0.11
   web3dart: ^2.7.0
   video_player: ^2.10.0
+  url_launcher: ^6.3.2
   uuid: ^3.0.5
 
 
@@ -54,6 +59,19 @@ dev_dependencies:
 
   
   flutter_lints: ^5.0.0
+
+# use 3 rows from every corner for equal shaped icon
+flutter_launcher_icons:
+  android: true
+  image_path_android: assets/logo/icon6.png
+  android_adaptive_icon_background: "#F7FAFC"
+  android_adaptive_icon_foreground: assets/logo/icon6.png
+  adaptive_icon_background: "#F7FAFC"
+  # For iOS, we use a different image and background color
+  ios: true
+  image_path_ios: assets/logo/icon6.png
+  background_color_ios : "#F7FAFC"
+  remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
