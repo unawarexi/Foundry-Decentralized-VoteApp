@@ -349,8 +349,8 @@ class _CandidatesScreenState extends State<CandidatesScreen>
         position: _anims.headerSlide,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          color: (isDark ? TColors.darkBackground : TColors.lightBackground)
-              .withOpacity(0.72 + 0.23 * collapsed),
+          color: (isDark ? const Color(0xFF0A0F0B) : const Color(0xFFF1F8E9))
+              .withOpacity(collapsed > 0.8 ? 1.0 : collapsed),
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
           child: Row(
             children: [
