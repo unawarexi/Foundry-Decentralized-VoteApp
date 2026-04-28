@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
-import 'package:flutter_frontend_vote/core/constants/sizes.dart';
-import 'package:flutter_frontend_vote/core/animations/animations.dart';
-import 'package:flutter_frontend_vote/core/constants/responsive.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/analytics_screen.dart';
+import 'package:flutter_frontend_vote/app/screens/nav/elections_screen.dart';
 import 'package:flutter_frontend_vote/app/screens/nav/candidates_screen.dart';
 import 'package:flutter_frontend_vote/app/screens/nav/profile_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/verify_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/vote_screen.dart';
+import 'package:flutter_frontend_vote/app/screens/nav/forums_screen.dart';
+import 'package:flutter_frontend_vote/app/screens/nav/home_screen.dart';
 
 // Main Bottom Navigation Widget
 class BottomNavigation extends StatefulWidget {
@@ -19,267 +16,179 @@ class BottomNavigation extends StatefulWidget {
 }
 
 class _BottomNavigationState extends State<BottomNavigation>
-    with TickerProviderStateMixin {
-  int _currentIndex = 0;
-  late List<AnimationController> _animationControllers;
-  late List<Animation<double>> _scaleAnimations;
+    with SingleTickerProviderStateMixin {
+  int _navIndex = 0;
+  late AnimationController _entranceController;
+  late Animation<double> _fadeAnim;
 
   final List<Widget> _screens = [
-    const VoteScreen(),
+    const HomeScreen(),
+    const ElectionsScreen(),
     const CandidatesScreen(),
-    const AnalyticsScreen(),
-    const ProfileScreen(),
     const VerifyScreen(),
-  ];
-
-  final List<NavItem> _navItems = [
-    NavItem(
-      icon: Icons.how_to_vote_outlined,
-      activeIcon: Icons.how_to_vote,
-      label: 'Vote',
-      gradientColors: [TColors.primary, TColors.primaryDark],
-    ),
-    NavItem(
-      icon: Icons.people_outline_rounded,
-      activeIcon: Icons.people_rounded,
-      label: 'Candidates',
-      gradientColors: [TColors.secondary, TColors.secondary],
-    ),
-    NavItem(
-      icon: Icons.analytics_outlined,
-      activeIcon: Icons.analytics,
-      label: 'Analytics',
-      gradientColors: [TColors.primary, TColors.secondaryAlt],
-    ),
-    NavItem(
-      icon: Icons.account_circle_outlined,
-      activeIcon: Icons.account_circle,
-      label: 'Profile',
-      gradientColors: [TColors.secondaryAlt, TColors.primary],
-    ),
-    NavItem(
-      icon: Icons.verified_user_outlined,
-      activeIcon: Icons.verified_user,
-      label: 'Verify',
-      gradientColors: [TColors.accent, TColors.accent],
-    ),
+    const ProfileScreen(),
   ];
 
   @override
   void initState() {
     super.initState();
-    _animationControllers = List.generate(
-      _navItems.length,
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: this,
-      ),
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
     );
-
-    _scaleAnimations = _animationControllers
-        .map(
-          (controller) => Tween<double>(begin: 0.8, end: 1.0).animate(
-            CurvedAnimation(parent: controller, curve: Curves.elasticOut),
-          ),
-        )
-        .toList();
-
-    // Animate the initially selected item
-    _animationControllers[0].forward();
+    _fadeAnim = CurvedAnimation(
+      parent: _entranceController,
+      curve: Curves.easeOut,
+    );
+    _entranceController.forward();
   }
 
   @override
   void dispose() {
-    for (var controller in _animationControllers) {
-      controller.dispose();
-    }
+    _entranceController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
-
     return Scaffold(
-      body: _screens[_currentIndex],
-      bottomNavigationBar: Container(
-        height: TSizes.bottomNavHeight,
-        decoration: BoxDecoration(
-          color: isDark ? TColors.darkSurface : TColors.white,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: (isDark ? Colors.black : TColors.primary.withOpacity(0.1)),
-              blurRadius: 25,
-              spreadRadius: 0,
-              offset: const Offset(0, -5),
-            ),
-          ],
-        ),
+      body: _screens[_navIndex],
+      backgroundColor: isDark
+          ? TColors.darkBackground
+          : TColors.lightBackground,
+      extendBody: true,
+      bottomNavigationBar: FadeTransition(
+        opacity: _fadeAnim,
         child: Container(
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
           decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: isDark ? TColors.darkBorder : TColors.lightBorder,
-                width: 1,
-              ),
+            color: (isDark ? TColors.darkSurface : TColors.lightSurface)
+                .withOpacity(0.95),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: isDark ? TColors.darkBorder : TColors.lightBorder,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(isDark ? 0.4 : 0.1),
+                blurRadius: 24,
+                offset: const Offset(0, 8),
+              ),
+            ],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: List.generate(
-              _navItems.length,
-              (index) => _buildModernNavItem(
-                index: index,
-                navItem: _navItems[index],
-                isDark: isDark,
+            children: [
+              _NavItem(
+                icon: Icons.home_rounded,
+                label: 'Home',
+                index: 0,
+                selected: _navIndex == 0,
+                onTap: (i) => setState(() => _navIndex = i),
               ),
-            ),
+              _NavItem(
+                icon: Icons.how_to_vote_outlined,
+                label: 'Elections',
+                index: 1,
+                selected: _navIndex == 1,
+                onTap: (i) => setState(() => _navIndex = i),
+              ),
+              _NavItem(
+                icon: Icons.person_search_outlined,
+                label: 'Candidates',
+                index: 2,
+                selected: _navIndex == 2,
+                onTap: (i) => setState(() => _navIndex = i),
+              ),
+              _NavItem(
+                icon: Icons.forum_outlined,
+                label: 'Forum',
+                index: 3,
+                selected: _navIndex == 3,
+                onTap: (i) => setState(() => _navIndex = i),
+              ),
+              _NavItem(
+                icon: Icons.person_outline_rounded,
+                label: 'Profile',
+                index: 4,
+                selected: _navIndex == 4,
+                onTap: (i) => setState(() => _navIndex = i),
+              ),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildModernNavItem({
-    required int index,
-    required NavItem navItem,
-    required bool isDark,
-  }) {
-    final isActive = _currentIndex == index;
-
-    return GestureDetector(
-      onTap: () {
-        if (_currentIndex != index) {
-          setState(() {
-            // Reset previous animation
-            _animationControllers[_currentIndex].reverse();
-            _currentIndex = index;
-            // Start new animation
-            _animationControllers[index].forward();
-          });
-        }
-      },
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedBuilder(
-        animation: _scaleAnimations[index],
-        builder: (context, child) {
-          return Transform.scale(
-            scale: isActive ? _scaleAnimations[index].value : 0.9,
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(8, 8, 8, 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Icon Container with gradient background for active state
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      gradient: isActive
-                          ? LinearGradient(
-                              colors: navItem.gradientColors,
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            )
-                          : null,
-                      color: !isActive
-                          ? (isDark
-                                ? TColors.darkElevated
-                                : TColors.lightElevated)
-                          : null,
-                      borderRadius: BorderRadius.circular(14),
-                      boxShadow: isActive
-                          ? [
-                              BoxShadow(
-                                color: navItem.gradientColors[0].withOpacity(
-                                  0.4,
-                                ),
-                                blurRadius: 15,
-                                spreadRadius: 1,
-                                offset: const Offset(0, 8),
-                              ),
-                              BoxShadow(
-                                color: navItem.gradientColors[1].withOpacity(
-                                  0.2,
-                                ),
-                                blurRadius: 8,
-                                spreadRadius: -2,
-                                offset: const Offset(0, -2),
-                              ),
-                            ]
-                          : [],
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        isActive ? navItem.activeIcon : navItem.icon,
-                        key: ValueKey(isActive),
-                        color: isActive
-                            ? TColors.white
-                            : (isDark
-                                  ? TColors.textDarkTertiary
-                                  : TColors.textLightTertiary),
-                        size: 20,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 2),
-
-                  // Label with gradient text for active state
-                  AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 300),
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: isActive ? FontWeight.w700 : FontWeight.w500,
-                      color: isActive
-                          ? (isDark ? TColors.white : TColors.primary)
-                          : (isDark
-                                ? TColors.textDarkTertiary
-                                : TColors.textLightTertiary),
-                      letterSpacing: isActive ? 0.4 : 0,
-                    ),
-                    child: Text(navItem.label),
-                  ),
-
-                  // Active indicator dot
-                  AnimatedContainer(
-                    duration: const Duration(milliseconds: 300),
-                    margin: const EdgeInsets.only(top: 2),
-                    width: isActive ? 16 : 0,
-                    height: 2,
-                    decoration: BoxDecoration(
-                      gradient: isActive
-                          ? LinearGradient(colors: navItem.gradientColors)
-                          : null,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
       ),
     );
   }
 }
 
-class NavItem {
+// ── Bottom nav item (design from vote_screen.dart) ─────────────
+// Gold accent, secondary-colored selected state, border highlight.
+class _NavItem extends StatelessWidget {
   final IconData icon;
-  final IconData activeIcon;
   final String label;
-  final List<Color> gradientColors;
+  final int index;
+  final bool selected;
+  final void Function(int) onTap;
 
-  NavItem({
+  const _NavItem({
     required this.icon,
-    required this.activeIcon,
     required this.label,
-    required this.gradientColors,
+    required this.index,
+    required this.selected,
+    required this.onTap,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
+    return GestureDetector(
+      onTap: () => onTap(index),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: selected
+              ? TColors.primary.withOpacity(isDark ? 0.5 : 1.0)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(12),
+          border: selected
+              ? Border.all(color: TColors.secondary.withOpacity(0.3))
+              : null,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: selected
+                  ? TColors.secondary
+                  : (isDark
+                        ? TColors.textDarkTertiary
+                        : TColors.textLightTertiary),
+            ),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 9,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                color: selected
+                    ? TColors.secondary
+                    : (isDark
+                          ? TColors.textDarkTertiary
+                          : TColors.textLightTertiary),
+                letterSpacing: 0.3,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

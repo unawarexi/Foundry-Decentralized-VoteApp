@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
+import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // ──────────────────────────────────────────────────────────────
 // Accent tag pill
@@ -70,34 +71,39 @@ class SlideIllustration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: TColors.darkSurface,
+          color: isDark ? TColors.darkSurface : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: TColors.darkBorder),
+          border: isDark ? Border.all(color: TColors.darkBorder) : null,
         ),
         child: CustomPaint(
-          painter: _getIllustrationPainter(visual, animationValue),
+          painter: _getIllustrationPainter(visual, animationValue, isDark),
           child: Container(),
         ),
       ),
     );
   }
 
-  CustomPainter _getIllustrationPainter(SlideVisual v, double animValue) {
+  CustomPainter _getIllustrationPainter(
+    SlideVisual v,
+    double animValue,
+    bool isDark,
+  ) {
     switch (v) {
       case SlideVisual.identity:
-        return IdentityIllustration(progress: animValue);
+        return IdentityIllustration(progress: animValue, isDark: isDark);
       case SlideVisual.regionLock:
-        return RegionLockIllustration(progress: animValue);
+        return RegionLockIllustration(progress: animValue, isDark: isDark);
       case SlideVisual.blockchain:
-        return BlockchainIllustration(progress: animValue);
+        return BlockchainIllustration(progress: animValue, isDark: isDark);
       case SlideVisual.transparency:
-        return TransparencyIllustration(progress: animValue);
+        return TransparencyIllustration(progress: animValue, isDark: isDark);
       case SlideVisual.governance:
-        return GovernanceIllustration(progress: animValue);
+        return GovernanceIllustration(progress: animValue, isDark: isDark);
     }
   }
 }
@@ -105,7 +111,8 @@ class SlideIllustration extends StatelessWidget {
 // ── Illustration 1: Identity / Biometric ─────────────────────
 class IdentityIllustration extends CustomPainter {
   final double progress;
-  const IdentityIllustration({required this.progress});
+  final bool isDark;
+  const IdentityIllustration({required this.progress, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -117,7 +124,12 @@ class IdentityIllustration extends CustomPainter {
       size.width * 0.4 * progress,
       Paint()
         ..shader = RadialGradient(
-          colors: [TColors.primary.withOpacity(0.25), Colors.transparent],
+          colors: [
+            (isDark ? TColors.primary : TColors.primaryDark).withOpacity(
+              isDark ? 0.25 : 0.15,
+            ),
+            Colors.transparent,
+          ],
         ).createShader(Rect.fromCircle(center: c, radius: size.width * 0.4)),
     );
 
@@ -128,7 +140,9 @@ class IdentityIllustration extends CustomPainter {
         c,
         r,
         Paint()
-          ..color = TColors.secondary.withOpacity(0.12 * (5 - i))
+          ..color = (isDark ? TColors.secondary : TColors.primary).withOpacity(
+            isDark ? 0.12 * (5 - i) : 0.18 * (5 - i),
+          )
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.8,
       );
@@ -136,7 +150,9 @@ class IdentityIllustration extends CustomPainter {
 
     // Central face icon outline
     final facePaint = Paint()
-      ..color = TColors.secondary.withOpacity(0.9 * progress)
+      ..color = (isDark ? TColors.secondary : TColors.primary).withOpacity(
+        0.9 * progress,
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.5;
 
@@ -162,13 +178,17 @@ class IdentityIllustration extends CustomPainter {
       Offset(c.dx - size.width * 0.18, scanY),
       Offset(c.dx + size.width * 0.18, scanY),
       Paint()
-        ..color = TColors.accent.withOpacity(0.6 * progress)
+        ..color = TColors.accent.withOpacity(
+          isDark ? 0.6 * progress : 0.8 * progress,
+        )
         ..strokeWidth = 1.2,
     );
 
     // Corner brackets
     final bracketPaint = Paint()
-      ..color = TColors.secondary.withOpacity(0.6 * progress)
+      ..color = (isDark ? TColors.secondary : TColors.primary).withOpacity(
+        isDark ? 0.6 * progress : 0.8 * progress,
+      )
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeCap = StrokeCap.square;
@@ -182,7 +202,7 @@ class IdentityIllustration extends CustomPainter {
       canvas,
       size,
       'ZK IDENTITY',
-      TColors.secondary,
+      isDark ? TColors.secondary : TColors.primary,
       Offset(c.dx, size.height * 0.85),
       progress,
     );
@@ -273,19 +293,23 @@ class IdentityIllustration extends CustomPainter {
 // ── Illustration 2: Region Lock / Globe ──────────────────────
 class RegionLockIllustration extends CustomPainter {
   final double progress;
-  const RegionLockIllustration({required this.progress});
+  final bool isDark;
+  const RegionLockIllustration({required this.progress, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
     final c = Offset(size.width / 2, size.height * 0.48);
     final r = size.width * 0.3;
 
+    final primaryColor = isDark ? TColors.primary : TColors.primary;
+    final secondaryColor = isDark ? TColors.secondary : TColors.primary;
+
     // Globe circle
     canvas.drawCircle(
       c,
       r * progress,
       Paint()
-        ..color = TColors.primary.withOpacity(0.4)
+        ..color = primaryColor.withOpacity(isDark ? 0.4 : 0.15)
         ..style = PaintingStyle.fill,
     );
 
@@ -293,7 +317,7 @@ class RegionLockIllustration extends CustomPainter {
       c,
       r * progress,
       Paint()
-        ..color = TColors.secondary.withOpacity(0.5)
+        ..color = secondaryColor.withOpacity(isDark ? 0.5 : 0.8)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.2,
     );
@@ -312,7 +336,9 @@ class RegionLockIllustration extends CustomPainter {
         math.pi * 2,
         false,
         Paint()
-          ..color = TColors.secondary.withOpacity(0.15 * progress)
+          ..color = secondaryColor.withOpacity(
+            isDark ? 0.15 * progress : 0.3 * progress,
+          )
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.7,
       );
@@ -327,7 +353,9 @@ class RegionLockIllustration extends CustomPainter {
         math.pi,
         false,
         Paint()
-          ..color = TColors.secondary.withOpacity(0.15 * progress)
+          ..color = secondaryColor.withOpacity(
+            isDark ? 0.15 * progress : 0.3 * progress,
+          )
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.7,
       );
@@ -338,23 +366,35 @@ class RegionLockIllustration extends CustomPainter {
     canvas.drawCircle(
       pinPos,
       8 * progress,
-      Paint()..color = TColors.accent.withOpacity(0.85 * progress),
+      Paint()
+        ..color = TColors.accent.withOpacity(
+          isDark ? 0.85 * progress : 1.0 * progress,
+        ),
     );
     canvas.drawCircle(
       pinPos,
       14 * progress,
       Paint()
-        ..color = TColors.accent.withOpacity(0.25 * progress)
+        ..color = TColors.accent.withOpacity(
+          isDark ? 0.25 * progress : 0.4 * progress,
+        )
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1,
     );
 
     // Lock icon below globe
     final lockCenter = Offset(c.dx, c.dy + r + 32);
-    _drawLock(canvas, lockCenter, 18, progress);
+    _drawLock(canvas, lockCenter, 18, progress, isDark);
   }
 
-  void _drawLock(Canvas canvas, Offset center, double size, double p) {
+  void _drawLock(
+    Canvas canvas,
+    Offset center,
+    double size,
+    double p,
+    bool isDark,
+  ) {
+    final secondaryColor = isDark ? TColors.secondary : TColors.primary;
     // Lock body
     final bodyRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
@@ -367,7 +407,7 @@ class RegionLockIllustration extends CustomPainter {
     canvas.drawRRect(
       bodyRect,
       Paint()
-        ..color = TColors.secondary.withOpacity(0.7 * p)
+        ..color = secondaryColor.withOpacity(isDark ? 0.7 * p : 0.9 * p)
         ..style = PaintingStyle.fill,
     );
 
@@ -382,7 +422,7 @@ class RegionLockIllustration extends CustomPainter {
       math.pi,
       false,
       Paint()
-        ..color = TColors.secondary.withOpacity(0.7 * p)
+        ..color = secondaryColor.withOpacity(isDark ? 0.7 * p : 0.9 * p)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.5
         ..strokeCap = StrokeCap.round,
@@ -397,7 +437,8 @@ class RegionLockIllustration extends CustomPainter {
 // ── Illustration 3: Blockchain / Nodes ───────────────────────
 class BlockchainIllustration extends CustomPainter {
   final double progress;
-  const BlockchainIllustration({required this.progress});
+  final bool isDark;
+  const BlockchainIllustration({required this.progress, required this.isDark});
 
   static final List<Offset> _nodeOffsets = [
     const Offset(0.5, 0.2),
@@ -425,13 +466,16 @@ class BlockchainIllustration extends CustomPainter {
         .map((o) => Offset(o.dx * size.width, o.dy * size.height))
         .toList();
 
+    final secondaryColor = isDark ? TColors.secondary : TColors.primary;
+    final primaryColor = isDark ? TColors.primary : TColors.primaryDark;
+
     // Edges
     for (final edge in _edges) {
       canvas.drawLine(
         nodes[edge[0]],
         nodes[edge[1]],
         Paint()
-          ..color = TColors.secondary.withOpacity(0.18 * progress)
+          ..color = secondaryColor.withOpacity((isDark ? 0.18 : 0.3) * progress)
           ..strokeWidth = 1,
       );
     }
@@ -441,18 +485,21 @@ class BlockchainIllustration extends CustomPainter {
       final delay = i / nodes.length;
       final p = ((progress - delay * 0.4) / 0.6).clamp(0.0, 1.0);
 
+      // Pulse
       canvas.drawCircle(
         nodes[i],
-        10 * p,
-        Paint()..color = TColors.primary.withOpacity(0.8),
-      );
-      canvas.drawCircle(
-        nodes[i],
-        10 * p,
+        18 * p,
         Paint()
-          ..color = TColors.secondary.withOpacity(0.6 * p)
+          ..color = primaryColor.withOpacity((isDark ? 0.3 : 0.5) * (1 - p))
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1.5,
+      );
+
+      // Core
+      canvas.drawCircle(
+        nodes[i],
+        7 * p,
+        Paint()..color = secondaryColor.withOpacity(0.9 * p),
       );
 
       // Hash label inside node
@@ -461,7 +508,7 @@ class BlockchainIllustration extends CustomPainter {
           text: '${i + 1}',
           style: TextStyle(
             color: TColors.secondary.withOpacity(p),
-            fontSize: 8,
+            fontSize: 11,
             fontFamily: 'IBMPlexMono',
             fontWeight: FontWeight.w700,
           ),
@@ -491,7 +538,11 @@ class BlockchainIllustration extends CustomPainter {
 // ── Illustration 4: Global Transparency ──────────────────────
 class TransparencyIllustration extends CustomPainter {
   final double progress;
-  const TransparencyIllustration({required this.progress});
+  final bool isDark;
+  const TransparencyIllustration({
+    required this.progress,
+    required this.isDark,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -501,7 +552,7 @@ class TransparencyIllustration extends CustomPainter {
       TColors.secondary,
       TColors.primary,
       TColors.accent,
-      TColors.darkBorder,
+      isDark ? TColors.darkBorder : TColors.lightBorder,
       TColors.secondary,
     ];
     final labels = ['NG', 'US', 'UK', 'DE', 'JP'];
@@ -521,7 +572,7 @@ class TransparencyIllustration extends CustomPainter {
           Rect.fromLTWH(chartLeft, y, chartRight - chartLeft, 12),
           const Radius.circular(3),
         ),
-        Paint()..color = TColors.darkBorder,
+        Paint()..color = isDark ? TColors.darkBorder : TColors.lightBorder,
       );
 
       // Fill
@@ -541,7 +592,9 @@ class TransparencyIllustration extends CustomPainter {
         text: TextSpan(
           text: labels[i],
           style: TextStyle(
-            color: TColors.textDarkTertiary.withOpacity(progress),
+            color:
+                (isDark ? TColors.textDarkTertiary : TColors.textLightSecondary)
+                    .withOpacity(progress),
             fontSize: 9,
             fontFamily: 'Inter',
             fontWeight: FontWeight.w600,
@@ -557,7 +610,9 @@ class TransparencyIllustration extends CustomPainter {
         text: TextSpan(
           text: pct,
           style: TextStyle(
-            color: TColors.secondary.withOpacity(progress),
+            color: (isDark ? TColors.secondary : TColors.primary).withOpacity(
+              progress,
+            ),
             fontSize: 9,
             fontFamily: 'IBMPlexMono',
           ),
@@ -572,7 +627,9 @@ class TransparencyIllustration extends CustomPainter {
       text: TextSpan(
         text: 'LIVE RESULTS — GLOBAL',
         style: TextStyle(
-          color: TColors.secondary.withOpacity(progress * 0.7),
+          color: (isDark ? TColors.secondary : TColors.primary).withOpacity(
+            progress * (isDark ? 0.7 : 0.9),
+          ),
           fontSize: 9,
           letterSpacing: 2,
           fontFamily: 'Inter',
@@ -592,16 +649,22 @@ class TransparencyIllustration extends CustomPainter {
 // ── Illustration 5: Governance layers ────────────────────────
 class GovernanceIllustration extends CustomPainter {
   final double progress;
-  const GovernanceIllustration({required this.progress});
+  final bool isDark;
+  const GovernanceIllustration({required this.progress, required this.isDark});
 
   @override
   void paint(Canvas canvas, Size size) {
     final levels = [
-      ('HEAD OF STATE', 0.12, TColors.secondary, 1.0),
-      ('GOVERNOR', 0.27, TColors.primary, 0.9),
+      (
+        'HEAD OF STATE',
+        0.12,
+        isDark ? TColors.secondary : TColors.primary,
+        1.0,
+      ),
+      ('GOVERNOR', 0.27, isDark ? TColors.primary : TColors.primaryDark, 0.9),
       ('MAYOR', 0.42, TColors.accent, 0.8),
-      ('UNIVERSITY', 0.57, TColors.secondary, 0.65),
-      ('SCHOOL', 0.72, TColors.primary, 0.5),
+      ('UNIVERSITY', 0.57, isDark ? TColors.secondary : TColors.primary, 0.65),
+      ('SCHOOL', 0.72, isDark ? TColors.primary : TColors.primaryDark, 0.5),
     ];
 
     for (final lvl in levels) {
@@ -618,7 +681,7 @@ class GovernanceIllustration extends CustomPainter {
           Rect.fromLTWH(left, y, w, 18),
           const Radius.circular(4),
         ),
-        Paint()..color = lvl.$3.withOpacity(0.18),
+        Paint()..color = lvl.$3.withOpacity(isDark ? 0.18 : 0.12),
       );
 
       canvas.drawRRect(
@@ -627,7 +690,7 @@ class GovernanceIllustration extends CustomPainter {
           const Radius.circular(4),
         ),
         Paint()
-          ..color = lvl.$3.withOpacity(0.6)
+          ..color = lvl.$3.withOpacity(isDark ? 0.6 : 0.8)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.8,
       );

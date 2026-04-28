@@ -4,6 +4,7 @@ import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/app/components/splash/splash_components.dart';
+import 'package:go_router/go_router.dart';
 
 /// VoteSecure Splash Screen
 /// Tone: "Modern infrastructure with institutional weight"
@@ -22,22 +23,14 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
-
     _orchestrator = SplashOrchestrator(
       vsync: this,
       onComplete: () {
         if (mounted) {
-          Navigator.of(context).pushReplacement(
-            PageRouteBuilder(
-              pageBuilder: (_, __, ___) => const OnboardingPlaceholder(),
-              transitionDuration: Duration.zero,
-            ),
-          );
+          context.go('/onboarding');
         }
       },
     );
-
     _orchestrator.startSequence();
   }
 
@@ -50,6 +43,13 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+    );
     final bgColor = isDark ? TColors.darkBackground : TColors.lightBackground;
 
     return Scaffold(
@@ -104,8 +104,8 @@ class _SplashScreenState extends State<SplashScreen>
               Color.lerp(
                 bgColor,
                 isDark
-                    ? const Color(0xFF1A1A40).withOpacity(0.8)
-                    : const Color(0xFFC0C0C0).withOpacity(0.8),
+                    ? const Color(0xFF1A1A40).withValues(alpha: 0.8)
+                    : const Color(0xFFC0C0C0).withValues(alpha: 0.8),
                 _orchestrator.bgAnimation.value,
               )!,
             ],
@@ -119,8 +119,8 @@ class _SplashScreenState extends State<SplashScreen>
   Widget _buildGrid() {
     final isDark = THelperFunctions.isDarkMode(context);
     final gridColor = isDark
-        ? TColors.secondary.withOpacity(0.4)
-        : TColors.secondary.withOpacity(0.2);
+        ? TColors.secondary.withValues(alpha: 0.4)
+        : TColors.secondary.withValues(alpha: 0.2);
 
     return Opacity(
       opacity: _orchestrator.gridOpacity.value,
@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
           shape: BoxShape.circle,
           gradient: RadialGradient(
             colors: [
-              TColors.primary.withOpacity(
+              TColors.primary.withValues(alpha: 
                 0.3 * _orchestrator.logoOpacity.value,
               ),
               Colors.transparent,
@@ -149,6 +149,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget _buildContent() {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -165,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: TColors.secondary.withOpacity(
+                    color: TColors.secondary.withValues(alpha: 
                       _orchestrator.ringOpacity.value,
                     ),
                     width: 1.5,
@@ -203,9 +204,7 @@ class _SplashScreenState extends State<SplashScreen>
                     fontFamily: 'IBMPlexSerif',
                     fontSize: 28,
                     fontWeight: FontWeight.w700,
-                    color: THelperFunctions.isDarkMode(context)
-                        ? TColors.white
-                        : TColors.primary,
+                    color: isDark ? TColors.white : TColors.primary,
                     letterSpacing: 6,
                   ),
                 ),
@@ -219,7 +218,7 @@ class _SplashScreenState extends State<SplashScreen>
                     child: Container(
                       width: 120 * _orchestrator.dividerWidth.value,
                       height: 1,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
                             Colors.transparent,
@@ -245,9 +244,9 @@ class _SplashScreenState extends State<SplashScreen>
                         fontFamily: 'Inter',
                         fontSize: 11,
                         fontWeight: FontWeight.w400,
-                        color: THelperFunctions.isDarkMode(context)
+                        color: isDark
                             ? TColors.textDarkSecondary
-                            : TColors.textSecondary,
+                            : TColors.textLightSecondary,
                         letterSpacing: 2.5,
                       ),
                     ),
@@ -282,9 +281,9 @@ class _SplashScreenState extends State<SplashScreen>
                     end: Alignment.centerRight,
                     colors: [
                       Colors.transparent,
-                      TColors.secondary.withOpacity(0.06),
-                      TColors.secondary.withOpacity(0.12),
-                      TColors.secondary.withOpacity(0.06),
+                      TColors.secondary.withValues(alpha: 0.06),
+                      TColors.secondary.withValues(alpha: 0.12),
+                      TColors.secondary.withValues(alpha: 0.06),
                       Colors.transparent,
                     ],
                   ),
@@ -298,6 +297,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Widget _buildBottomBar() {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Positioned(
       bottom: 48,
       left: 0,
@@ -327,7 +327,7 @@ class _SplashScreenState extends State<SplashScreen>
                       margin: const EdgeInsets.symmetric(horizontal: 3),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: TColors.secondary.withOpacity(
+                        color: TColors.secondary.withValues(alpha: 
                           0.2 + 0.6 * progress,
                         ),
                       ),
@@ -342,7 +342,7 @@ class _SplashScreenState extends State<SplashScreen>
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 10,
-                color: TColors.textDarkTertiary,
+                color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
                 letterSpacing: 1.5,
               ),
             ),
@@ -351,15 +351,4 @@ class _SplashScreenState extends State<SplashScreen>
       ),
     );
   }
-}
-
-// ── Placeholder for nav target ────────────────────────────────
-class OnboardingPlaceholder extends StatelessWidget {
-  const OnboardingPlaceholder({super.key});
-  @override
-  Widget build(BuildContext context) => Scaffold(
-    backgroundColor: THelperFunctions.isDarkMode(context)
-        ? TColors.darkBackground
-        : TColors.lightBackground,
-  );
 }

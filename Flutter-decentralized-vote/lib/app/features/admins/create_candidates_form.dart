@@ -234,7 +234,7 @@ class _CreateCandidatesFormState extends State<CreateCandidatesForm>
                   padding: const EdgeInsets.all(20),
                   child: Form(
                     key: formKeys[0],
-                    child: const CandidatePartyIdentity(formData: {}),
+                    child: const CandidatePartyIdentity(),
                   ),
                 ),
                 // Step 2: Personal Information
@@ -242,7 +242,7 @@ class _CreateCandidatesFormState extends State<CreateCandidatesForm>
                   padding: const EdgeInsets.all(20),
                   child: Form(
                     key: formKeys[1],
-                    child: const PersonalInformation(formData: {}),
+                    child: const PersonalInformation(),
                   ),
                 ),
                 // Step 3: Education & Career
@@ -250,7 +250,7 @@ class _CreateCandidatesFormState extends State<CreateCandidatesForm>
                   padding: const EdgeInsets.all(20),
                   child: Form(
                     key: formKeys[2],
-                    child: const EducationAndCareer(),
+                    child: const EducationalCareer(),
                   ),
                 ),
                 // Step 4: Vision & Manifesto

@@ -178,7 +178,7 @@ class _MiniAction extends StatelessWidget {
         FloatingActionButton.small(
           heroTag: label,
           onPressed: onTap,
-          backgroundColor: isDark ? TColors.darkElevated : TColors.blue50,
+          backgroundColor: isDark ? TColors.darkElevated : TColors.infoLight,
           foregroundColor: TColors.primary,
           elevation: 2,
           child: Icon(icon, size: 20),

@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend_vote/core/constants/colors.dart';
 
 // ═══════════════════════════════════════════════
 //  SpeakUp Decorative Painters
@@ -261,4 +262,480 @@ class SGrainPainter extends CustomPainter {
   @override
   bool shouldRepaint(SGrainPainter oldDelegate) =>
       opacity != oldDelegate.opacity || density != oldDelegate.density;
+}
+
+/// VoteSecure Mini Logo — hexagonal stroke with checkmark
+class MiniLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final r = size.width / 2;
+
+    final hexPath = Path();
+    for (int i = 0; i < 6; i++) {
+      final angle = (math.pi / 3) * i - math.pi / 6;
+      final x = c.dx + r * 0.9 * math.cos(angle);
+      final y = c.dy + r * 0.9 * math.sin(angle);
+      if (i == 0)
+        hexPath.moveTo(x, y);
+      else
+        hexPath.lineTo(x, y);
+    }
+    hexPath.close();
+    canvas.drawPath(
+      hexPath,
+      Paint()
+        ..color = TColors.secondary
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.5,
+    );
+
+    canvas.drawCircle(c, r * 0.55, Paint()..color = TColors.primary);
+
+    final checkPath = Path()
+      ..moveTo(c.dx - r * 0.22, c.dy)
+      ..lineTo(c.dx - r * 0.04, c.dy + r * 0.18)
+      ..lineTo(c.dx + r * 0.24, c.dy - r * 0.2);
+    canvas.drawPath(
+      checkPath,
+      Paint()
+        ..color = TColors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..strokeCap = StrokeCap.round
+        ..strokeJoin = StrokeJoin.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter _) => false;
+}
+
+/// Large decorative hexagon ring for corner accents
+class HexRingPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+
+    for (int ring = 1; ring <= 3; ring++) {
+      final r = size.width * 0.15 * ring;
+      final hexPath = Path();
+      for (int i = 0; i < 6; i++) {
+        final angle = (math.pi / 3) * i - math.pi / 6;
+        final x = c.dx + r * math.cos(angle);
+        final y = c.dy + r * math.sin(angle);
+        if (i == 0)
+          hexPath.moveTo(x, y);
+        else
+          hexPath.lineTo(x, y);
+      }
+      hexPath.close();
+      canvas.drawPath(
+        hexPath,
+        Paint()
+          ..color = TColors.secondary.withValues(alpha: 0.5 / ring)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.8,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter _) => false;
+}
+
+/// Wallet icon in hexagonal outline style
+class WalletIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final r = size.width / 2;
+
+    final hexPath = Path();
+    for (int i = 0; i < 6; i++) {
+      final angle = (math.pi / 3) * i;
+      final x = c.dx + r * 0.9 * math.cos(angle);
+      final y = c.dy + r * 0.9 * math.sin(angle);
+      if (i == 0)
+        hexPath.moveTo(x, y);
+      else
+        hexPath.lineTo(x, y);
+    }
+    hexPath.close();
+    canvas.drawPath(
+      hexPath,
+      Paint()
+        ..color = TColors.secondary.withValues(alpha: 0.6)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2,
+    );
+
+    // Inner W glyph
+    final wPaint = Paint()
+      ..color = TColors.secondary.withValues(alpha: 0.7)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final wPath = Path()
+      ..moveTo(c.dx - r * 0.35, c.dy - r * 0.15)
+      ..lineTo(c.dx - r * 0.18, c.dy + r * 0.25)
+      ..lineTo(c.dx, c.dy)
+      ..lineTo(c.dx + r * 0.18, c.dy + r * 0.25)
+      ..lineTo(c.dx + r * 0.35, c.dy - r * 0.15);
+    canvas.drawPath(wPath, wPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter _) => false;
+}
+
+/// Simple grid texture painter
+class AuthGridPainter extends CustomPainter {
+  final Color color;
+  const AuthGridPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 0.5;
+    const spacing = 36.0;
+    for (double x = 0; x <= size.width; x += spacing)
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    for (double y = 0; y <= size.height; y += spacing)
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter _) => false;
+}
+
+/// SkillRadarPainter — Pentagon radar chart
+class SkillRadarPainter extends CustomPainter {
+  final List<double> scores; // 5 values 0.0–1.0
+  final double progress; // 0.0–1.0 from entrance animation
+  final Color fillColor;
+  final Color strokeColor;
+  final Color gridColor;
+
+  const SkillRadarPainter({
+    required this.scores,
+    required this.progress,
+    required this.fillColor,
+    required this.strokeColor,
+    required this.gridColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final maxR = math.min(size.width, size.height) / 2 * 0.85;
+    const n = 5;
+
+    // Axis angles: start from top, rotate evenly
+    List<double> axisAngles = List.generate(
+      n,
+      (i) => -math.pi / 2 + (2 * math.pi / n) * i,
+    );
+
+    // Grid rings
+    for (int ring = 1; ring <= 4; ring++) {
+      final r = maxR * ring / 4;
+      final ringPath = Path();
+      for (int i = 0; i < n; i++) {
+        final x = center.dx + r * math.cos(axisAngles[i]);
+        final y = center.dy + r * math.sin(axisAngles[i]);
+        if (i == 0)
+          ringPath.moveTo(x, y);
+        else
+          ringPath.lineTo(x, y);
+      }
+      ringPath.close();
+      canvas.drawPath(
+        ringPath,
+        Paint()
+          ..color = gridColor.withOpacity(ring == 4 ? 0.4 : 0.2)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 0.8,
+      );
+    }
+
+    // Axis lines from center to vertex
+    for (int i = 0; i < n; i++) {
+      canvas.drawLine(
+        center,
+        Offset(
+          center.dx + maxR * math.cos(axisAngles[i]),
+          center.dy + maxR * math.sin(axisAngles[i]),
+        ),
+        Paint()
+          ..color = gridColor.withOpacity(0.3)
+          ..strokeWidth = 0.6,
+      );
+    }
+
+    // Score polygon — animated via progress
+    final dataPath = Path();
+    for (int i = 0; i < n; i++) {
+      final r = maxR * scores[i] * progress;
+      final x = center.dx + r * math.cos(axisAngles[i]);
+      final y = center.dy + r * math.sin(axisAngles[i]);
+      if (i == 0)
+        dataPath.moveTo(x, y);
+      else
+        dataPath.lineTo(x, y);
+    }
+    dataPath.close();
+
+    // Fill
+    canvas.drawPath(dataPath, Paint()..color = fillColor);
+
+    // Stroke
+    canvas.drawPath(
+      dataPath,
+      Paint()
+        ..color = strokeColor.withOpacity(0.8)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..strokeJoin = StrokeJoin.round,
+    );
+
+    // Score vertex dots
+    for (int i = 0; i < n; i++) {
+      final r = maxR * scores[i] * progress;
+      canvas.drawCircle(
+        Offset(
+          center.dx + r * math.cos(axisAngles[i]),
+          center.dy + r * math.sin(axisAngles[i]),
+        ),
+        3,
+        Paint()..color = strokeColor,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant SkillRadarPainter old) =>
+      old.progress != progress || old.scores != scores;
+}
+
+/// MilestonePainter — Horizontal dotted timeline
+class MilestonePainter extends CustomPainter {
+  final int total;
+  final int achieved;
+  final double progress;
+  final Color activeColor;
+  final Color inactiveColor;
+  final List<String> labels;
+
+  const MilestonePainter({
+    required this.total,
+    required this.achieved,
+    required this.progress,
+    required this.activeColor,
+    required this.inactiveColor,
+    required this.labels,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (total == 0) return;
+
+    final spacing = size.width / (total - 1 == 0 ? 1 : total - 1);
+    const nodeR = 6.0;
+    const lineY = 10.0;
+
+    // Draw connectors first (behind nodes)
+    for (int i = 0; i < total - 1; i++) {
+      final x1 = i * spacing + nodeR;
+      final x2 = (i + 1) * spacing - nodeR;
+      final segmentProgress = ((progress * total) - i).clamp(0.0, 1.0);
+      final endX = x1 + (x2 - x1) * segmentProgress;
+
+      // Active connector
+      if (i < achieved) {
+        _drawDashedLine(
+          canvas,
+          Offset(x1, lineY),
+          Offset(endX, lineY),
+          activeColor.withOpacity(0.6),
+        );
+      } else {
+        _drawDashedLine(
+          canvas,
+          Offset(x1, lineY),
+          Offset(endX, lineY),
+          inactiveColor,
+        );
+      }
+    }
+
+    // Draw nodes
+    for (int i = 0; i < total; i++) {
+      final x = i * spacing;
+      final nodeProgress = ((progress * total) - i).clamp(0.0, 1.0);
+      final r = nodeR * nodeProgress;
+      final isDone = i < achieved;
+
+      // Node circle
+      canvas.drawCircle(
+        Offset(x, lineY),
+        r,
+        Paint()
+          ..color = isDone
+              ? activeColor.withOpacity(0.15)
+              : const Color(0xFF16162C),
+      );
+      canvas.drawCircle(
+        Offset(x, lineY),
+        r,
+        Paint()
+          ..color = isDone ? activeColor.withOpacity(0.85) : inactiveColor
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.5,
+      );
+
+      // Check or number
+      if (isDone && r > 3) {
+        final tp = TextPainter(
+          text: TextSpan(
+            text: '✓',
+            style: TextStyle(
+              color: activeColor,
+              fontSize: 7,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(x - tp.width / 2, lineY - tp.height / 2));
+      }
+
+      // Label below
+      if (i < labels.length && nodeProgress > 0.5) {
+        final tp = TextPainter(
+          text: TextSpan(
+            text: labels[i],
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: isDone ? activeColor.withOpacity(0.8) : inactiveColor,
+              fontSize: 8,
+            ),
+          ),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        tp.paint(canvas, Offset(x - tp.width / 2, lineY + nodeR + 4));
+      }
+    }
+  }
+
+  void _drawDashedLine(Canvas canvas, Offset p1, Offset p2, Color color) {
+    final path = Path()
+      ..moveTo(p1.dx, p1.dy)
+      ..lineTo(p2.dx, p2.dy);
+    final dashPath = Path();
+    const dashLen = 4.0;
+    const gapLen = 3.0;
+    var dist = 0.0;
+    bool drawing = true;
+    for (final metric in path.computeMetrics()) {
+      while (dist < metric.length) {
+        final seg = drawing ? dashLen : gapLen;
+        final end = math.min(dist + seg, metric.length);
+        if (drawing) {
+          final t1 = metric.getTangentForOffset(dist)!.position;
+          final t2 = metric.getTangentForOffset(end)!.position;
+          dashPath.moveTo(t1.dx, t1.dy);
+          dashPath.lineTo(t2.dx, t2.dy);
+        }
+        dist += seg;
+        drawing = !drawing;
+      }
+    }
+    canvas.drawPath(
+      dashPath,
+      Paint()
+        ..color = color
+        ..strokeWidth = 1.2
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant MilestonePainter old) =>
+      old.progress != progress || old.achieved != achieved;
+}
+
+/// WaveformPainter — Approval rating history waveform
+class WaveformPainter extends CustomPainter {
+  final List<double> values;
+  final Color activeColor;
+  final Color inactiveColor;
+
+  const WaveformPainter({
+    required this.values,
+    required this.activeColor,
+    required this.inactiveColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.isEmpty) return;
+    final barW = (size.width / values.length) * 0.55;
+    final gap = size.width / values.length;
+
+    for (int i = 0; i < values.length; i++) {
+      final v = values[i];
+      final barH = size.height * v;
+      final x = i * gap + (gap - barW) / 2;
+      final y = size.height - barH;
+
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(x, y, barW, barH),
+          const Radius.circular(2),
+        ),
+        Paint()
+          ..color = Color.lerp(
+            inactiveColor,
+            activeColor,
+            v,
+          )!.withOpacity(0.7 + 0.3 * v),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant WaveformPainter old) => old.values != values;
+}
+
+/// RadialGlowPainter — Ambient radial glow behind spotlight card
+class RadialGlowPainter extends CustomPainter {
+  final Color color;
+  final double opacity;
+
+  const RadialGlowPainter({required this.color, required this.opacity});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height * 0.4);
+    canvas.drawCircle(
+      center,
+      size.width * 0.6,
+      Paint()
+        ..shader =
+            RadialGradient(
+              colors: [color.withOpacity(opacity), Colors.transparent],
+            ).createShader(
+              Rect.fromCircle(center: center, radius: size.width * 0.6),
+            ),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant RadialGlowPainter old) =>
+      old.opacity != opacity;
 }

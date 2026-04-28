@@ -415,3 +415,393 @@ class OnboardingOrchestrator {
   }
 }
 
+/// Orchestrates animations for the Login Screen.
+class LoginOrchestrator {
+  final TickerProvider vsync;
+
+  late final AnimationController entranceController;
+  late final AnimationController shimmerController;
+  late final AnimationController pulseController;
+
+  late final Animation<double> bgAnim;
+  late final Animation<double> logoAnim;
+  late final Animation<double> headerAnim;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> formAnim;
+  late final Animation<Offset> formSlide;
+  late final Animation<double> footerAnim;
+  late final Animation<double> shimmerPos;
+  late final Animation<double> pulseAnim;
+
+  LoginOrchestrator({required this.vsync}) {
+    _buildControllers();
+    _buildAnimations();
+  }
+
+  void _buildControllers() {
+    entranceController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 1400));
+    shimmerController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 2000));
+    pulseController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 1800));
+  }
+
+  void _buildAnimations() {
+    bgAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.0, 0.4, curve: Curves.easeOut));
+    logoAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.1, 0.5, curve: Curves.easeOut));
+    headerAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.3, 0.65, curve: Curves.easeOut));
+    headerSlide = Tween(begin: const Offset(0, 0.3), end: Offset.zero).animate(
+      CurvedAnimation(parent: entranceController, curve: const Interval(0.3, 0.65, curve: Curves.easeOut)),
+    );
+    formAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.5, 0.85, curve: Curves.easeOut));
+    formSlide = Tween(begin: const Offset(0, 0.2), end: Offset.zero).animate(
+      CurvedAnimation(parent: entranceController, curve: const Interval(0.5, 0.85, curve: Curves.easeOut)),
+    );
+    footerAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.75, 1.0, curve: Curves.easeOut));
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut));
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(parent: pulseController, curve: Curves.easeInOut));
+
+    shimmerController.repeat();
+    pulseController.repeat(reverse: true);
+  }
+
+  void forward() => entranceController.forward();
+
+  void dispose() {
+    entranceController.dispose();
+    shimmerController.dispose();
+    pulseController.dispose();
+  }
+}
+
+/// Orchestrates animations for the Sign Up Screen.
+class SignUpOrchestrator {
+  final TickerProvider vsync;
+
+  late final AnimationController entranceController;
+  late final AnimationController shimmerController;
+  late final AnimationController bgPulseController;
+
+  late final Animation<double> bgAnim;
+  late final Animation<double> logoAnim;
+  late final Animation<double> headerAnim;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> stepAnim;
+  late final Animation<Offset> stepSlide;
+  late final Animation<double> formAnim;
+  late final Animation<Offset> formSlide;
+  late final Animation<double> footerAnim;
+  late final Animation<double> shimmerPos;
+
+  SignUpOrchestrator({required this.vsync}) {
+    _buildControllers();
+    _buildAnimations();
+  }
+
+  void _buildControllers() {
+    entranceController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 1500));
+    shimmerController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 2200));
+    bgPulseController = AnimationController(vsync: vsync, duration: const Duration(milliseconds: 3000));
+  }
+
+  void _buildAnimations() {
+    bgAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.0, 0.4, curve: Curves.easeOut));
+    logoAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.1, 0.5, curve: Curves.easeOut));
+    headerAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.25, 0.6, curve: Curves.easeOut));
+    headerSlide = Tween(begin: const Offset(0, 0.25), end: Offset.zero).animate(
+      CurvedAnimation(parent: entranceController, curve: const Interval(0.25, 0.6, curve: Curves.easeOut)),
+    );
+    stepAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.4, 0.7, curve: Curves.easeOut));
+    stepSlide = Tween(begin: const Offset(0, 0.2), end: Offset.zero).animate(
+      CurvedAnimation(parent: entranceController, curve: const Interval(0.4, 0.7, curve: Curves.easeOut)),
+    );
+    formAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.55, 0.85, curve: Curves.easeOut));
+    formSlide = Tween(begin: const Offset(0, 0.15), end: Offset.zero).animate(
+      CurvedAnimation(parent: entranceController, curve: const Interval(0.55, 0.85, curve: Curves.easeOut)),
+    );
+    footerAnim = CurvedAnimation(parent: entranceController, curve: const Interval(0.8, 1.0, curve: Curves.easeOut));
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut));
+
+    shimmerController.repeat();
+    bgPulseController.repeat(reverse: true);
+  }
+
+  void forward() => entranceController.forward();
+
+  void dispose() {
+    entranceController.dispose();
+    shimmerController.dispose();
+    bgPulseController.dispose();
+  }
+}
+
+/// Staggered entrance animation builder for HomeScreen and similar screens.
+/// Extracted from vote_screen.dart for DRYness and reusability.
+class HomeScreenEntranceAnimations {
+  final AnimationController entranceController;
+  final AnimationController shimmerController;
+  final AnimationController pulseController;
+
+  late final Animation<double> headerFade;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> identityCardFade;
+  late final Animation<Offset> identityCardSlide;
+  late final Animation<double> statsRowFade;
+  late final Animation<Offset> statsRowSlide;
+  late final Animation<double> sectionFade;
+  late final Animation<double> cardsFade;
+  late final Animation<Offset> cardsSlide;
+  late final Animation<double> globalFade;
+  late final Animation<Offset> globalSlide;
+  late final Animation<double> shimmerPos;
+  late final Animation<double> pulseAnim;
+
+  HomeScreenEntranceAnimations({
+    required this.entranceController,
+    required this.shimmerController,
+    required this.pulseController,
+  }) {
+    // Header (top greeting + logo bar)
+    headerFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+    );
+    headerSlide = Tween(
+      begin: const Offset(0, -0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+    ));
+
+    // Identity card (voter status card)
+    identityCardFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.15, 0.55, curve: Curves.easeOut),
+    );
+    identityCardSlide = Tween(
+      begin: const Offset(0, 0.18),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.15, 0.55, curve: Curves.easeOut),
+    ));
+
+    // Stats row (3 quick-stat chips)
+    statsRowFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.3, 0.65, curve: Curves.easeOut),
+    );
+    statsRowSlide = Tween(
+      begin: const Offset(0, 0.2),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.3, 0.65, curve: Curves.easeOut),
+    ));
+
+    // Section label + election cards
+    sectionFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.45, 0.75, curve: Curves.easeOut),
+    );
+    cardsFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.5, 0.85, curve: Curves.easeOut),
+    );
+    cardsSlide = Tween(
+      begin: const Offset(0, 0.15),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.5, 0.85, curve: Curves.easeOut),
+    ));
+
+    // Global feed strip
+    globalFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.7, 1.0, curve: Curves.easeOut),
+    );
+    globalSlide = Tween(
+      begin: const Offset(0, 0.12),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.7, 1.0, curve: Curves.easeOut),
+    ));
+
+    // Gold shimmer
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(
+      CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut),
+    );
+
+    // Live pulse
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+  }
+}
+
+/// Staggered entrance animation builder for ElectionsScreen.
+class ElectionsScreenAnimations {
+  final AnimationController entranceController;
+  final AnimationController shimmerController;
+  final AnimationController pulseController;
+  final AnimationController searchController;
+
+  late final Animation<double> headerFade;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> filterFade;
+  late final Animation<double> heroFade;
+  late final Animation<Offset> heroSlide;
+  late final Animation<double> listFade;
+  late final Animation<Offset> listSlide;
+  late final Animation<double> shimmerPos;
+  late final Animation<double> pulseAnim;
+  late final Animation<double> searchExpandAnim;
+
+  ElectionsScreenAnimations({
+    required this.entranceController,
+    required this.shimmerController,
+    required this.pulseController,
+    required this.searchController,
+  }) {
+    headerFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+    );
+    headerSlide = Tween(begin: const Offset(0, -0.2), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+      ),
+    );
+
+    filterFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.1, 0.45, curve: Curves.easeOut),
+    );
+
+    heroFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.2, 0.6, curve: Curves.easeOut),
+    );
+    heroSlide = Tween(begin: const Offset(0, 0.12), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.2, 0.6, curve: Curves.easeOut),
+      ),
+    );
+
+    listFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.45, 0.85, curve: Curves.easeOut),
+    );
+    listSlide = Tween(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.45, 0.85, curve: Curves.easeOut),
+      ),
+    );
+
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(
+      CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut),
+    );
+
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+
+    searchExpandAnim = CurvedAnimation(
+      parent: searchController,
+      curve: Curves.easeOut,
+    );
+  }
+}
+
+/// Staggered entrance animation builder for CandidatesScreen.
+class CandidatesScreenAnimations {
+  final AnimationController entranceController;
+  final AnimationController shimmerController;
+  final AnimationController pulseController;
+  final AnimationController viewToggleController;
+  final AnimationController spotlightController;
+
+  late final Animation<double> headerFade;
+  late final Animation<Offset> headerSlide;
+
+  late final Animation<double> spotlightFade;
+  late final Animation<Offset> spotlightSlide;
+  late final Animation<double> spotlightScale;
+
+  late final Animation<double> filterRowFade;
+  late final Animation<double> listFade;
+  late final Animation<Offset> listSlide;
+
+  late final Animation<double> shimmerPos;
+  late final Animation<double> pulseAnim;
+  late final Animation<double> spotlightGlow;
+
+  CandidatesScreenAnimations({
+    required this.entranceController,
+    required this.shimmerController,
+    required this.pulseController,
+    required this.viewToggleController,
+    required this.spotlightController,
+  }) {
+    headerFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+    );
+    headerSlide = Tween(begin: const Offset(0, -0.2), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+      ),
+    );
+
+    filterRowFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.1, 0.45, curve: Curves.easeOut),
+    );
+
+    spotlightFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.15, 0.55, curve: Curves.easeOut),
+    );
+    spotlightSlide = Tween(begin: const Offset(0, 0.12), end: Offset.zero)
+        .animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.15, 0.55, curve: Curves.easeOut),
+      ),
+    );
+    spotlightScale = Tween(begin: 0.94, end: 1.0).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.15, 0.55, curve: Curves.easeOut),
+      ),
+    );
+
+    listFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.4, 0.85, curve: Curves.easeOut),
+    );
+    listSlide = Tween(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.4, 0.85, curve: Curves.easeOut),
+      ),
+    );
+
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(
+      CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut),
+    );
+
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+
+    spotlightGlow = Tween(begin: 0.15, end: 0.35).animate(
+      CurvedAnimation(parent: spotlightController, curve: Curves.easeInOut),
+    );
+  }
+}

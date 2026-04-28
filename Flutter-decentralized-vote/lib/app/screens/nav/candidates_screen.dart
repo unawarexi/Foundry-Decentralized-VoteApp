@@ -1,15 +1,629 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend_vote/app/components/nav/nav_placeholder_screen.dart';
+import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_frontend_vote/core/constants/colors.dart';
+import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
-class CandidatesScreen extends StatelessWidget {
+import 'widgets/home/accent_tag.dart';
+import 'widgets/candidates/candidate_models.dart';
+import 'widgets/candidates/candidates_header.dart';
+import 'widgets/candidates/spotlight_card.dart';
+import 'widgets/candidates/candidate_list_card.dart';
+import 'widgets/candidates/candidate_grid_card.dart';
+import 'widgets/candidates/candidate_detail_sheet.dart';
+
+class CandidatesScreen extends StatefulWidget {
   const CandidatesScreen({super.key});
 
   @override
+  State<CandidatesScreen> createState() => _CandidatesScreenState();
+}
+
+class _CandidatesScreenState extends State<CandidatesScreen>
+    with TickerProviderStateMixin {
+  bool get isDark => THelperFunctions.isDarkMode(context);
+
+  late AnimationController _entranceController;
+  late AnimationController _shimmerController;
+  late AnimationController _pulseController;
+  late AnimationController _viewToggleController;
+  late AnimationController _spotlightController;
+
+  late CandidatesScreenAnimations _anims;
+
+  final ScrollController _scrollController = ScrollController();
+  double _scrollOffset = 0;
+
+  bool _isGridView = false;
+  bool _searchOpen = false;
+  String _searchQuery = '';
+  int _sortIndex = 0; // 0=Popularity 1=AZ 2=Region 3=Party
+  int _filterParty = 0; // 0=All
+  String _filterElection = 'All';
+
+  final _searchFocus = FocusNode();
+  final _searchCtrl = TextEditingController();
+
+  static const _sortLabels = ['Popularity', 'A–Z', 'Region', 'Party'];
+
+  @override
+  void initState() {
+    super.initState();
+    _buildControllers();
+
+    _anims = CandidatesScreenAnimations(
+      entranceController: _entranceController,
+      shimmerController: _shimmerController,
+      pulseController: _pulseController,
+      viewToggleController: _viewToggleController,
+      spotlightController: _spotlightController,
+    );
+
+    _runEntrance();
+    _scrollController.addListener(
+      () => setState(() => _scrollOffset = _scrollController.offset),
+    );
+  }
+
+  void _buildControllers() {
+    _entranceController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1100),
+    );
+    _shimmerController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    );
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1600),
+    )..repeat(reverse: true);
+    _viewToggleController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 280),
+    );
+    _spotlightController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 3000),
+    )..repeat(reverse: true);
+  }
+
+  Future<void> _runEntrance() async {
+    await Future.delayed(const Duration(milliseconds: 60));
+    _entranceController.forward();
+    await Future.delayed(const Duration(milliseconds: 700));
+    _shimmerController.forward();
+  }
+
+  void _toggleSearch() {
+    setState(() => _searchOpen = !_searchOpen);
+    if (_searchOpen) {
+      Future.delayed(
+        const Duration(milliseconds: 250),
+        () => _searchFocus.requestFocus(),
+      );
+    } else {
+      _searchFocus.unfocus();
+      _searchCtrl.clear();
+      setState(() => _searchQuery = '');
+    }
+  }
+
+  void _toggleView() {
+    setState(() => _isGridView = !_isGridView);
+    _viewToggleController.forward(from: 0);
+  }
+
+  List<CandidateData> get _visibleCandidates {
+    var list = List<CandidateData>.from(allCandidates);
+    if (_searchQuery.isNotEmpty) {
+      final q = _searchQuery.toLowerCase();
+      list = list
+          .where(
+            (c) =>
+                c.name.toLowerCase().contains(q) ||
+                c.party.toLowerCase().contains(q) ||
+                c.region.toLowerCase().contains(q) ||
+                c.election.toLowerCase().contains(q),
+          )
+          .toList();
+    }
+    if (_filterParty > 0) {
+      final parties = ['All', 'APC', 'PDP', 'LP', 'IND', 'NNPP'];
+      list = list.where((c) => c.partyCode == parties[_filterParty]).toList();
+    }
+    if (_filterElection != 'All') {
+      list = list.where((c) => c.election.contains(_filterElection)).toList();
+    }
+    switch (_sortIndex) {
+      case 1:
+        list.sort((a, b) => a.name.compareTo(b.name));
+        break;
+      case 2:
+        list.sort((a, b) => a.region.compareTo(b.region));
+        break;
+      case 3:
+        list.sort((a, b) => a.partyCode.compareTo(b.partyCode));
+        break;
+      default:
+        list.sort((a, b) => b.approvalPct.compareTo(a.approvalPct));
+    }
+    return list;
+  }
+
+  @override
+  void dispose() {
+    _entranceController.dispose();
+    _shimmerController.dispose();
+    _pulseController.dispose();
+    _viewToggleController.dispose();
+    _spotlightController.dispose();
+    _scrollController.dispose();
+    _searchFocus.dispose();
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const NavPlaceholderScreen(
-      title: 'Candidate Profiles',
-      subtitle: 'Transparent auditing of candidate credentials and manifestos.',
-      icon: Icons.people_outline_rounded,
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: (isDark
+          ? TColors.darkBackground
+          : TColors.lightBackground),
+      body: AnimatedBuilder(
+        animation: Listenable.merge([
+          _entranceController,
+          _shimmerController,
+          _pulseController,
+          _spotlightController,
+        ]),
+        builder: (context, _) {
+          return Stack(
+            children: [
+              _buildBackground(),
+
+              CustomPaint(
+                size: MediaQuery.of(context).size,
+                painter: AuthGridPainter(
+                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
+                ),
+              ),
+
+              Positioned(
+                top: -55,
+                right: -55,
+                child: Opacity(
+                  opacity: 0.055,
+                  child: CustomPaint(
+                    size: const Size(240, 240),
+                    painter: HexRingPainter(),
+                  ),
+                ),
+              ),
+
+              _buildShimmer(context),
+
+              _buildBody(context),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildBackground() {
+    final p = (_scrollOffset * 0.00018).clamp(0.0, 0.12);
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment(1 - p, -1),
+          end: const Alignment(-1, 1),
+          colors: isDark
+              ? const [
+                  Color(0xFF0A0F0B),
+                  TColors.darkBackground,
+                  Color(0xFF0B0A14),
+                ]
+              : const [
+                  Color(0xFFF1F8E9),
+                  TColors.lightBackground,
+                  Color(0xFFF8F7F4),
+                ],
+          stops: const [0.0, 0.5, 1.0],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShimmer(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anims.shimmerPos,
+      builder: (_, __) => Positioned.fill(
+        child: IgnorePointer(
+          child: Transform.translate(
+            offset: Offset(
+              MediaQuery.of(context).size.width *
+                  (_anims.shimmerPos.value - 0.5) *
+                  2,
+              0,
+            ),
+            child: Container(
+              width: 130,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    TColors.secondary.withOpacity(0.05),
+                    TColors.secondary.withOpacity(0.09),
+                    TColors.secondary.withOpacity(0.05),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    final candidates = _visibleCandidates;
+
+    return SafeArea(
+      bottom: false,
+      child: CustomScrollView(
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: StickyHeaderDelegate(
+              minHeight: 62,
+              maxHeight: 62,
+              child: _buildStickyHeader(),
+            ),
+          ),
+
+          SliverToBoxAdapter(child: _buildPartyFilter()),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+
+          if (candidates.isNotEmpty)
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SpotlightCard(
+                  candidate: candidates.first,
+                  spotlightFade: _anims.spotlightFade,
+                  spotlightSlide: _anims.spotlightSlide,
+                  spotlightScale: _anims.spotlightScale,
+                  spotlightGlow: _anims.spotlightGlow,
+                  onTap: () => _showCandidateDetail(context, candidates.first),
+                ),
+              ),
+            ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: CandidatesHeader(
+                count: candidates.length,
+                listFade: _anims.listFade,
+                currentSortLabel: _sortLabels[_sortIndex],
+                onTapSort: () => _showSortSheet(context),
+              ),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 14)),
+
+          if (_isGridView)
+            _buildGridSliver(candidates)
+          else
+            _buildListSliver(candidates),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStickyHeader() {
+    final collapsed = (_scrollOffset / 60).clamp(0.0, 1.0);
+
+    return FadeTransition(
+      opacity: _anims.headerFade,
+      child: SlideTransition(
+        position: _anims.headerSlide,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          color: (isDark ? TColors.darkBackground : TColors.lightBackground)
+              .withOpacity(0.72 + 0.23 * collapsed),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  child: _searchOpen
+                      ? SearchField(
+                          key: const ValueKey('search'),
+                          ctrl: _searchCtrl,
+                          focus: _searchFocus,
+                          onChanged: (v) => setState(() => _searchQuery = v),
+                        )
+                      : Row(
+                          key: const ValueKey('title'),
+                          children: [
+                            Text(
+                              'Candidates',
+                              style: TextStyle(
+                                fontFamily: 'IBMPlexSerif',
+                                fontSize: 21,
+                                fontWeight: FontWeight.w700,
+                                color: (isDark ? TColors.white : TColors.black),
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            AccentTag(label: 'ALL ELECTIONS'),
+                          ],
+                        ),
+                ),
+              ),
+
+              const SizedBox(width: 10),
+
+              GestureDetector(
+                onTap: _toggleSearch,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: _searchOpen
+                        ? TColors.secondary.withOpacity(0.12)
+                        : (isDark ? TColors.darkCard : TColors.lightCard),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: _searchOpen
+                          ? TColors.secondary.withOpacity(0.5)
+                          : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                    ),
+                  ),
+                  child: AnimatedRotation(
+                    turns: _searchOpen ? 0.125 : 0,
+                    duration: const Duration(milliseconds: 220),
+                    child: Icon(
+                      _searchOpen ? Icons.close : Icons.search_rounded,
+                      color: _searchOpen
+                          ? TColors.secondary
+                          : (isDark
+                                ? TColors.textDarkSecondary
+                                : TColors.textLightSecondary),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              GestureDetector(
+                onTap: _toggleView,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: (isDark ? TColors.darkCard : TColors.lightCard),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: (isDark
+                          ? TColors.darkBorder
+                          : TColors.lightBorder),
+                    ),
+                  ),
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder: (child, anim) => ScaleTransition(
+                      scale: Tween(begin: 0.7, end: 1.0).animate(anim),
+                      child: child,
+                    ),
+                    child: Icon(
+                      _isGridView
+                          ? Icons.view_list_rounded
+                          : Icons.grid_view_rounded,
+                      key: ValueKey(_isGridView),
+                      color: (isDark
+                          ? TColors.textDarkSecondary
+                          : TColors.textLightSecondary),
+                      size: 18,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              GestureDetector(
+                onTap: () => _showSortSheet(context),
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: (isDark ? TColors.darkCard : TColors.lightCard),
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: (isDark
+                          ? TColors.darkBorder
+                          : TColors.lightBorder),
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.tune_rounded,
+                    color: (isDark
+                        ? TColors.textDarkSecondary
+                        : TColors.textLightSecondary),
+                    size: 18,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPartyFilter() {
+    final parties = ['All', 'APC', 'PDP', 'LP', 'IND', 'NNPP'];
+    return FadeTransition(
+      opacity: _anims.filterRowFade,
+      child: SizedBox(
+        height: 44,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          itemCount: parties.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 8),
+          itemBuilder: (_, i) {
+            final on = _filterParty == i;
+            return GestureDetector(
+              onTap: () => setState(() => _filterParty = i),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeOut,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 0,
+                ),
+                decoration: BoxDecoration(
+                  color: on
+                      ? TColors.primary
+                      : (isDark ? TColors.darkCard : TColors.lightCard),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: on
+                        ? TColors.secondary.withOpacity(0.55)
+                        : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                    width: on ? 1.2 : 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      parties[i],
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 12,
+                        fontWeight: on ? FontWeight.w600 : FontWeight.w400,
+                        color: on
+                            ? TColors.secondary
+                            : (isDark
+                                  ? TColors.textDarkTertiary
+                                  : TColors.textLightTertiary),
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 300),
+                      width: on ? 18 : 0,
+                      height: 2,
+                      decoration: BoxDecoration(
+                        color: TColors.secondary,
+                        borderRadius: BorderRadius.circular(1),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverList _buildListSliver(List<CandidateData> candidates) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, i) => Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          child: CandidateListCard(
+            data: candidates[i],
+            index: i,
+            listAnim: _anims.listFade,
+            pulseAnim: _anims.pulseAnim,
+            onTap: () => _showCandidateDetail(context, candidates[i]),
+          ),
+        ),
+        childCount: candidates.length,
+      ),
+    );
+  }
+
+  SliverPadding _buildGridSliver(List<CandidateData> candidates) {
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      sliver: SliverGrid(
+        delegate: SliverChildBuilderDelegate(
+          (context, i) => CandidateGridCard(
+            data: candidates[i],
+            index: i,
+            listAnim: _anims.listFade,
+            pulseAnim: _anims.pulseAnim,
+            onTap: () => _showCandidateDetail(context, candidates[i]),
+          ),
+          childCount: candidates.length,
+        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 0.82,
+        ),
+      ),
+    );
+  }
+
+  void _showCandidateDetail(BuildContext context, CandidateData c) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: false,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (_) =>
+          CandidateDetailSheet(candidate: c, pulseAnim: _anims.pulseAnim),
+    );
+  }
+
+  void _showSortSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      showDragHandle: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) => SortSheet(
+        currentSort: _sortIndex,
+        onSelect: (i) {
+          setState(() => _sortIndex = i);
+          Navigator.pop(context);
+        },
+      ),
     );
   }
 }

@@ -7,7 +7,10 @@ import 'package:flutter_frontend_vote/app/screens/onbaording/onboarding_screen.d
 import 'package:flutter_frontend_vote/app/bottom_navigation.dart';
 
 // ── Auth ──
+import 'package:flutter_frontend_vote/app/features/auth/presentation/signup_screen.dart';
 import 'package:flutter_frontend_vote/app/features/auth/presentation/login_screen.dart';
+import 'package:flutter_frontend_vote/app/features/auth/presentation/option_screen.dart';
+import 'package:flutter_frontend_vote/app/features/auth/presentation/candidate_signup_screen.dart';
 
 // ── Elections ──
 import 'package:flutter_frontend_vote/app/features/election/presentation/elections_list_screen.dart';
@@ -85,6 +88,21 @@ final GoRouter appRouter = GoRouter(
       path: '/login',
       name: 'login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/signup',
+      name: 'signup',
+      builder: (context, state) => const SignUpScreen(),
+    ),
+    GoRoute(
+      path: '/option',
+      name: 'option',
+      builder: (context, state) => const AuthOptionScreen(),
+    ),
+    GoRoute(
+      path: '/candidate-signup',
+      name: 'candidate-signup',
+      builder: (context, state) => const CandidateSignUpScreen(),
     ),
 
     // ──────────── Main App (Bottom Nav) ────────────
@@ -276,7 +294,7 @@ final GoRouter appRouter = GoRouter(
           Text('Page not found', style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () => context.go('/home'),
+            onPressed: () => context.go('/option'),
             child: const Text('Go Home'),
           ),
         ],

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend_vote/app/constants/animations.dart';
-import 'package:flutter_frontend_vote/app/constants/colors.dart';
+import 'package:flutter_frontend_vote/core/animations/animations.dart';
+import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:fl_chart/fl_chart.dart';
