@@ -76,17 +76,16 @@ dev_dependencies:
 
   flutter_lints: ^5.0.0
 
-# use 3 rows from every corner for equal shaped icon
 flutter_launcher_icons:
   android: true
-  image_path_android: assets/logo/icon6.png
-  android_adaptive_icon_background: "#F7FAFC"
-  android_adaptive_icon_foreground: assets/logo/icon6.png
-  adaptive_icon_background: "#F7FAFC"
+  image_path_android: assets/logo/emblem_launcher_android.png
+  android_adaptive_icon_background: "#F8F7F4"
+  android_adaptive_icon_foreground: assets/logo/emblem_launcher_android.png
+  adaptive_icon_background: "#F8F7F4"
   # For iOS, we use a different image and background color
   ios: true
-  image_path_ios: assets/logo/icon6.png
-  background_color_ios: "#F7FAFC"
+  image_path_ios: assets/logo/emblem_launcher_ios.png
+  background_color_ios: "#F8F7F4"
   remove_alpha_ios: true
 
 # For information on the generic Dart part of this file, see the
