@@ -301,7 +301,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
           if (candidates.isNotEmpty)
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: SpotlightCard(
                   candidate: candidates.first,
                   spotlightFade: _anims.spotlightFade,
@@ -317,7 +317,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
 
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: CandidatesHeader(
                 count: candidates.length,
                 listFade: _anims.listFade,
@@ -567,7 +567,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, i) => Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
           child: CandidateListCard(
             data: candidates[i],
             index: i,
@@ -583,7 +583,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
 
   SliverPadding _buildGridSliver(List<CandidateData> candidates) {
     return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       sliver: SliverGrid(
         delegate: SliverChildBuilderDelegate(
           (context, i) => CandidateGridCard(

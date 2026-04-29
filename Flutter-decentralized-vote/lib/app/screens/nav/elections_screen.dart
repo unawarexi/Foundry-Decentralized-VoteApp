@@ -338,7 +338,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
           // ── Featured hero card
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: HeroCard(
                 heroFade: _animations.heroFade,
                 heroSlide: _animations.heroSlide,
@@ -364,7 +364,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   child: ElectionListCard(
                     data: live[i],
                     index: i,
@@ -393,7 +393,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   child: ElectionListCard(
                     data: upcoming[i],
                     index: i + live.length,
@@ -424,7 +424,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
                   child: ElectionListCard(
                     data: closed[i],
                     index: i + live.length + upcoming.length,
@@ -624,7 +624,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
     return FadeTransition(
       opacity: _animations.listFade,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 14),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
         child: Row(
           children: [
             if (pulse)

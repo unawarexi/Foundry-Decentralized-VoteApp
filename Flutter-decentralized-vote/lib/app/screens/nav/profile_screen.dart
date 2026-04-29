@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 2. Identity integrity band
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildIdentityBand(),
             ),
           ),
@@ -244,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 3. Voting activity stats
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildActivityStats(),
             ),
           ),
@@ -254,7 +254,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 4. Connected wallet card
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildWalletCard(),
             ),
           ),
@@ -264,7 +264,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 5. Voting history
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildSectionLabel(
                 tag: 'ON-CHAIN',
                 title: 'Voting History',
@@ -276,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen>
             delegate: SliverChildBuilderDelegate(
               (_, i) => Padding(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
+                  horizontal: 16,
                   vertical: 5,
                 ),
                 child: _buildHistoryTile(_votingHistory[i]),
@@ -290,14 +290,14 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 6. Settings group
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildSectionLabel(tag: 'PREFERENCES', title: 'Settings'),
             ),
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 12)),
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildSettingsGroup(),
             ),
           ),
@@ -307,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen>
           // ── 7. Danger zone
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: _buildDangerZone(),
             ),
           ),

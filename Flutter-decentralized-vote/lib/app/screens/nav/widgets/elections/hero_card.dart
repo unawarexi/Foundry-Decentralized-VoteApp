@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import '../home/accent_tag.dart';
-import '../home/painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 import 'live_badge.dart';
 import 'countdown_block.dart';
 import 'participation_bar.dart';
@@ -72,7 +72,7 @@ class HeroCard extends StatelessWidget {
                     opacity: 0.07,
                     child: CustomPaint(
                       size: const Size(160, 160),
-                      painter: const HexRingPainter(),
+                      painter: HexRingPainter(),
                     ),
                   ),
                 ),

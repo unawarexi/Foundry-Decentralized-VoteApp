@@ -12,7 +12,7 @@ class TSizes {
   static const double xxxl = 64.0;
 
   // ──────────────── PADDING ────────────────
-  static const double pagePadding = 20.0;
+  static const double pagePadding = 16.0;
   static const double cardPadding = 16.0;
   static const double inputPadding = 14.0;
   static const double chipPadding = 12.0;
