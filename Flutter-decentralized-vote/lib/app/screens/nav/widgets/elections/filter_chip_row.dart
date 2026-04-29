@@ -22,7 +22,7 @@ class FilterChipRow extends StatelessWidget {
     return FadeTransition(
       opacity: filterFade,
       child: SizedBox(
-        height: 44,
+        height: 34,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -36,7 +36,10 @@ class FilterChipRow extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOut,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 0,
+                ),
                 decoration: BoxDecoration(
                   color: selected
                       ? TColors.primary.withOpacity(isDark ? 0.55 : 1.0)
@@ -57,10 +60,14 @@ class FilterChipRow extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 12,
-                        fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                        fontWeight: selected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
                         color: selected
                             ? TColors.secondary
-                            : (isDark ? TColors.textDarkTertiary : TColors.textLightTertiary),
+                            : (isDark
+                                  ? TColors.textDarkTertiary
+                                  : TColors.textLightTertiary),
                         letterSpacing: 0.3,
                       ),
                     ),

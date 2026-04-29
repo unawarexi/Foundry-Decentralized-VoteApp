@@ -881,3 +881,82 @@ class ForumScreenAnimations {
     );
   }
 }
+
+/// Staggered entrance animation builder for ProfileScreen.
+class ProfileScreenAnimations {
+  final AnimationController entranceController;
+  final AnimationController shimmerController;
+  final AnimationController pulseController;
+
+  late final Animation<double> headerFade;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> identityFade;
+  late final Animation<Offset> identitySlide;
+  late final Animation<double> statsFade;
+  late final Animation<Offset> statsSlide;
+  late final Animation<double> walletFade;
+  late final Animation<Offset> walletSlide;
+  late final Animation<double> listFade;
+  late final Animation<double> pulseAnim;
+
+  ProfileScreenAnimations({
+    required this.entranceController,
+    required this.shimmerController,
+    required this.pulseController,
+  }) {
+    headerFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+    );
+    headerSlide = Tween(begin: const Offset(0, -0.15), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: entranceController,
+            curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+          ),
+        );
+
+    identityFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.15, 0.50, curve: Curves.easeOut),
+    );
+    identitySlide = Tween(begin: const Offset(0, 0.12), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: entranceController,
+            curve: const Interval(0.15, 0.50, curve: Curves.easeOut),
+          ),
+        );
+
+    statsFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.25, 0.60, curve: Curves.easeOut),
+    );
+    statsSlide = Tween(begin: const Offset(0, 0.10), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.25, 0.60, curve: Curves.easeOut),
+      ),
+    );
+
+    walletFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.35, 0.70, curve: Curves.easeOut),
+    );
+    walletSlide = Tween(begin: const Offset(0, 0.10), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.35, 0.70, curve: Curves.easeOut),
+      ),
+    );
+
+    listFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.45, 0.85, curve: Curves.easeOut),
+    );
+
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+  }
+}

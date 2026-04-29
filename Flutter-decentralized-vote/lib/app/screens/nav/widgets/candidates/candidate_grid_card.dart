@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
-import 'package:flutter_frontend_vote/core/constants/sizes.dart';
 import 'candidate_models.dart';
 import 'candidate_atomic_widgets.dart';
 

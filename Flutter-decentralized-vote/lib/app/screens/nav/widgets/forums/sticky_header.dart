@@ -190,7 +190,7 @@ class ForumStickyHeader extends StatelessWidget {
   Widget _buildCategoryTabs(bool isDark) {
     final tabs = ['Hot 🔥', 'New', 'Unanswered', 'Mine'];
     return SizedBox(
-      height: 44,
+      height: 34,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),

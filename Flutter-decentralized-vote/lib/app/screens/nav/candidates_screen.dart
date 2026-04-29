@@ -375,13 +375,16 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                                   fontFamily: 'IBMPlexSerif',
                                   fontSize: 21,
                                   fontWeight: FontWeight.w700,
-                                  color: (isDark ? TColors.white : TColors.black),
+                                  color: (isDark
+                                      ? TColors.white
+                                      : TColors.black),
                                 ),
                               ),
                             ),
                             const SizedBox(width: 8),
                             const Flexible(
-                                child: AccentTag(label: 'ALL ELECTIONS')),
+                              child: AccentTag(label: 'ALL ELECTIONS'),
+                            ),
                           ],
                         ),
                 ),
@@ -496,7 +499,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
     return FadeTransition(
       opacity: _anims.filterRowFade,
       child: SizedBox(
-        height: 44,
+        height: 34,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),

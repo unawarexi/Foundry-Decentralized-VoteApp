@@ -140,13 +140,13 @@ class HomeIdentityCard extends StatelessWidget {
                           label: 'Biometric',
                           active: true,
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 4),
                         const StatusPill(
                           icon: Icons.shield_outlined,
                           label: 'ZK Proof',
                           active: true,
                         ),
-                        SizedBox(width: 8),
+                        SizedBox(width: 4),
                         StatusPill(
                           icon: Icons.link_rounded,
                           label: 'On-Chain',
