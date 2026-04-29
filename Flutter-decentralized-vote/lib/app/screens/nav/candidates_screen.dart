@@ -367,17 +367,21 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                       : Row(
                           key: const ValueKey('title'),
                           children: [
-                            Text(
-                              'Candidates',
-                              style: TextStyle(
-                                fontFamily: 'IBMPlexSerif',
-                                fontSize: 21,
-                                fontWeight: FontWeight.w700,
-                                color: (isDark ? TColors.white : TColors.black),
+                            Flexible(
+                              child: Text(
+                                'Candidates',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'IBMPlexSerif',
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w700,
+                                  color: (isDark ? TColors.white : TColors.black),
+                                ),
                               ),
                             ),
-                            SizedBox(width: 10),
-                            AccentTag(label: 'ALL ELECTIONS'),
+                            const SizedBox(width: 8),
+                            const Flexible(
+                                child: AccentTag(label: 'ALL ELECTIONS')),
                           ],
                         ),
                 ),

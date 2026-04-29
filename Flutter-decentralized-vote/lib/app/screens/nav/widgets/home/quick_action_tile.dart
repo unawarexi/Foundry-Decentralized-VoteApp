@@ -67,6 +67,8 @@ class _QuickActionTileState extends State<QuickActionTile>
                 const SizedBox(height: 6),
                 Text(
                   widget.label,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,

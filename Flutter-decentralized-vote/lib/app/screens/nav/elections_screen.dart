@@ -466,17 +466,20 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                       : Row(
                           key: const ValueKey('title'),
                           children: [
-                            Text(
-                              'Elections',
-                              style: TextStyle(
-                                fontFamily: 'IBMPlexSerif',
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                                color: isDark ? TColors.white : TColors.primary,
+                            Flexible(
+                              child: Text(
+                                'Elections',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontFamily: 'IBMPlexSerif',
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w700,
+                                  color: isDark ? TColors.white : TColors.primary,
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 10),
-                            const AccentTag(label: 'GLOBAL'),
+                            const SizedBox(width: 8),
+                            const Flexible(child: AccentTag(label: 'GLOBAL')),
                           ],
                         ),
                 ),

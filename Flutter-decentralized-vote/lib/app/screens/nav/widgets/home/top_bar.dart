@@ -52,17 +52,20 @@ class HomeTopBar extends StatelessWidget {
                 child: CustomPaint(painter: MiniLogoPainter()),
               ),
               const SizedBox(width: 10),
-              AnimatedOpacity(
-                duration: TAnimations.normal,
-                opacity: collapse < 0.6 ? 1.0 : 0.0,
-                child: Text(
-                  'VOTESECURE',
-                  style: TextStyle(
-                    fontFamily: 'IBMPlexSerif',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: isDark ? TColors.white : TColors.primary,
-                    letterSpacing: 3,
+              Flexible(
+                child: AnimatedOpacity(
+                  duration: TAnimations.normal,
+                  opacity: collapse < 0.6 ? 1.0 : 0.0,
+                  child: Text(
+                    'VOTESECURE',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: 'IBMPlexSerif',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: isDark ? TColors.white : TColors.primary,
+                      letterSpacing: 3,
+                    ),
                   ),
                 ),
               ),

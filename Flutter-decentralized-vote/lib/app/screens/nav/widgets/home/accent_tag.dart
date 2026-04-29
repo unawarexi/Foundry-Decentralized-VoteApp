@@ -18,6 +18,8 @@ class AccentTag extends StatelessWidget {
       ),
       child: Text(
         label,
+        overflow: TextOverflow.ellipsis,
+        maxLines: 1,
         style: const TextStyle(
           fontFamily: 'Inter',
           fontSize: 8.5,

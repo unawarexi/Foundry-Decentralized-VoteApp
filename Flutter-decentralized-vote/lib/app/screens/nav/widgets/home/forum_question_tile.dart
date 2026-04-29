@@ -34,9 +34,10 @@ class ForumQuestionTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              AccentTag(label: data.candidate),
-              const Spacer(),
+              Flexible(child: AccentTag(label: data.candidate)),
+              const SizedBox(width: 8),
               // Timer badge — if unanswered, shows 24hr countdown
               if (data.isUnanswered)
                 Container(
@@ -49,6 +50,7 @@ class ForumQuestionTile extends StatelessWidget {
                         Border.all(color: TColors.warning.withOpacity(0.4)),
                   ),
                   child: Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.timer_outlined,
                           size: 10, color: TColors.warning),
@@ -77,29 +79,42 @@ class ForumQuestionTile extends StatelessWidget {
           ),
           const SizedBox(height: 10),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.arrow_upward_rounded,
-                  size: 13, color: TColors.secondary),
-              const SizedBox(width: 4),
-              Text(
-                '${data.upvotes} upvotes',
-                style: const TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 11,
-                    color: TColors.secondary),
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(Icons.arrow_upward_rounded,
+                        size: 13, color: TColors.secondary),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        '${data.upvotes} upvotes',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11,
+                            color: TColors.secondary),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Icon(Icons.comment_outlined,
+                        size: 13, color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        '${data.answers} answers',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 11,
+                            color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(width: 16),
-              Icon(Icons.comment_outlined,
-                  size: 13, color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary),
-              const SizedBox(width: 4),
-              Text(
-                '${data.answers} answers',
-                style: TextStyle(
-                    fontFamily: 'Inter',
-                    fontSize: 11,
-                    color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary),
-              ),
-              const Spacer(),
+              const SizedBox(width: 8),
               Text(
                 data.timePosted,
                 style: TextStyle(
