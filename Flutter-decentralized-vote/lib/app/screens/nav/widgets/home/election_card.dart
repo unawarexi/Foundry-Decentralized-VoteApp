@@ -49,8 +49,8 @@ class _ElectionCardState extends State<ElectionCard>
         builder: (_, __) => Transform.scale(
           scale: _pressCtrl.value,
           child: Container(
-            width: 220,
-            padding: const EdgeInsets.all(18),
+            width: 200,
+            padding: const EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: isDark ? TColors.darkCard : TColors.lightCard,
               borderRadius: BorderRadius.circular(16),
@@ -85,15 +85,15 @@ class _ElectionCardState extends State<ElectionCard>
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
                   d.title,
                   style: TextStyle(
                     fontFamily: 'IBMPlexSerif',
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w700,
                     color: isDark ? TColors.white : TColors.primary,
-                    height: 1.25,
+                    height: 1.2,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

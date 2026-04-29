@@ -44,7 +44,7 @@ class _StatChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       decoration: BoxDecoration(
         color: isDark ? TColors.darkCard : TColors.lightCard,
         borderRadius: BorderRadius.circular(TSizes.radiusMd),
@@ -60,11 +60,11 @@ class _StatChip extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: TColors.secondary, size: 16),
-          const SizedBox(height: 8),
-          Text(value, style: TextStyle(fontFamily: 'IBMPlexSerif', fontSize: 24, fontWeight: FontWeight.w700, color: isDark ? TColors.white : TColors.primary)),
-          const SizedBox(height: 2),
-          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 10, color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary, height: 1.4, letterSpacing: 0.2)),
+          Icon(icon, color: TColors.secondary, size: 14),
+          const SizedBox(height: 6),
+          Text(value, style: TextStyle(fontFamily: 'IBMPlexSerif', fontSize: 18, fontWeight: FontWeight.w700, color: isDark ? TColors.white : TColors.primary)),
+          const SizedBox(height: 1),
+          Text(label, style: TextStyle(fontFamily: 'Inter', fontSize: 9, color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary, height: 1.3, letterSpacing: 0.1)),
         ],
       ),
     );

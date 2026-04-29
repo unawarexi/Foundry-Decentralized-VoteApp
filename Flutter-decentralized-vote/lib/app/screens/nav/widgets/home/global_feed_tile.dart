@@ -19,7 +19,7 @@ class GlobalFeedTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: isDark ? TColors.darkCard : TColors.lightCard,
         borderRadius: BorderRadius.circular(12),
@@ -36,8 +36,8 @@ class GlobalFeedTile extends StatelessWidget {
         children: [
           // Country flag placeholder
           Container(
-            width: 36,
-            height: 36,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
               color: item.color.withOpacity(isDark ? 0.15 : 0.1),
               borderRadius: BorderRadius.circular(8),
@@ -46,7 +46,7 @@ class GlobalFeedTile extends StatelessWidget {
             child: Center(
               child: Text(
                 item.flag,
-                style: const TextStyle(fontSize: 18),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ),

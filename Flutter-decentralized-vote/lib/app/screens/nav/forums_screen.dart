@@ -7,11 +7,9 @@ import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // ── Extracted widgets ─────────────────────────────────────────
 import 'widgets/forums/data_models.dart';
-import 'widgets/forums/painters.dart';
 import 'widgets/forums/atomic_widgets.dart';
 import 'widgets/forums/sheets.dart';
 import 'widgets/forums/forum_question_card.dart';
-import 'widgets/forums/scoreboard_row.dart';
 import 'widgets/forums/sticky_header.dart';
 import 'widgets/forums/scoreboard_strip.dart';
 import 'widgets/forums/forum_empty_state.dart';
@@ -211,11 +209,14 @@ class _ForumScreenState extends State<ForumScreen>
       backgroundColor: isDark
           ? TColors.darkBackground
           : TColors.lightBackground,
-      floatingActionButton: AskQuestionFAB(
-        entrance: _animations.fabEntrance,
-        float: _animations.fabFloat,
-        pulse: _animations.pulseAnim,
-        onTap: () => _showAskSheet(context),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: AskQuestionFAB(
+          entrance: _animations.fabEntrance,
+          float: _animations.fabFloat,
+          pulse: _animations.pulseAnim,
+          onTap: () => _showAskSheet(context),
+        ),
       ),
       body: AnimatedBuilder(
         animation: Listenable.merge([

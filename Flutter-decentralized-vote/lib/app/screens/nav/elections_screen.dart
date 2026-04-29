@@ -6,7 +6,7 @@ import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // Common Widgets
-import 'widgets/home/painters.dart'; // GridPainter, HexRingPainter
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 import 'widgets/home/accent_tag.dart';
 
 // Election Specific Widgets
@@ -207,7 +207,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
               // Layer 2: Grid texture
               CustomPaint(
                 size: MediaQuery.of(context).size,
-                painter: GridPainter(
+                painter: AuthGridPainter(
                   color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
                 ),
               ),
@@ -474,7 +474,9 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                                   fontFamily: 'IBMPlexSerif',
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark ? TColors.white : TColors.primary,
+                                  color: isDark
+                                      ? TColors.white
+                                      : TColors.primary,
                                 ),
                               ),
                             ),

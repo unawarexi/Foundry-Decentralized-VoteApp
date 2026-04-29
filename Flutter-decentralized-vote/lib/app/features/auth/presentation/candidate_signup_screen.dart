@@ -414,17 +414,20 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                                 ),
                               ),
                               const SizedBox(width: 6),
-                              Text(
-                                steps[i],
-                                style: TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 10,
-                                  color: isActive || isDone
-                                      ? TColors.secondary
-                                      : (isDark
-                                            ? TColors.textDarkTertiary
-                                            : TColors.textLightTertiary),
-                                  letterSpacing: 0.5,
+                              Flexible(
+                                child: Text(
+                                  steps[i],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 10,
+                                    color: isActive || isDone
+                                        ? TColors.secondary
+                                        : (isDark
+                                              ? TColors.textDarkTertiary
+                                              : TColors.textLightTertiary),
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
                             ],
@@ -691,16 +694,19 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                isLast
-                                    ? 'Submit Application'
-                                    : 'Continue to Next Phase',
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: TColors.white,
-                                  letterSpacing: 0.5,
+                              Flexible(
+                                child: Text(
+                                  isLast
+                                      ? 'Submit Application'
+                                      : 'Continue to Next Phase',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontFamily: 'Inter',
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: TColors.white,
+                                    letterSpacing: 0.5,
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 10),

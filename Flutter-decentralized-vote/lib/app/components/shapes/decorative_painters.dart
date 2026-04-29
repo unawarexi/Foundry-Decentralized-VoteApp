@@ -3,23 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 
 // ═══════════════════════════════════════════════
-//  SpeakUp Decorative Painters
+//   VoteSecure Decorative Painters
 //  Painted curves, swooshes, and accent shapes
 //  using CustomPainter for layered compositions.
 // ═══════════════════════════════════════════════
-
-/// A flowing, multi-layer gradient swoosh.
-/// Stacks 2–3 translucent Bezier ribbon layers.
-///
-/// ```dart
-/// CustomPaint(
-///   size: Size(double.infinity, 260),
-///   painter: SSwooshPainter(
-///     colors: [TColors.primary, TColors.screenShare],
-///     isDark: true,
-///   ),
-/// )
-/// ```
 class SSwooshPainter extends CustomPainter {
   final List<Color> colors;
   final bool isDark;
@@ -51,8 +38,9 @@ class SSwooshPainter extends CustomPainter {
         end: Alignment.bottomRight,
         colors: [
           colors[0].withValues(alpha: baseAlpha * intensity),
-          (colors.length > 1 ? colors[1] : colors[0])
-              .withValues(alpha: baseAlpha * 0.6 * intensity),
+          (colors.length > 1 ? colors[1] : colors[0]).withValues(
+            alpha: baseAlpha * 0.6 * intensity,
+          ),
         ],
       ).createShader(Rect.fromLTWH(0, 0, w, h));
 
@@ -70,8 +58,9 @@ class SSwooshPainter extends CustomPainter {
       ..shader = LinearGradient(
         colors: [
           colors[0].withValues(alpha: baseAlpha * 0.7 * intensity),
-          (colors.length > 1 ? colors[1] : colors[0])
-              .withValues(alpha: baseAlpha * 0.4 * intensity),
+          (colors.length > 1 ? colors[1] : colors[0]).withValues(
+            alpha: baseAlpha * 0.4 * intensity,
+          ),
         ],
       ).createShader(Rect.fromLTWH(0, 0, w, h));
 
@@ -104,11 +93,7 @@ class SAuroraPainter extends CustomPainter {
   final double phase;
   final bool isDark;
 
-  SAuroraPainter({
-    required this.colors,
-    this.phase = 0.0,
-    this.isDark = true,
-  });
+  SAuroraPainter({required this.colors, this.phase = 0.0, this.isDark = true});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -122,9 +107,12 @@ class SAuroraPainter extends CustomPainter {
       final path = Path()
         ..moveTo(-w * 0.1, h * (0.3 + i * 0.12) + yOffset)
         ..cubicTo(
-          w * 0.25, h * (0.15 + i * 0.08) + yOffset,
-          w * 0.75, h * (0.45 + i * 0.06) + yOffset,
-          w * 1.1, h * (0.2 + i * 0.1) + yOffset,
+          w * 0.25,
+          h * (0.15 + i * 0.08) + yOffset,
+          w * 0.75,
+          h * (0.45 + i * 0.06) + yOffset,
+          w * 1.1,
+          h * (0.2 + i * 0.1) + yOffset,
         );
 
       final paint = Paint()
@@ -219,13 +207,8 @@ class SCornerArcPainter extends CustomPainter {
 
     final paint = Paint()
       ..shader = RadialGradient(
-        colors: [
-          color.withValues(alpha: 0.15),
-          color.withValues(alpha: 0),
-        ],
-      ).createShader(
-        Rect.fromCircle(center: center, radius: radius),
-      );
+        colors: [color.withValues(alpha: 0.15), color.withValues(alpha: 0)],
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
 
     canvas.drawCircle(center, radius, paint);
   }
@@ -313,9 +296,13 @@ class MiniLogoPainter extends CustomPainter {
 
 /// Large decorative hexagon ring for corner accents
 class HexRingPainter extends CustomPainter {
+  final Color? color;
+  const HexRingPainter({this.color});
+
   @override
   void paint(Canvas canvas, Size size) {
     final c = Offset(size.width / 2, size.height / 2);
+    final baseColor = color ?? TColors.secondary;
 
     for (int ring = 1; ring <= 3; ring++) {
       final r = size.width * 0.15 * ring;
@@ -333,7 +320,7 @@ class HexRingPainter extends CustomPainter {
       canvas.drawPath(
         hexPath,
         Paint()
-          ..color = TColors.secondary.withValues(alpha: 0.5 / ring)
+          ..color = baseColor.withOpacity(0.5 / ring)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 0.8,
       );
@@ -341,7 +328,8 @@ class HexRingPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter _) => false;
+  bool shouldRepaint(covariant HexRingPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
 
 /// Wallet icon in hexagonal outline style
@@ -736,6 +724,180 @@ class RadialGlowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant RadialGlowPainter old) =>
-      old.opacity != opacity;
+  bool shouldRepaint(covariant RadialGlowPainter old) => old.opacity != opacity;
+}
+
+/// Pulsing ring painter for blaring CTAs
+class PulsingRingPainter extends CustomPainter {
+  final double progress;
+  final Color color;
+  final bool isCircle;
+  final double borderRadius;
+
+  PulsingRingPainter({
+    required this.progress,
+    required this.color,
+    this.isCircle = true,
+    this.borderRadius = 8,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (int i = 0; i < 2; i++) {
+      final t = (progress + i * 0.5) % 1.0;
+      final paint = Paint()
+        ..color = color.withOpacity((1.0 - t) * 0.45)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2;
+
+      final expansion = t * 28.0;
+
+      if (isCircle) {
+        canvas.drawCircle(
+          Offset(size.width / 2, size.height / 2),
+          (math.max(size.width, size.height) / 2) + expansion / 2,
+          paint,
+        );
+      } else {
+        final rect = Rect.fromLTWH(
+          -expansion / 2,
+          -expansion / 2,
+          size.width + expansion,
+          size.height + expansion,
+        );
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            rect,
+            Radius.circular(borderRadius + (expansion * 0.3)),
+          ),
+          paint,
+        );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(PulsingRingPainter oldDelegate) =>
+      oldDelegate.progress != progress ||
+      oldDelegate.color != color ||
+      oldDelegate.isCircle != isCircle ||
+      oldDelegate.borderRadius != borderRadius;
+}
+
+/// HeatmapPainter — Activity heatmap cells for Forum/Stats
+class HeatmapPainter extends CustomPainter {
+  final List<double> values; // 0.0–1.0 per cell
+  final Color activeColor;
+  final Color inactiveColor;
+
+  const HeatmapPainter({
+    required this.values,
+    required this.activeColor,
+    required this.inactiveColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.isEmpty) return;
+    final cellSize = size.width / values.length;
+    final padding = cellSize * 0.15;
+
+    for (int i = 0; i < values.length; i++) {
+      final v = values[i];
+      final x = i * cellSize + padding;
+      final w = cellSize - padding * 2;
+      final rect = RRect.fromRectAndRadius(
+        Rect.fromLTWH(x, padding, w, size.height - padding * 2),
+        const Radius.circular(2),
+      );
+      canvas.drawRRect(
+        rect,
+        Paint()
+          ..color = v > 0
+              ? activeColor.withOpacity(0.15 + 0.75 * v)
+              : inactiveColor,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant HeatmapPainter old) => old.values != values;
+}
+
+/// TimerArcPainter — Circular countdown arc for forum questions
+class TimerArcPainter extends CustomPainter {
+  final double progress; // 0.0–1.0
+  final Color color;
+
+  const TimerArcPainter({required this.progress, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final r = math.min(size.width, size.height) / 2 - 2;
+
+    // Background track (full circle)
+    canvas.drawCircle(
+      center,
+      r,
+      Paint()
+        ..color = TColors.darkBorder.withOpacity(0.2)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2,
+    );
+
+    // Progress arc (clockwise from top)
+    if (progress > 0) {
+      canvas.drawArc(
+        Rect.fromCircle(center: center, radius: r),
+        -math.pi / 2, // start at top (12 o'clock)
+        2 * math.pi * progress,
+        false,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2
+          ..strokeCap = StrokeCap.round,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant TimerArcPainter old) =>
+      old.progress != progress || old.color != color;
+}
+
+/// UpvoteBurstPainter — Gold particle burst on upvote action
+class UpvoteBurstPainter extends CustomPainter {
+  final double progress; // 0.0–1.0
+  final Color color;
+
+  const UpvoteBurstPainter({required this.progress, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    const particleCount = 8;
+    const maxRadius = 24.0;
+    const particleSize = 3.0;
+
+    final opacity = progress < 0.6 ? 1.0 : 1.0 - (progress - 0.6) / 0.4;
+
+    for (int i = 0; i < particleCount; i++) {
+      final angle = (2 * math.pi / particleCount) * i;
+      final dist = maxRadius * progress;
+      final px = center.dx + dist * math.cos(angle);
+      final py = center.dy + dist * math.sin(angle);
+
+      canvas.drawCircle(
+        Offset(px, py),
+        particleSize * (1.0 - progress * 0.5),
+        Paint()..color = color.withOpacity(opacity.clamp(0.0, 1.0)),
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant UpvoteBurstPainter old) =>
+      old.progress != progress;
 }

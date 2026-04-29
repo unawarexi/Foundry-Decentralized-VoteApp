@@ -55,7 +55,7 @@ class _QuickActionTileState extends State<QuickActionTile>
         child: ScaleTransition(
           scale: _pressScale,
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
               color: widget.color,
               borderRadius: BorderRadius.circular(12),
@@ -63,8 +63,8 @@ class _QuickActionTileState extends State<QuickActionTile>
             ),
             child: Column(
               children: [
-                Icon(widget.icon, color: TColors.secondary, size: 20),
-                const SizedBox(height: 6),
+                Icon(widget.icon, color: TColors.secondary, size: 18),
+                const SizedBox(height: 5),
                 Text(
                   widget.label,
                   overflow: TextOverflow.ellipsis,

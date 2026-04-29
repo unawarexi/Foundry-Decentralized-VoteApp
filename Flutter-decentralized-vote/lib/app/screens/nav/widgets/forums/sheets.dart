@@ -3,7 +3,7 @@ import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'data_models.dart';
 import 'atomic_widgets.dart';
-import 'painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
 class AskQuestionSheet extends StatefulWidget {
   const AskQuestionSheet({super.key});

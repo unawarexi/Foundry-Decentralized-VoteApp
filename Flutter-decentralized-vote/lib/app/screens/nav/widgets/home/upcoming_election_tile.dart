@@ -23,7 +23,7 @@ class UpcomingElectionTile extends StatelessWidget {
     return FadeTransition(
       opacity: entranceAnim,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
           color: isDark ? TColors.darkCard : TColors.lightCard,
           borderRadius: BorderRadius.circular(12),
@@ -40,8 +40,8 @@ class UpcomingElectionTile extends StatelessWidget {
           children: [
             // Date block
             Container(
-              width: 44,
-              height: 44,
+              width: 38,
+              height: 38,
               decoration: BoxDecoration(
                 color: TColors.primary.withOpacity(isDark ? 0.3 : 0.15),
                 borderRadius: BorderRadius.circular(8),
@@ -55,16 +55,16 @@ class UpcomingElectionTile extends StatelessWidget {
                     d.month,
                     style: const TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 9,
+                        fontSize: 8,
                         color: TColors.secondary,
-                        letterSpacing: 1,
+                        letterSpacing: 0.8,
                         fontWeight: FontWeight.w600),
                   ),
                   Text(
                     d.day,
                     style: TextStyle(
                         fontFamily: 'IBMPlexSerif',
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: FontWeight.w700,
                         color: isDark ? TColors.white : TColors.primary),
                   ),

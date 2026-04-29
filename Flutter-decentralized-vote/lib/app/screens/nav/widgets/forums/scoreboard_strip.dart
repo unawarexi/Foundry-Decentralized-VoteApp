@@ -3,7 +3,7 @@ import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
 import 'data_models.dart';
-import 'painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 import 'atomic_widgets.dart';
 import 'scoreboard_row.dart';
 

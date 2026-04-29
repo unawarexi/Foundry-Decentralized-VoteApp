@@ -9,7 +9,7 @@ import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'widgets/home/top_bar.dart';
 import 'widgets/home/identity_card.dart';
 import 'widgets/home/stats_row.dart';
-import 'widgets/home/painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 import 'widgets/home/section_label.dart';
 import 'widgets/home/quick_action_tile.dart';
 import 'widgets/home/election_card.dart';
@@ -120,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _buildBackground(isDark),
           CustomPaint(
             size: MediaQuery.of(context).size,
-            painter: GridPainter(
+            painter: AuthGridPainter(
               color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
             ),
           ),
@@ -199,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
           // ── Quick stats row
           SliverToBoxAdapter(
@@ -209,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // ── Quick actions
           SliverToBoxAdapter(
@@ -219,7 +219,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // ── Active elections section label
           SliverToBoxAdapter(
@@ -238,7 +238,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           // ── Horizontal election cards
           SliverToBoxAdapter(child: _buildElectionCardsRow()),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // ── Upcoming elections list
           SliverToBoxAdapter(
@@ -271,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          const SliverToBoxAdapter(child: SizedBox(height: 24)),
 
           // ── Global feed strip
           SliverToBoxAdapter(

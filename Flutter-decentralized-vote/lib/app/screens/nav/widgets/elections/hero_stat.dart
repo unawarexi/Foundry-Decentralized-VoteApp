@@ -19,7 +19,7 @@ class HeroStat extends StatelessWidget {
             fontFamily: 'IBMPlexMono',
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: isDark ? TColors.white : TColors.primary,
+            color: isDark ? TColors.white : TColors.secondary,
           ),
         ),
         Text(
@@ -27,7 +27,9 @@ class HeroStat extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 9,
-            color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+            color: isDark
+                ? TColors.textDarkTertiary
+                : TColors.textLightTertiary,
             letterSpacing: 0.5,
           ),
         ),

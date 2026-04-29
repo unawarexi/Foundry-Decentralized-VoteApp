@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
-import 'painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
 class ForumEmptyState extends StatelessWidget {
   final Animation<double> listAnim;

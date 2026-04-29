@@ -8,7 +8,6 @@ import 'countdown_block.dart';
 import 'participation_bar.dart';
 import 'hero_stat.dart';
 import 'hero_cta_button.dart';
-import 'elections_data.dart';
 
 class HeroCard extends StatelessWidget {
   final Animation<double> heroFade;
@@ -164,10 +163,7 @@ class HeroCard extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // Participation bar
-                      ParticipationBar(
-                        percent: 68,
-                        entranceAnim: heroFade,
-                      ),
+                      ParticipationBar(percent: 68, entranceAnim: heroFade),
 
                       const SizedBox(height: 16),
 

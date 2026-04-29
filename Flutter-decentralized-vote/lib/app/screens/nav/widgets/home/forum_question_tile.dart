@@ -13,7 +13,7 @@ class ForumQuestionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: isDark ? TColors.darkCard : TColors.lightCard,
         borderRadius: BorderRadius.circular(12),

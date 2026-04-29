@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
-import 'painters.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
 class ForumBackground extends StatelessWidget {
   final double scrollOffset;
@@ -47,7 +47,7 @@ class ForumBackground extends StatelessWidget {
         Positioned.fill(
           child: Opacity(
             opacity: isDark ? 0.04 : 0.08,
-            child: CustomPaint(painter: GridPainter(color: TColors.secondary)),
+            child: CustomPaint(painter: AuthGridPainter(color: TColors.secondary)),
           ),
         ),
 
