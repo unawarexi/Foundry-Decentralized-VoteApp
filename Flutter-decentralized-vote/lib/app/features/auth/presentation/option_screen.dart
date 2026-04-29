@@ -12,10 +12,12 @@ class AuthOptionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
-    
+
     final size = MediaQuery.sizeOf(context);
     return Scaffold(
-      backgroundColor: isDark ? TColors.darkBackground : TColors.lightBackground,
+      backgroundColor: isDark
+          ? TColors.darkBackground
+          : TColors.lightBackground,
       body: Stack(
         children: [
           // --- Gold Patterned Background ---
@@ -82,11 +84,11 @@ class AuthOptionScreen extends StatelessWidget {
           // --- Main Content ---
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 24),
                   Row(
                     children: [
                       SizedBox(
@@ -107,9 +109,9 @@ class AuthOptionScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 54),
+                  const SizedBox(height: 32),
                   const AuthAccentTag(label: 'SELECT ACCOUNT TYPE'),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 12),
                   Text(
                     'How will you\nparticipate?',
                     style: TextStyle(
@@ -120,20 +122,22 @@ class AuthOptionScreen extends StatelessWidget {
                       height: 1.12,
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 14),
                   Container(width: 40, height: 2, color: TColors.secondary),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 14),
                   Text(
                     'Choose your role to begin. Each path is secured, transparent, and tailored for your participation.',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 13,
-                      color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
+                      color: isDark
+                          ? TColors.textDarkSecondary
+                          : TColors.textLightSecondary,
                       height: 1.65,
                       letterSpacing: 0.2,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   // Option Cards
                   Expanded(
                     child: SingleChildScrollView(
@@ -142,7 +146,8 @@ class AuthOptionScreen extends StatelessWidget {
                         children: [
                           _OptionCard(
                             title: 'Continue as Candidate',
-                            description: 'Run for leadership — Presidential, Governor, CEO, or any elected position.',
+                            description:
+                                'Run for leadership — Presidential, Governor, CEO, or any elected position.',
                             icon: Icons.how_to_reg_rounded,
                             isDark: isDark,
                             highlight: true,
@@ -151,7 +156,8 @@ class AuthOptionScreen extends StatelessWidget {
                           ),
                           _OptionCard(
                             title: 'Continue as Voter',
-                            description: 'Cast your vote — one citizen, one immutable, verifiable ballot.',
+                            description:
+                                'Cast your vote — one citizen, one immutable, verifiable ballot.',
                             icon: Icons.person_pin_rounded,
                             isDark: isDark,
                             highlight: false,
@@ -162,7 +168,7 @@ class AuthOptionScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 24),
                   Center(
                     child: TextButton(
                       onPressed: () => context.go('/login'),
@@ -171,12 +177,14 @@ class AuthOptionScreen extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 13,
-                          color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+                          color: isDark
+                              ? TColors.textDarkTertiary
+                              : TColors.textLightTertiary,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
@@ -209,13 +217,15 @@ class _OptionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Gold for highlighted, Silver/Grey for the other
-    final Color primaryColor = highlight 
-        ? TColors.secondary 
+    final Color primaryColor = highlight
+        ? TColors.secondary
         : (isDark ? const Color(0xFFB0BEC5) : const Color(0xFF78909C));
-    
-    final Color bgColor = highlight 
-        ? TColors.secondary.withValues(alpha: 0.1) 
-        : (isDark ? Colors.grey[800]!.withValues(alpha: 0.3) : Colors.grey[200]!);
+
+    final Color bgColor = highlight
+        ? TColors.secondary.withValues(alpha: 0.1)
+        : (isDark
+              ? Colors.grey[800]!.withValues(alpha: 0.3)
+              : Colors.grey[200]!);
 
     return IntrinsicHeight(
       child: Row(
@@ -225,17 +235,17 @@ class _OptionCard extends StatelessWidget {
           Column(
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: bgColor,
                   border: Border.all(
-                    color: primaryColor.withValues(alpha: 0.5), 
+                    color: primaryColor.withValues(alpha: 0.5),
                     width: 1.5,
                   ),
                 ),
-                child: Icon(icon, color: primaryColor, size: 24),
+                child: Icon(icon, color: primaryColor, size: 20),
               ),
               if (!isLast)
                 Expanded(
@@ -251,35 +261,43 @@ class _OptionCard extends StatelessWidget {
           // Content
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(bottom: 32.0),
+              padding: const EdgeInsets.only(bottom: 24.0),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: onTap,
                   borderRadius: BorderRadius.circular(16),
-                  splashColor: highlight 
+                  splashColor: highlight
                       ? TColors.secondary.withValues(alpha: 0.3)
-                      : (isDark ? const Color(0xFFE0E0E0).withValues(alpha: 0.15) : const Color(0xFF9E9E9E).withValues(alpha: 0.2)),
+                      : (isDark
+                            ? const Color(0xFFE0E0E0).withValues(alpha: 0.15)
+                            : const Color(0xFF9E9E9E).withValues(alpha: 0.2)),
                   highlightColor: highlight
                       ? TColors.secondary.withValues(alpha: 0.1)
-                      : (isDark ? const Color(0xFFE0E0E0).withValues(alpha: 0.05) : const Color(0xFF9E9E9E).withValues(alpha: 0.1)),
+                      : (isDark
+                            ? const Color(0xFFE0E0E0).withValues(alpha: 0.05)
+                            : const Color(0xFF9E9E9E).withValues(alpha: 0.1)),
                   child: Ink(
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
                       color: isDark ? TColors.darkCard : TColors.lightCard,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: highlight 
-                            ? TColors.secondary.withValues(alpha: 0.3) 
-                            : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                        color: highlight
+                            ? TColors.secondary.withValues(alpha: 0.3)
+                            : (isDark
+                                  ? TColors.darkBorder
+                                  : TColors.lightBorder),
                       ),
-                      boxShadow: highlight 
+                      boxShadow: highlight
                           ? [
                               BoxShadow(
-                                color: TColors.secondary.withValues(alpha: 0.08),
+                                color: TColors.secondary.withValues(
+                                  alpha: 0.08,
+                                ),
                                 blurRadius: 20,
                                 offset: const Offset(0, 8),
-                              )
+                              ),
                             ]
                           : null,
                     ),
@@ -290,22 +308,24 @@ class _OptionCard extends StatelessWidget {
                           title,
                           style: TextStyle(
                             fontFamily: 'IBMPlexSerif',
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: FontWeight.w700,
                             color: isDark ? TColors.white : TColors.primary,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Text(
                           description,
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 14,
-                            color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
+                            fontSize: 13,
+                            color: isDark
+                                ? TColors.textDarkSecondary
+                                : TColors.textLightSecondary,
                             height: 1.6,
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 14),
                         Row(
                           children: [
                             Text(
@@ -319,7 +339,11 @@ class _OptionCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 8),
-                            Icon(Icons.arrow_forward_rounded, color: primaryColor, size: 16),
+                            Icon(
+                              Icons.arrow_forward_rounded,
+                              color: primaryColor,
+                              size: 16,
+                            ),
                           ],
                         ),
                       ],

@@ -251,9 +251,9 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                   Color(0xFF0A0A14),
                 ]
               : const [
-                  Color(0xFFF1F8E9),
+                  Color(0xFFE8F0ED),
                   TColors.lightBackground,
-                  Color(0xFFF8F7F4),
+                  Color(0xFFECECF4),
                 ],
           stops: const [0.0, 0.55, 1.0],
         ),
@@ -452,7 +452,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
         position: _animations.headerSlide,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          color: (isDark ? const Color(0xFF080F0B) : const Color(0xFFF1F8E9))
+          color: (isDark ? const Color(0xFF080F0B) : const Color(0xFFE8F0ED))
               .withOpacity(collapsed > 0.8 ? 1.0 : collapsed),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(

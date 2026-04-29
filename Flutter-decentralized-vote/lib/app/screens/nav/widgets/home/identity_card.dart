@@ -32,10 +32,8 @@ class HomeIdentityCard extends StatelessWidget {
           builder: (_, __) => Container(
             padding: const EdgeInsets.all(TSizes.cardPadding),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: isDark 
-                    ? [TColors.primary, TColors.secondaryAlt]
-                    : [TColors.primary.withOpacity(0.9), TColors.secondaryAlt.withOpacity(0.8)],
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0D2A1E), Color(0xFF12112A)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

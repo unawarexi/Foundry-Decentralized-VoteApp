@@ -805,3 +805,79 @@ class CandidatesScreenAnimations {
     );
   }
 }
+
+/// Staggered entrance animation builder for ForumScreen.
+class ForumScreenAnimations {
+  final AnimationController entranceController;
+  final AnimationController shimmerController;
+  final AnimationController pulseController;
+  final AnimationController fabController;
+
+  late final Animation<double> headerFade;
+  late final Animation<Offset> headerSlide;
+  late final Animation<double> scoreboardFade;
+  late final Animation<Offset> scoreboardSlide;
+  late final Animation<double> listFade;
+  late final Animation<Offset> listSlide;
+  late final Animation<double> fabEntrance;
+  late final Animation<double> fabFloat;
+  late final Animation<double> shimmerPos;
+  late final Animation<double> pulseAnim;
+
+  ForumScreenAnimations({
+    required this.entranceController,
+    required this.shimmerController,
+    required this.pulseController,
+    required this.fabController,
+  }) {
+    headerFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+    );
+    headerSlide = Tween(begin: const Offset(0, -0.2), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+      ),
+    );
+
+    scoreboardFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.15, 0.5, curve: Curves.easeOut),
+    );
+    scoreboardSlide = Tween(begin: const Offset(0, 0.14), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.15, 0.5, curve: Curves.easeOut),
+      ),
+    );
+
+    listFade = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.35, 0.8, curve: Curves.easeOut),
+    );
+    listSlide = Tween(begin: const Offset(0, 0.1), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.35, 0.8, curve: Curves.easeOut),
+      ),
+    );
+
+    fabEntrance = CurvedAnimation(
+      parent: entranceController,
+      curve: const Interval(0.7, 1.0, curve: Curves.elasticOut),
+    );
+
+    fabFloat = Tween(begin: -3.0, end: 3.0).animate(
+      CurvedAnimation(parent: fabController, curve: Curves.easeInOut),
+    );
+
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(
+      CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut),
+    );
+
+    pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+  }
+}

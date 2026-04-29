@@ -155,6 +155,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                 ),
               ),
               _buildCornerAccent(),
+              _buildShimmer(context),
               SafeArea(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
@@ -187,15 +188,28 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
   }
 
   Widget _buildBackground(bool isDark) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            isDark ? const Color(0xFF100E06) : const Color(0xFFFFFDE7),
-            isDark ? TColors.darkBackground : TColors.lightBackground,
-          ],
+    return AnimatedBuilder(
+      animation: _orchestrator.bgAnim,
+      builder: (_, __) => Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color.lerp(
+                isDark ? TColors.darkBackground : TColors.lightBackground,
+                isDark ? const Color(0xFF100E06) : const Color(0xFFFFFDE7),
+                _orchestrator.bgAnim.value,
+              )!,
+              isDark ? TColors.darkBackground : TColors.lightBackground,
+              Color.lerp(
+                isDark ? TColors.darkBackground : TColors.lightBackground,
+                isDark ? const Color(0xFF0B1A12) : const Color(0xFFE8F5E9),
+                _orchestrator.bgAnim.value,
+              )!,
+            ],
+            stops: const [0.0, 0.45, 1.0],
+          ),
         ),
       ),
     );
@@ -206,7 +220,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
       bottom: -80,
       left: -80,
       child: Opacity(
-        opacity: 0.06,
+        opacity: (0.06 * _orchestrator.logoAnim.value).clamp(0.0, 1.0),
         child: CustomPaint(
           size: const Size(260, 260),
           painter: HexRingPainter(),
@@ -215,174 +229,247 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
     );
   }
 
-  Widget _buildTopBar(bool isDark) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: _prevStep,
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isDark ? TColors.darkBorder : TColors.lightBorder,
+  Widget _buildShimmer(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _orchestrator.shimmerPos,
+      builder: (_, __) => Positioned.fill(
+        child: IgnorePointer(
+          child: Transform.translate(
+            offset: Offset(
+              SResponsive.width(context) *
+                  (_orchestrator.shimmerPos.value - 0.5) *
+                  2,
+              0,
+            ),
+            child: Container(
+              width: 100,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    TColors.secondary.withValues(alpha: 0.04),
+                    TColors.secondary.withValues(alpha: 0.08),
+                    TColors.secondary.withValues(alpha: 0.04),
+                    Colors.transparent,
+                  ],
+                ),
               ),
-              borderRadius: BorderRadius.circular(TSizes.radiusSm),
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_new_rounded,
-              color: TColors.secondary,
-              size: 14,
             ),
           ),
         ),
-        const SizedBox(width: 14),
-        SizedBox(
-          width: 28,
-          height: 28,
-          child: CustomPaint(painter: MiniLogoPainter()),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          'VOTESECURE',
-          style: TextStyle(
-            fontFamily: 'IBMPlexSerif',
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: isDark ? TColors.white : TColors.primary,
-            letterSpacing: 3,
+      ),
+    );
+  }
+
+  Widget _buildTopBar(bool isDark) {
+    return FadeTransition(
+      opacity: _orchestrator.logoAnim,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: _prevStep,
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: isDark ? TColors.darkBorder : TColors.lightBorder,
+                ),
+                borderRadius: BorderRadius.circular(TSizes.radiusSm),
+              ),
+              child: Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: TColors.secondary,
+                size: 14,
+              ),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(width: 14),
+          SizedBox(
+            width: 28,
+            height: 28,
+            child: CustomPaint(painter: MiniLogoPainter()),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'VOTESECURE',
+            style: TextStyle(
+              fontFamily: 'IBMPlexSerif',
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+              color: isDark ? TColors.white : TColors.primary,
+              letterSpacing: 3,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildHeader(bool isDark) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthAccentTag(label: 'CANDIDATE REGISTRATION'),
-        const SizedBox(height: 18),
-        Text(
-          'Leadership\nApplication.',
-          style: TextStyle(
-            fontFamily: 'IBMPlexSerif',
-            fontSize: 38,
-            fontWeight: FontWeight.w700,
-            color: isDark ? TColors.white : TColors.primary,
-            height: 1.12,
-          ),
+    return FadeTransition(
+      opacity: _orchestrator.headerAnim,
+      child: SlideTransition(
+        position: _orchestrator.headerSlide,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AuthAccentTag(label: 'CANDIDATE REGISTRATION'),
+            const SizedBox(height: 18),
+            Text(
+              'Leadership\nApplication.',
+              style: TextStyle(
+                fontFamily: 'IBMPlexSerif',
+                fontSize: 38,
+                fontWeight: FontWeight.w700,
+                color: isDark ? TColors.white : TColors.primary,
+                height: 1.12,
+              ),
+            ),
+            const SizedBox(height: TSizes.md),
+            Container(width: 40, height: 2, color: TColors.secondary),
+            const SizedBox(height: 14),
+            Text(
+              'Provide your qualifications and manifesto for transparency and immutable record keeping.',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13,
+                color: isDark
+                    ? TColors.textDarkSecondary
+                    : TColors.textLightSecondary,
+                height: 1.65,
+                letterSpacing: 0.2,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 14),
-        Text(
-          'Provide your qualifications and manifesto for transparency and immutable record keeping.',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 13,
-            color: isDark
-                ? TColors.textDarkSecondary
-                : TColors.textLightSecondary,
-            height: 1.65,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _buildStepIndicator(bool isDark) {
     final steps = ['Personal', 'Security', 'Candidate', 'Verify'];
-    return Row(
-      children: List.generate(steps.length, (i) {
-        final isActive = i == _step;
-        final isDone = i < _step;
-        return Expanded(
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                   onTap: () => setState(() => _step = i),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+    return FadeTransition(
+      opacity: _orchestrator.stepAnim,
+      child: SlideTransition(
+        position: _orchestrator.stepSlide,
+        child: Row(
+          children: List.generate(steps.length, (i) {
+            final isActive = i == _step;
+            final isDone = i < _step;
+            return Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => setState(() => _step = i),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: isDone
-                                  ? TColors.secondary
-                                  : (isActive
-                                        ? TColors.primary
-                                        : Colors.transparent),
-                              border: Border.all(
-                                color: isActive || isDone
-                                    ? TColors.secondary
-                                    : (isDark
-                                          ? TColors.darkBorder
-                                          : TColors.lightBorder),
+                          Row(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                width: 22,
+                                height: 22,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: isDone
+                                      ? TColors.secondary
+                                      : (isActive
+                                            ? TColors.primary
+                                            : Colors.transparent),
+                                  border: Border.all(
+                                    color: isActive || isDone
+                                        ? TColors.secondary
+                                        : (isDark
+                                              ? TColors.darkBorder
+                                              : TColors.lightBorder),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: isDone
+                                      ? Icon(
+                                          Icons.check,
+                                          color: isDark
+                                              ? TColors.darkBackground
+                                              : TColors.lightBackground,
+                                          size: 11,
+                                        )
+                                      : Text(
+                                          '${i + 1}',
+                                          style: TextStyle(
+                                            fontFamily: 'Inter',
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.w700,
+                                            color: isActive
+                                                ? TColors.white
+                                                : (isDark
+                                                      ? TColors.textDarkTertiary
+                                                      : TColors
+                                                            .textLightTertiary),
+                                          ),
+                                        ),
+                                ),
                               ),
-                            ),
-                            child: Center(
-                              child: isDone
-                                  ? const Icon(
-                                      Icons.check,
-                                      color: Colors.black,
-                                      size: 10,
-                                    )
-                                  : Text(
-                                      '${i + 1}',
-                                      style: TextStyle(
-                                        fontSize: 9,
-                                        color: isActive
-                                            ? TColors.white
-                                            : (isDark ? TColors.textDarkTertiary : TColors.textLightTertiary),
-                                      ),
-                                    ),
-                            ),
+                              const SizedBox(width: 6),
+                              Text(
+                                steps[i],
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 10,
+                                  color: isActive || isDone
+                                      ? TColors.secondary
+                                      : (isDark
+                                            ? TColors.textDarkTertiary
+                                            : TColors.textLightTertiary),
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
                           ),
-                          const SizedBox(width: 4),
-                          Text(
-                            steps[i],
-                            style: TextStyle(
-                              fontSize: 9,
-                              color: isActive || isDone
+                          const SizedBox(height: 8),
+                          AnimatedContainer(
+                            duration: const Duration(milliseconds: 400),
+                            height: 2,
+                            decoration: BoxDecoration(
+                              color: isDone || isActive
                                   ? TColors.secondary
-                                  : (isDark ? TColors.textDarkTertiary : TColors.textLightTertiary),
+                                  : (isDark
+                                        ? TColors.darkBorder
+                                        : TColors.lightBorder),
+                              borderRadius: BorderRadius.circular(1),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
-                      Container(
-                        height: 2,
-                        color: isDone || isActive
-                            ? TColors.secondary
-                            : (isDark
-                                  ? TColors.darkBorder
-                                  : TColors.lightBorder),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
+                  if (i < steps.length - 1) const SizedBox(width: 8),
+                ],
               ),
-              if (i < steps.length - 1) const SizedBox(width: 4),
-            ],
-          ),
-        );
-      }),
+            );
+          }),
+        ),
+      ),
     );
   }
 
   Widget _buildForm(bool isDark) {
-    return Form(
-      key: _formKey,
-      child: AnimatedSize(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
-        alignment: Alignment.topCenter,
-        child: _buildTab(_step, isDark),
+    return FadeTransition(
+      opacity: _orchestrator.formAnim,
+      child: SlideTransition(
+        position: _orchestrator.formSlide,
+        child: Form(
+          key: _formKey,
+          child: AnimatedSize(
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeInOut,
+            alignment: Alignment.topCenter,
+            child: _buildTab(_step, isDark),
+          ),
+        ),
       ),
     );
   }
@@ -534,117 +621,143 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
     final isDark = THelperFunctions.isDarkMode(context);
     final isLast = _step == 3;
     final isFirst = _step == 0;
-    return Row(
-      children: [
-        if (!isFirst) ...[
-          GestureDetector(
-            onTap: _prevStep,
-            child: Container(
-              width: 58,
-              height: 58,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: TColors.secondary.withValues(alpha: 0.3),
+    return FadeTransition(
+      opacity: _orchestrator.formAnim,
+      child: Row(
+        children: [
+          if (!isFirst) ...[
+            GestureDetector(
+              onTap: _prevStep,
+              child: Container(
+                width: 58,
+                height: 58,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: TColors.secondary.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
                 ),
-              ),
-              child: const Icon(
-                Icons.arrow_back_rounded,
-                color: TColors.secondary,
-                size: 20,
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                  color: TColors.secondary,
+                  size: 20,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-        ],
-        Expanded(
-          child: GestureDetector(
-            onTap: _isLoading ? null : (isLast ? _handleSubmit : _nextStep),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: 58,
-              decoration: BoxDecoration(
-                color: (isLast && !_agreedToTerms)
-                    ? (isDark ? TColors.darkCard : TColors.lightCard)
-                    : TColors.accent,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: TColors.accent.withValues(alpha: 0.5),
-                  width: 1,
-                ),
-                boxShadow: (isLast && _agreedToTerms) || !isLast
-                    ? [
-                        BoxShadow(
-                          color: TColors.accent.withValues(alpha: 0.3),
-                          blurRadius: 22,
-                          offset: const Offset(0, 8),
-                        ),
-                      ]
-                    : [],
-              ),
-              child: Center(
-                child: _isLoading
-                    ? const LoadingDots()
-                    : Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            isLast ? 'Submit Application' : 'Continue to Next Phase',
-                            style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                              color: TColors.white,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Icon(
-                            isLast
-                                ? Icons.how_to_reg
-                                : Icons.arrow_forward_rounded,
-                            color: TColors.white,
-                            size: 17,
-                          ),
-                        ],
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: AnimatedBuilder(
+              animation: _orchestrator.bgPulseController,
+              builder: (_, __) => GestureDetector(
+                onTap: _isLoading ? null : (isLast ? _handleSubmit : _nextStep),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: 58,
+                  decoration: BoxDecoration(
+                    color: (isLast && !_agreedToTerms)
+                        ? TColors.darkCard
+                        : TColors.accent,
+                    borderRadius: BorderRadius.circular(TSizes.radiusMd),
+                    border: Border.all(
+                      color: TColors.accent.withValues(
+                        alpha: (0.5 +
+                                0.2 * _orchestrator.bgPulseController.value)
+                            .clamp(0.0, 1.0),
                       ),
+                      width: 1,
+                    ),
+                    boxShadow: (isLast && _agreedToTerms) || !isLast
+                        ? [
+                            BoxShadow(
+                              color: TColors.accent.withValues(
+                                alpha: (0.3 +
+                                        0.15 *
+                                            _orchestrator
+                                                .bgPulseController.value)
+                                    .clamp(0.0, 1.0),
+                              ),
+                              blurRadius: 22,
+                              offset: const Offset(0, 8),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Center(
+                    child: _isLoading
+                        ? const LoadingDots()
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                isLast
+                                    ? 'Submit Application'
+                                    : 'Continue to Next Phase',
+                                style: const TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: TColors.white,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Icon(
+                                isLast
+                                    ? Icons.how_to_reg
+                                    : Icons.arrow_forward_rounded,
+                                color: TColors.white,
+                                size: 17,
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildFooter(bool isDark) {
-    return Column(
-      children: [
-        const AuthDivider(),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Need help with registration? ',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+    return FadeTransition(
+      opacity: _orchestrator.footerAnim,
+      child: Column(
+        children: [
+          const AuthDivider(),
+          const SizedBox(height: TSizes.lg),
+          const WalletConnectButton(),
+          const SizedBox(height: TSizes.sectionSpacing),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Need help with registration? ',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  color: isDark
+                      ? TColors.textDarkTertiary
+                      : TColors.textLightTertiary,
+                ),
               ),
-            ),
-            const Text(
-              'Contact Support',
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: TColors.secondary,
+              const Text(
+                'Contact Support',
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: TColors.secondary,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

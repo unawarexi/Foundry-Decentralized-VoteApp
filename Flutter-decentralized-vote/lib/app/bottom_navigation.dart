@@ -25,7 +25,7 @@ class _BottomNavigationState extends State<BottomNavigation>
     const HomeScreen(),
     const ElectionsScreen(),
     const CandidatesScreen(),
-    const VerifyScreen(),
+    const ForumScreen(),
     const ProfileScreen(),
   ];
 

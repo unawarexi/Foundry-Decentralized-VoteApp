@@ -40,8 +40,8 @@ class HeroCard extends StatelessWidget {
           builder: (_, __) => Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                colors: const [Color(0xFF0D2B1E), Color(0xFF111128)],
+              gradient: const LinearGradient(
+                colors: [Color(0xFF0D2A1E), Color(0xFF12112A)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
