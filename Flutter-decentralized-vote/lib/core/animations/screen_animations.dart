@@ -883,80 +883,111 @@ class ForumScreenAnimations {
 }
 
 /// Staggered entrance animation builder for ProfileScreen.
+/// Staggered entrance animation builder for ProfileScreen.
 class ProfileScreenAnimations {
   final AnimationController entranceController;
   final AnimationController shimmerController;
   final AnimationController pulseController;
+  final AnimationController heroGlowController;
+  final AnimationController zkRingController;
 
-  late final Animation<double> headerFade;
-  late final Animation<Offset> headerSlide;
-  late final Animation<double> identityFade;
-  late final Animation<Offset> identitySlide;
+  late final Animation<double> heroFade;
+  late final Animation<Offset> heroSlide;
+  late final Animation<double> heroScale;
+
+  late final Animation<double> verifyFade;
+  late final Animation<Offset> verifySlide;
+
   late final Animation<double> statsFade;
   late final Animation<Offset> statsSlide;
-  late final Animation<double> walletFade;
-  late final Animation<Offset> walletSlide;
-  late final Animation<double> listFade;
+
+  late final Animation<double> contentFade;
+  late final Animation<Offset> contentSlide;
+
+  late final Animation<double> shimmerPos;
   late final Animation<double> pulseAnim;
+  late final Animation<double> heroGlow;
+  late final Animation<double> zkRotation;
 
   ProfileScreenAnimations({
     required this.entranceController,
     required this.shimmerController,
     required this.pulseController,
+    required this.heroGlowController,
+    required this.zkRingController,
   }) {
-    headerFade = CurvedAnimation(
+    // Hero profile header
+    heroFade = CurvedAnimation(
       parent: entranceController,
-      curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
+      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
     );
-    headerSlide = Tween(begin: const Offset(0, -0.15), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: entranceController,
-            curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
-          ),
-        );
+    heroSlide = Tween(begin: const Offset(0, -0.15), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      ),
+    );
+    heroScale = Tween(begin: 0.96, end: 1.0).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      ),
+    );
 
-    identityFade = CurvedAnimation(
+    // Verification strip & Voter ID Card
+    verifyFade = CurvedAnimation(
       parent: entranceController,
-      curve: const Interval(0.15, 0.50, curve: Curves.easeOut),
+      curve: const Interval(0.15, 0.5, curve: Curves.easeOut),
     );
-    identitySlide = Tween(begin: const Offset(0, 0.12), end: Offset.zero)
-        .animate(
-          CurvedAnimation(
-            parent: entranceController,
-            curve: const Interval(0.15, 0.50, curve: Curves.easeOut),
-          ),
-        );
+    verifySlide = Tween(begin: const Offset(0, 0.15), end: Offset.zero).animate(
+      CurvedAnimation(
+        parent: entranceController,
+        curve: const Interval(0.15, 0.5, curve: Curves.easeOut),
+      ),
+    );
 
+    // Stats row
     statsFade = CurvedAnimation(
       parent: entranceController,
-      curve: const Interval(0.25, 0.60, curve: Curves.easeOut),
+      curve: const Interval(0.25, 0.6, curve: Curves.easeOut),
     );
-    statsSlide = Tween(begin: const Offset(0, 0.10), end: Offset.zero).animate(
+    statsSlide = Tween(begin: const Offset(0, 0.14), end: Offset.zero).animate(
       CurvedAnimation(
         parent: entranceController,
-        curve: const Interval(0.25, 0.60, curve: Curves.easeOut),
+        curve: const Interval(0.25, 0.6, curve: Curves.easeOut),
       ),
     );
 
-    walletFade = CurvedAnimation(
+    // Content sections (history, candidates, wallet, settings)
+    contentFade = CurvedAnimation(
       parent: entranceController,
-      curve: const Interval(0.35, 0.70, curve: Curves.easeOut),
+      curve: const Interval(0.4, 0.85, curve: Curves.easeOut),
     );
-    walletSlide = Tween(begin: const Offset(0, 0.10), end: Offset.zero).animate(
+    contentSlide = Tween(begin: const Offset(0, 0.1), end: Offset.zero).animate(
       CurvedAnimation(
         parent: entranceController,
-        curve: const Interval(0.35, 0.70, curve: Curves.easeOut),
+        curve: const Interval(0.4, 0.85, curve: Curves.easeOut),
       ),
     );
 
-    listFade = CurvedAnimation(
-      parent: entranceController,
-      curve: const Interval(0.45, 0.85, curve: Curves.easeOut),
+    // Shimmer sweep
+    shimmerPos = Tween(begin: -0.3, end: 1.3).animate(
+      CurvedAnimation(parent: shimmerController, curve: Curves.easeInOut),
     );
 
+    // Live status pulse
     pulseAnim = Tween(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: pulseController, curve: Curves.easeInOut),
+    );
+
+    // Hero ambient glow (spotlight effect)
+    heroGlow = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: heroGlowController, curve: Curves.easeInOut),
+    );
+
+    // ZK ring continuous rotation
+    zkRotation = Tween(begin: 0.0, end: 2 * 3.141592653589793).animate(
+      CurvedAnimation(parent: zkRingController, curve: Curves.linear),
     );
   }
 }

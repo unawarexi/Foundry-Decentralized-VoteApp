@@ -49,9 +49,7 @@ class SOrbFieldPainter extends CustomPainter {
             color.withValues(alpha: isDark ? 0.12 : 0.08),
             color.withValues(alpha: 0),
           ],
-        ).createShader(
-          Rect.fromCircle(center: Offset(cx, cy), radius: radius),
-        )
+        ).createShader(Rect.fromCircle(center: Offset(cx, cy), radius: radius))
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 40);
 
       canvas.drawCircle(Offset(cx, cy), radius, paint);
@@ -172,7 +170,8 @@ class STopographyPainter extends CustomPainter {
       path.moveTo(0, baseY);
 
       for (double x = 0; x <= size.width; x += 2) {
-        final y = baseY +
+        final y =
+            baseY +
             math.sin((x / size.width) * frequency * math.pi * 2 + phase) *
                 amplitude;
         path.lineTo(x, y);
@@ -195,10 +194,7 @@ class SHexMeshPainter extends CustomPainter {
   final Color strokeColor;
   final double hexSize;
 
-  SHexMeshPainter({
-    required this.strokeColor,
-    this.hexSize = 30,
-  });
+  SHexMeshPainter({required this.strokeColor, this.hexSize = 30});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -240,8 +236,7 @@ class SHexMeshPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(SHexMeshPainter oldDelegate) =>
-      strokeColor != oldDelegate.strokeColor ||
-      hexSize != oldDelegate.hexSize;
+      strokeColor != oldDelegate.strokeColor || hexSize != oldDelegate.hexSize;
 }
 
 // ═══════════════════════════════════════════════
@@ -271,9 +266,7 @@ class SPatternBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned.fill(
-          child: CustomPaint(painter: painter),
-        ),
+        Positioned.fill(child: CustomPaint(painter: painter)),
         child,
       ],
     );

@@ -387,7 +387,7 @@ class AuthGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = color
+      ..color = color.withOpacity(0.08)
       ..strokeWidth = 0.5;
     const spacing = 36.0;
     for (double x = 0; x <= size.width; x += spacing)
@@ -712,14 +712,13 @@ class RadialGlowPainter extends CustomPainter {
     final center = Offset(size.width / 2, size.height * 0.4);
     canvas.drawCircle(
       center,
-      size.width * 0.6,
+      size.width * 0.7,
       Paint()
-        ..shader =
-            RadialGradient(
-              colors: [color.withOpacity(opacity), Colors.transparent],
-            ).createShader(
-              Rect.fromCircle(center: center, radius: size.width * 0.6),
-            ),
+        ..shader = RadialGradient(
+          colors: [color.withOpacity(opacity), Colors.transparent],
+        ).createShader(
+          Rect.fromCircle(center: center, radius: size.width * 0.7),
+        ),
     );
   }
 
@@ -804,14 +803,16 @@ class HeatmapPainter extends CustomPainter {
 
     for (int i = 0; i < values.length; i++) {
       final v = values[i];
-      final x = i * cellSize + padding;
-      final w = cellSize - padding * 2;
-      final rect = RRect.fromRectAndRadius(
-        Rect.fromLTWH(x, padding, w, size.height - padding * 2),
-        const Radius.circular(2),
-      );
       canvas.drawRRect(
-        rect,
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            i * cellSize + padding,
+            padding,
+            cellSize - padding * 2,
+            size.height - padding * 2,
+          ),
+          const Radius.circular(2),
+        ),
         Paint()
           ..color = v > 0
               ? activeColor.withOpacity(0.15 + 0.75 * v)
@@ -900,4 +901,208 @@ class UpvoteBurstPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant UpvoteBurstPainter old) =>
       old.progress != progress;
+}
+
+/// ZKProofCirclePainter — Slowly-rotating ZK proof status ring
+/// Draws a dashed outer ring with 8 node dots that slowly rotate.
+/// Represents blockchain/ZK proof synchronisation status.
+class ZKProofCirclePainter extends CustomPainter {
+  final double rotation; // 0.0→2π
+  final Color color;
+
+  const ZKProofCirclePainter({required this.rotation, required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final outerR = math.min(size.width, size.height) / 2 - 2;
+    final innerR = outerR * 0.65;
+
+    // Outer dashed ring (rotating)
+    _drawDashedCircle(
+      canvas,
+      center,
+      outerR,
+      color.withOpacity(0.28),
+      3.5,
+      2.5,
+      1.0,
+    );
+
+    // Inner solid ring (static)
+    canvas.drawCircle(
+      center,
+      innerR,
+      Paint()
+        ..color = color.withOpacity(0.12)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8,
+    );
+
+    // 8 rotating node dots
+    const nodeCount = 8;
+    for (int i = 0; i < nodeCount; i++) {
+      final angle = rotation + (2 * math.pi / nodeCount) * i;
+      final nx = center.dx + outerR * math.cos(angle);
+      final ny = center.dy + outerR * math.sin(angle);
+
+      // Alternate between larger and smaller dots
+      final isMain = i % 2 == 0;
+      canvas.drawCircle(
+        Offset(nx, ny),
+        isMain ? 2.8 : 1.6,
+        Paint()..color = color.withOpacity(isMain ? 0.7 : 0.35),
+      );
+    }
+
+    // Center small dot — anchor point
+    canvas.drawCircle(center, 2.5, Paint()..color = color.withOpacity(0.5));
+  }
+
+  void _drawDashedCircle(
+    Canvas canvas,
+    Offset center,
+    double radius,
+    Color color,
+    double dashLen,
+    double gapLen,
+    double strokeWidth,
+  ) {
+    final path = Path()
+      ..addOval(Rect.fromCircle(center: center, radius: radius));
+    final dashPath = Path();
+
+    for (final metric in path.computeMetrics()) {
+      var dist = 0.0;
+      var drawing = true;
+      while (dist < metric.length) {
+        final seg = drawing ? dashLen : gapLen;
+        final end = math.min(dist + seg, metric.length);
+        if (drawing) {
+          final t1 = metric.getTangentForOffset(dist)!.position;
+          final t2 = metric.getTangentForOffset(end)!.position;
+          dashPath.moveTo(t1.dx, t1.dy);
+          dashPath.lineTo(t2.dx, t2.dy);
+        }
+        dist += seg;
+        drawing = !drawing;
+      }
+    }
+
+    canvas.drawPath(
+      dashPath,
+      Paint()
+        ..color = color
+        ..strokeWidth = strokeWidth
+        ..style = PaintingStyle.stroke
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant ZKProofCirclePainter old) =>
+      old.rotation != rotation;
+}
+
+/// VoterIDCardPainter — Embossed card background detail
+/// Adds institutional texture to the voter ID card:
+///   1. Diagonal lines (subtle watermark)
+///   2. Four corner bracket marks
+///   3. Center hex watermark outline
+class VoterIDCardPainter extends CustomPainter {
+  final Color lineColor;
+  final Color accentColor;
+
+  const VoterIDCardPainter({
+    required this.lineColor,
+    required this.accentColor,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final linePaint = Paint()
+      ..color = lineColor
+      ..strokeWidth = 0.8;
+
+    // Diagonal lines (every 20px) — security watermark texture
+    const step = 20.0;
+    for (double d = -size.height; d < size.width + size.height; d += step) {
+      canvas.drawLine(
+        Offset(d, 0),
+        Offset(d + size.height, size.height),
+        linePaint,
+      );
+    }
+
+    // Corner brackets
+    final bracketPaint = Paint()
+      ..color = accentColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.square;
+
+    const bl = 12.0; // bracket length
+    const bp = 8.0; // bracket padding from corner
+    // Top-left
+    canvas.drawLine(Offset(bp, bp), Offset(bp + bl, bp), bracketPaint);
+    canvas.drawLine(Offset(bp, bp), Offset(bp, bp + bl), bracketPaint);
+    // Top-right
+    canvas.drawLine(
+      Offset(size.width - bp, bp),
+      Offset(size.width - bp - bl, bp),
+      bracketPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width - bp, bp),
+      Offset(size.width - bp, bp + bl),
+      bracketPaint,
+    );
+    // Bottom-left
+    canvas.drawLine(
+      Offset(bp, size.height - bp),
+      Offset(bp + bl, size.height - bp),
+      bracketPaint,
+    );
+    canvas.drawLine(
+      Offset(bp, size.height - bp),
+      Offset(bp, size.height - bp - bl),
+      bracketPaint,
+    );
+    // Bottom-right
+    canvas.drawLine(
+      Offset(size.width - bp, size.height - bp),
+      Offset(size.width - bp - bl, size.height - bp),
+      bracketPaint,
+    );
+    canvas.drawLine(
+      Offset(size.width - bp, size.height - bp),
+      Offset(size.width - bp, size.height - bp - bl),
+      bracketPaint,
+    );
+
+    // Center hex watermark
+    final hexCenter = Offset(size.width * 0.82, size.height / 2);
+    const hexR = 28.0;
+    final hexPath = Path();
+    for (int i = 0; i < 6; i++) {
+      final angle = (math.pi / 3) * i - math.pi / 6;
+      final x = hexCenter.dx + hexR * math.cos(angle);
+      final y = hexCenter.dy + hexR * math.sin(angle);
+      if (i == 0)
+        hexPath.moveTo(x, y);
+      else
+        hexPath.lineTo(x, y);
+    }
+    hexPath.close();
+    canvas.drawPath(
+      hexPath,
+      Paint()
+        ..color = accentColor.withOpacity(0.5)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.8,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant VoterIDCardPainter old) => false;
 }
