@@ -36,7 +36,7 @@ class ProfileHeroHeader extends StatelessWidget {
             builder: (_, __) => Container(
               padding: EdgeInsets.fromLTRB(
                 20,
-                20 + MediaQuery.of(context).padding.top,
+                80 + MediaQuery.of(context).padding.top,
                 20,
                 24,
               ),
@@ -47,8 +47,8 @@ class ProfileHeroHeader extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
+                  bottomLeft: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
                 ),
                 border: Border(
                   bottom: BorderSide(
@@ -133,7 +133,9 @@ class ProfileHeroHeader extends StatelessWidget {
                                   height: 24,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: isDark ? TColors.darkElevated : TColors.lightElevated,
+                                    color: isDark
+                                        ? TColors.darkElevated
+                                        : TColors.lightElevated,
                                     border: Border.all(
                                       color: TColors.secondary.withOpacity(0.4),
                                     ),
@@ -197,15 +199,21 @@ class ProfileHeroHeader extends StatelessWidget {
                             width: 34,
                             height: 34,
                             decoration: BoxDecoration(
-                              color: isDark ? TColors.darkCard : TColors.lightCard,
+                              color: isDark
+                                  ? TColors.darkCard
+                                  : TColors.lightCard,
                               borderRadius: BorderRadius.circular(9),
                               border: Border.all(
-                                color: isDark ? TColors.darkBorder : TColors.lightBorder,
+                                color: isDark
+                                    ? TColors.darkBorder
+                                    : TColors.lightBorder,
                               ),
                             ),
                             child: Icon(
                               Icons.edit_outlined,
-                              color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+                              color: isDark
+                                  ? TColors.textDarkTertiary
+                                  : TColors.textLightTertiary,
                               size: 16,
                             ),
                           ),

@@ -278,13 +278,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   Widget _buildBody(BuildContext context, bool isDark) {
-    return CustomScrollView(
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      child: CustomScrollView(
       controller: _scrollController,
       physics: const BouncingScrollPhysics(),
       slivers: [
         // ── Sticky Header (Blends with Status Bar)
         SliverAppBar(
           pinned: true,
+          primary: false,
           toolbarHeight: 0,
           expandedHeight: 0,
           backgroundColor: Colors.transparent,
@@ -365,7 +369,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         // ── Voting history
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SectionLabel(
               tag: 'VOTE RECORD',
               title: 'Voting History',
@@ -377,7 +381,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (_, i) => Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
               child: VoteHistoryTile(
                 record: voteHistory[i],
                 index: i,
@@ -393,7 +397,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         // ── Followed candidates
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: SectionLabel(
               tag: 'FOLLOWING',
               title: 'Tracked Candidates',
@@ -477,7 +481,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         // ── App version + about
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: _buildAboutRow(isDark),
           ),
         ),
@@ -487,19 +491,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         // ── Sign out
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: FadeTransition(
               opacity: _animations.contentFade,
-
-              // child: const SignOutButton(),
+              child: SignOutButton(contentFade: _animations.contentFade),
             ),
           ),
         ),
 
         const SliverToBoxAdapter(child: SizedBox(height: 100)),
       ],
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildExpandableSliver({
     required String tag,
@@ -512,7 +516,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: FadeTransition(
           opacity: _animations.contentFade,
           child: Container(
@@ -587,7 +591,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: followedCandidates.length,
           separatorBuilder: (_, __) => const SizedBox(width: 12),
           itemBuilder: (_, i) {
