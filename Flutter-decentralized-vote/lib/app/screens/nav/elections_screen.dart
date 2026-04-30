@@ -208,7 +208,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
               CustomPaint(
                 size: MediaQuery.of(context).size,
                 painter: AuthGridPainter(
-                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
+                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.12),
                 ),
               ),
 
@@ -217,10 +217,12 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 top: -60,
                 left: -60,
                 child: Opacity(
-                  opacity: 0.055,
+                  opacity: isDark ? 0.055 : 0.2,
                   child: CustomPaint(
                     size: const Size(260, 260),
-                    painter: const HexRingPainter(),
+                    painter: HexRingPainter(
+                      color: isDark ? TColors.secondary : TColors.primary.withOpacity(0.4),
+                    ),
                   ),
                 ),
               ),
@@ -251,9 +253,9 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                   Color(0xFF0A0A14),
                 ]
               : const [
-                  Color(0xFFE8F0ED),
+                  Color(0xFFE5F0ED),
                   TColors.lightBackground,
-                  Color(0xFFECECF4),
+                  Color(0xFFE9E9F4),
                 ],
           stops: const [0.0, 0.55, 1.0],
         ),
@@ -262,6 +264,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
   }
 
   Widget _buildShimmer(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return AnimatedBuilder(
       animation: _animations.shimmerPos,
       builder: (_, __) => Positioned.fill(
@@ -279,9 +282,9 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    TColors.secondary.withOpacity(0.05),
-                    TColors.secondary.withOpacity(0.09),
-                    TColors.secondary.withOpacity(0.05),
+                    TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
+                    TColors.secondary.withOpacity(isDark ? 0.09 : 0.22),
+                    TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
                     Colors.transparent,
                   ],
                 ),

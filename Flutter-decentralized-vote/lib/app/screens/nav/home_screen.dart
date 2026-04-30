@@ -121,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           CustomPaint(
             size: MediaQuery.of(context).size,
             painter: AuthGridPainter(
-              color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
+              color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.12),
             ),
           ),
           _buildCornerDecor(isDark),
@@ -149,9 +149,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   const Color(0xFF0A0A16),
                 ]
               : [
-                  const Color(0xFFE8F0ED),
+                  const Color(0xFFE5F0EC),
                   TColors.lightBackground,
-                  const Color(0xFFECECF4),
+                  const Color(0xFFE9E9F4),
                 ],
           stops: const [0.0, 0.5, 1.0],
         ),
@@ -164,13 +164,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       top: -80,
       right: -80,
       child: Opacity(
-        opacity: isDark ? 0.06 : 0.12,
+        opacity: isDark ? 0.06 : 0.22,
         child: CustomPaint(
           size: const Size(280, 280),
           painter: HexRingPainter(
             color: isDark
                 ? TColors.secondary
-                : TColors.primary.withOpacity(0.3),
+                : TColors.primary.withOpacity(0.45),
           ),
         ),
       ),

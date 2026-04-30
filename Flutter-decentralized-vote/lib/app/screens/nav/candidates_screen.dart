@@ -194,7 +194,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
               CustomPaint(
                 size: MediaQuery.of(context).size,
                 painter: AuthGridPainter(
-                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
+                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.12),
                 ),
               ),
 
@@ -202,10 +202,12 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                 top: -55,
                 right: -55,
                 child: Opacity(
-                  opacity: 0.055,
+                  opacity: isDark ? 0.055 : 0.2,
                   child: CustomPaint(
                     size: const Size(240, 240),
-                    painter: HexRingPainter(),
+                    painter: HexRingPainter(
+                      color: isDark ? TColors.secondary : TColors.primary.withOpacity(0.4),
+                    ),
                   ),
                 ),
               ),
@@ -229,16 +231,16 @@ class _CandidatesScreenState extends State<CandidatesScreen>
           end: const Alignment(-1, 1),
           colors: isDark
               ? const [
-                  Color(0xFF0A0F0B),
+                  Color(0xFF08120A),
                   TColors.darkBackground,
-                  Color(0xFF0B0A14),
+                  Color(0xFF0A0A15),
                 ]
               : const [
-                  Color(0xFFE8F0ED),
+                  Color(0xFFE5F0ED),
                   TColors.lightBackground,
-                  Color(0xFFECECF4),
+                  Color(0xFFE9E9F4),
                 ],
-          stops: const [0.0, 0.5, 1.0],
+          stops: const [0.0, 0.55, 1.0],
         ),
       ),
     );
@@ -257,14 +259,14 @@ class _CandidatesScreenState extends State<CandidatesScreen>
               0,
             ),
             child: Container(
-              width: 130,
+              width: 140,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
                     Colors.transparent,
-                    TColors.secondary.withOpacity(0.05),
-                    TColors.secondary.withOpacity(0.09),
-                    TColors.secondary.withOpacity(0.05),
+                    TColors.secondary.withOpacity(isDark ? 0.04 : 0.1),
+                    TColors.secondary.withOpacity(isDark ? 0.08 : 0.2),
+                    TColors.secondary.withOpacity(isDark ? 0.04 : 0.1),
                     Colors.transparent,
                   ],
                 ),

@@ -210,7 +210,7 @@ class _ForumScreenState extends State<ForumScreen>
           ? TColors.darkBackground
           : TColors.lightBackground,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 20),
+        padding: const EdgeInsets.only(bottom: 120),
         child: AskQuestionFAB(
           entrance: _animations.fabEntrance,
           float: _animations.fabFloat,

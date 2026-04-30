@@ -46,7 +46,7 @@ class ForumBackground extends StatelessWidget {
 
         Positioned.fill(
           child: Opacity(
-            opacity: isDark ? 0.04 : 0.08,
+            opacity: isDark ? 0.04 : 0.12,
             child: CustomPaint(painter: AuthGridPainter(color: TColors.secondary)),
           ),
         ),
@@ -56,10 +56,12 @@ class ForumBackground extends StatelessWidget {
           bottom: -70,
           left: -70,
           child: Opacity(
-            opacity: 0.05,
+            opacity: isDark ? 0.05 : 0.18,
             child: CustomPaint(
               size: const Size(260, 260),
-              painter: HexRingPainter(),
+              painter: HexRingPainter(
+                color: isDark ? TColors.secondary : TColors.primary.withOpacity(0.4),
+              ),
             ),
           ),
         ),
@@ -82,9 +84,9 @@ class ForumBackground extends StatelessWidget {
                     gradient: LinearGradient(
                       colors: [
                         Colors.transparent,
-                        TColors.secondary.withOpacity(0.05),
-                        TColors.secondary.withOpacity(0.08),
-                        TColors.secondary.withOpacity(0.05),
+                        TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
+                        TColors.secondary.withOpacity(isDark ? 0.08 : 0.22),
+                        TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
                         Colors.transparent,
                       ],
                     ),

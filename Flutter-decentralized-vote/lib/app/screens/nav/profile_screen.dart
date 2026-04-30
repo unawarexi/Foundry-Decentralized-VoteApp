@@ -146,14 +146,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       ),
     );
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
-        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-      ),
-    );
-
     return Scaffold(
       backgroundColor: isDark
           ? TColors.darkBackground
@@ -174,7 +166,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
               CustomPaint(
                 size: MediaQuery.of(context).size,
                 painter: AuthGridPainter(
-                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.08),
+                  color: TColors.secondary.withOpacity(isDark ? 0.04 : 0.12),
                 ),
               ),
 
@@ -183,13 +175,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 top: -50,
                 right: -50,
                 child: Opacity(
-                  opacity: isDark ? 0.05 : 0.08,
+                  opacity: isDark ? 0.05 : 0.18,
                   child: CustomPaint(
                     size: const Size(230, 230),
                     painter: HexRingPainter(
                       color: isDark
                           ? TColors.secondary
-                          : TColors.primary.withOpacity(0.3),
+                          : TColors.primary.withOpacity(0.45),
                     ),
                   ),
                 ),
@@ -198,13 +190,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                 bottom: -60,
                 left: -60,
                 child: Opacity(
-                  opacity: isDark ? 0.04 : 0.07,
+                  opacity: isDark ? 0.04 : 0.15,
                   child: CustomPaint(
                     size: const Size(200, 200),
                     painter: HexRingPainter(
                       color: isDark
                           ? TColors.secondary
-                          : TColors.primary.withOpacity(0.3),
+                          : TColors.primary.withOpacity(0.4),
                     ),
                   ),
                 ),
@@ -220,22 +212,21 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   Widget _buildBackground(bool isDark) {
-    final p = (_scrollOffset * 0.00012).clamp(0.0, 0.08);
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment(-1 + p, -1),
-          end: const Alignment(1, 1),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
           colors: isDark
-              ? const [
-                  Color(0xFF08100A),
+              ? [
+                  const Color(0xFF0B1A12),
                   TColors.darkBackground,
-                  Color(0xFF0B0A14),
+                  const Color(0xFF0A0A16),
                 ]
-              : const [
-                  Color(0xFFE8F0ED),
+              : [
+                  const Color(0xFFE5F0ED),
                   TColors.lightBackground,
-                  Color(0xFFECECF4),
+                  const Color(0xFFE9E9F4),
                 ],
           stops: const [0.0, 0.5, 1.0],
         ),
@@ -244,36 +235,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
   }
 
   Widget _buildShimmer(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return AnimatedBuilder(
-      animation: _shimmerController,
-      builder: (context, child) {
-        return Positioned.fill(
-          child: IgnorePointer(
-            child: Transform.translate(
-              offset: Offset(
-                MediaQuery.of(context).size.width *
-                    (_animations.shimmerPos.value - 0.5) *
-                    2,
-                0,
-              ),
-              child: Container(
-                width: 120,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      TColors.secondary.withOpacity(0.04),
-                      TColors.secondary.withOpacity(0.12),
-                      TColors.secondary.withOpacity(0.04),
-                      Colors.transparent,
-                    ],
-                  ),
+      animation: _animations.shimmerPos,
+      builder: (_, __) => Positioned.fill(
+        child: IgnorePointer(
+          child: Transform.translate(
+            offset: Offset(
+              MediaQuery.of(context).size.width *
+                  (_animations.shimmerPos.value - 0.5) *
+                  2,
+              0,
+            ),
+            child: Container(
+              width: 140,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
+                    TColors.secondary.withOpacity(isDark ? 0.12 : 0.22),
+                    TColors.secondary.withOpacity(isDark ? 0.05 : 0.1),
+                    Colors.transparent,
+                  ],
                 ),
               ),
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
