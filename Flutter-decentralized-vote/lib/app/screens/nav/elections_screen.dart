@@ -7,7 +7,6 @@ import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // Common Widgets
 import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
-import 'widgets/home/accent_tag.dart';
 
 // Election Specific Widgets
 import 'widgets/elections/elections_data.dart';

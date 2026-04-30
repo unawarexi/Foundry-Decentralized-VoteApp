@@ -61,20 +61,20 @@ class _BottomNavigationState extends State<BottomNavigation>
       bottomNavigationBar: FadeTransition(
         opacity: _fadeAnim,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+          margin: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
           decoration: BoxDecoration(
             color: (isDark ? TColors.darkSurface : TColors.lightSurface)
                 .withOpacity(0.95),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isDark ? TColors.darkBorder : TColors.lightBorder,
             ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(isDark ? 0.4 : 0.1),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
+                blurRadius: 20,
+                offset: const Offset(0, 6),
               ),
             ],
           ),
@@ -149,12 +149,12 @@ class _NavItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
           color: selected
               ? TColors.primary.withOpacity(isDark ? 0.5 : 1.0)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           border: selected
               ? Border.all(color: TColors.secondary.withOpacity(0.3))
               : null,
@@ -164,26 +164,26 @@ class _NavItem extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 20,
+              size: 18,
               color: selected
                   ? TColors.secondary
                   : (isDark
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary),
             ),
-            const SizedBox(height: 3),
+            const SizedBox(height: 2),
             Text(
               label,
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 9,
+                fontSize: 8.5,
                 fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                 color: selected
                     ? TColors.secondary
                     : (isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary),
-                letterSpacing: 0.3,
+                letterSpacing: 0.2,
               ),
             ),
           ],
