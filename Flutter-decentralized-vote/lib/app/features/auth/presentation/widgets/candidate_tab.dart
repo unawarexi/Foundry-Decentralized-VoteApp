@@ -55,7 +55,7 @@ class CandidateTab extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: AuthAccentTag(label: 'LEADERSHIP PROFILE'),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
 
         VSDropdown<String>(
           label: 'Election Role Category',
@@ -70,7 +70,7 @@ class CandidateTab extends StatelessWidget {
           ],
           onChanged: onRoleChanged,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: roleNameController,
@@ -78,7 +78,7 @@ class CandidateTab extends StatelessWidget {
           label: 'Specific Role Name',
           hint: 'e.g. Executive Governor of Lagos State',
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: partyNameController,
@@ -86,7 +86,7 @@ class CandidateTab extends StatelessWidget {
           label: 'Political Party / Organization Name',
           hint: 'Full legal name of the entity',
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: rolePurposeController,
@@ -95,7 +95,7 @@ class CandidateTab extends StatelessWidget {
           hint: 'Briefly describe your main objective',
           maxLines: 3,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: biographyController,
@@ -104,7 +104,7 @@ class CandidateTab extends StatelessWidget {
           hint: 'Tell the voters about your background',
           maxLines: 5,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: achievementsController,
@@ -113,7 +113,7 @@ class CandidateTab extends StatelessWidget {
           hint: 'List your past successes in this or related fields',
           maxLines: 4,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
 
         VSTextField(
           controller: careerJourneyController,
@@ -122,13 +122,13 @@ class CandidateTab extends StatelessWidget {
           hint: 'Summary of your professional experience',
           maxLines: 4,
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: 24),
 
         const Align(
           alignment: Alignment.centerLeft,
           child: AuthAccentTag(label: 'CANDIDATE DISCLOSURES'),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         
         VSFileUpload(
           label: 'Campaign Manifesto',
@@ -137,7 +137,7 @@ class CandidateTab extends StatelessWidget {
           hasFile: hasManifesto,
           onTap: onUploadManifesto,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
         
         VSFileUpload(
           label: 'Video Introduction (15-30 Mins)',
@@ -146,7 +146,7 @@ class CandidateTab extends StatelessWidget {
           hasFile: hasVideoIntro,
           onTap: onUploadVideo,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
         
         VSFileUpload(
           label: 'Academic & Professional Qualifications',
@@ -155,7 +155,7 @@ class CandidateTab extends StatelessWidget {
           hasFile: hasQualifications,
           onTap: onUploadQualifications,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 14),
         
         VSFileUpload(
           label: 'Official Campaign Portraits',

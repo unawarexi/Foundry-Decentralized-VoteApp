@@ -6,17 +6,17 @@ import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // ── Extracted widgets ─────────────────────────────────────────
-import 'widgets/home/top_bar.dart';
-import 'widgets/home/identity_card.dart';
-import 'widgets/home/stats_row.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/top_bar.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/identity_card.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/stats_row.dart';
 import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
-import 'widgets/home/section_label.dart';
-import 'widgets/home/quick_action_tile.dart';
-import 'widgets/home/election_card.dart';
-import 'widgets/home/upcoming_election_tile.dart';
-import 'widgets/home/global_feed_tile.dart';
-import 'widgets/home/forum_question_tile.dart';
-import 'widgets/home/data_models.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/section_label.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/quick_action_tile.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/election_card.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/upcoming_election_tile.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/global_feed_tile.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/forum_question_tile.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/data_models.dart';
 
 /// VoteSecure Home Screen
 /// The civic command center — all active elections, user identity status,

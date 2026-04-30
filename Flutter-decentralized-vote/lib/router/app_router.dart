@@ -13,18 +13,18 @@ import 'package:flutter_frontend_vote/app/features/auth/presentation/option_scre
 import 'package:flutter_frontend_vote/app/features/auth/presentation/candidate_signup_screen.dart';
 
 // ── Elections ──
-import 'package:flutter_frontend_vote/app/features/election/presentation/elections_list_screen.dart';
-import 'package:flutter_frontend_vote/app/features/election/presentation/election_detail_screen.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/screens/elections_screen.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/screens/election_detail_screen.dart';
 import 'package:flutter_frontend_vote/app/features/election/presentation/create_election_screen.dart';
 
 // ── Voting ──
-import 'package:flutter_frontend_vote/app/features/voting/presentation/vote_casting_screen.dart';
+import 'package:flutter_frontend_vote/app/features/voting/presentation/screens/vote_casting_screen.dart';
 import 'package:flutter_frontend_vote/app/features/voting/presentation/vote_confirmation_screen.dart';
 import 'package:flutter_frontend_vote/app/features/voting/presentation/vote_receipt_screen.dart';
 
 // ── Candidates ──
-import 'package:flutter_frontend_vote/app/features/candidate/presentation/candidate_profile_screen.dart';
-import 'package:flutter_frontend_vote/app/features/candidate/presentation/candidate_list_screen.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/screens/candidate_profile_screen.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/screens/candidates_screen.dart';
 import 'package:flutter_frontend_vote/app/features/candidate/presentation/candidate_qa_screen.dart';
 import 'package:flutter_frontend_vote/app/features/candidate/presentation/manifesto_screen.dart';
 
@@ -41,8 +41,8 @@ import 'package:flutter_frontend_vote/app/features/wallet/presentation/transacti
 import 'package:flutter_frontend_vote/app/features/region/presentation/region_map_screen.dart';
 
 // ── Forum ──
-import 'package:flutter_frontend_vote/app/features/forum/presentation/forum_screen.dart';
-import 'package:flutter_frontend_vote/app/features/forum/presentation/question_detail_screen.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/screens/forums_screen.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/screens/question_detail_screen.dart';
 
 // ── Analytics / Settings / Legal ──
 import 'package:flutter_frontend_vote/app/features/analytics/presentation/analytics_dashboard_screen.dart';
@@ -116,7 +116,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/elections',
       name: 'elections',
-      builder: (context, state) => const ElectionsListScreen(),
+      builder: (context, state) => const ElectionsScreen(),
     ),
     GoRoute(
       path: '/election/:id',
@@ -128,7 +128,7 @@ final GoRouter appRouter = GoRouter(
       path: '/create-election',
       name: 'create-election',
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const CreateElectionScreen(),
+      builder: (context, state) => const ElectionDetailScreen(),
     ),
 
     // ──────────── Voting ────────────
@@ -142,7 +142,7 @@ final GoRouter appRouter = GoRouter(
       path: '/vote-confirmation',
       name: 'vote-confirmation',
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const VoteConfirmationScreen(),
+      builder: (context, state) => const VoteCastingScreen(),
     ),
     GoRoute(
       path: '/vote-receipt/:txHash',
@@ -155,7 +155,7 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/candidates',
       name: 'candidates',
-      builder: (context, state) => const CandidateListScreen(),
+      builder: (context, state) => const CandidatesScreen(),
     ),
     GoRoute(
       path: '/candidate/:id',
@@ -167,7 +167,7 @@ final GoRouter appRouter = GoRouter(
       path: '/candidate/:id/qa',
       name: 'candidate-qa',
       parentNavigatorKey: rootNavigatorKey,
-      builder: (context, state) => const CandidateQaScreen(),
+      builder: (context, state) => const CandidateProfileScreen(),
     ),
     GoRoute(
       path: '/candidate/:id/manifesto',

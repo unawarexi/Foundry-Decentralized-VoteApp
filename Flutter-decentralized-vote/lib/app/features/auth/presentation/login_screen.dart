@@ -93,23 +93,41 @@ class _LoginScreenState extends State<LoginScreen>
       ),
     );
     return Scaffold(
-      backgroundColor: isDark ? TColors.darkBackground : TColors.lightBackground,
+      backgroundColor: isDark
+          ? TColors.darkBackground
+          : TColors.lightBackground,
       resizeToAvoidBottomInset: true,
       body: AnimatedBuilder(
         animation: _orchestrator.entranceController,
         builder: (context, _) {
           return Stack(
             children: [
-              _buildBackground(isDark),
-
-              Opacity(
-                opacity: 0.04,
-                child: CustomPaint(
-                  size: MediaQuery.sizeOf(context),
-                  painter: AuthGridPainter(color: TColors.secondary),
+              // --- Gold Patterned Background ---
+              CustomPaint(
+                size: MediaQuery.sizeOf(context),
+                painter: AuthGridPainter(
+                  color: TColors.secondary.withOpacity(isDark ? 0.10 : 0.13),
                 ),
               ),
-
+              if (isDark)
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        TColors.darkBackground.withOpacity(0.92),
+                        Colors.transparent,
+                        TColors.secondary.withOpacity(0.10),
+                        Colors.transparent,
+                        TColors.darkBackground.withOpacity(0.85),
+                      ],
+                      stops: const [0.0, 0.18, 0.5, 0.82, 1.0],
+                    ),
+                  ),
+                ),
               _buildCornerAccent(),
               _buildShimmer(context),
 
@@ -151,34 +169,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildBackground(bool isDark) {
-    return AnimatedBuilder(
-      animation: _orchestrator.bgAnim,
-      builder: (_, __) => Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color.lerp(
-                isDark ? TColors.darkBackground : TColors.lightBackground,
-                isDark ? const Color(0xFF0B1A12) : const Color(0xFFE8F5E9),
-                _orchestrator.bgAnim.value,
-              )!,
-              isDark ? TColors.darkBackground : TColors.lightBackground,
-              Color.lerp(
-                isDark ? TColors.darkBackground : TColors.lightBackground,
-                isDark ? const Color(0xFF0D0D20) : const Color(0xFFE3F2FD),
-                _orchestrator.bgAnim.value,
-              )!,
-            ],
-            stops: const [0.0, 0.5, 1.0],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _buildCornerAccent() {
     return Positioned(
       top: -60,
@@ -200,7 +190,9 @@ class _LoginScreenState extends State<LoginScreen>
         child: IgnorePointer(
           child: Transform.translate(
             offset: Offset(
-              SResponsive.width(context) * (_orchestrator.shimmerPos.value - 0.5) * 2,
+              SResponsive.width(context) *
+                  (_orchestrator.shimmerPos.value - 0.5) *
+                  2,
               0,
             ),
             child: Container(
@@ -238,10 +230,10 @@ class _LoginScreenState extends State<LoginScreen>
             'VOTESECURE',
             style: TextStyle(
               fontFamily: 'IBMPlexSerif',
-              fontSize: 13,
+              fontSize: 12,
               fontWeight: FontWeight.w700,
               color: isDark ? TColors.white : TColors.primary,
-              letterSpacing: 3,
+              letterSpacing: 2.5,
             ),
           ),
         ],
@@ -277,9 +269,11 @@ class _LoginScreenState extends State<LoginScreen>
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
-                color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
-                height: 1.6,
-                letterSpacing: 0.2,
+                color: isDark
+                    ? TColors.textDarkSecondary
+                    : TColors.textLightSecondary,
+                height: 1.5,
+                letterSpacing: 0.1,
               ),
             ),
           ],
@@ -347,9 +341,9 @@ class _LoginScreenState extends State<LoginScreen>
                     'Forgot password?',
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      fontSize: 12,
+                      fontSize: 11,
                       color: TColors.secondary,
-                      letterSpacing: 0.3,
+                      letterSpacing: 0.2,
                     ),
                   ),
                 ),
@@ -380,15 +374,21 @@ class _LoginScreenState extends State<LoginScreen>
             color: TColors.primary,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: TColors.secondary.withValues(alpha: 
-                (0.18 + 0.18 * _orchestrator.pulseAnim.value).clamp(0.0, 1.0),
+              color: TColors.secondary.withValues(
+                alpha: (0.18 + 0.18 * _orchestrator.pulseAnim.value).clamp(
+                  0.0,
+                  1.0,
+                ),
               ),
               width: 1,
             ),
             boxShadow: [
               BoxShadow(
-                color: TColors.primary.withValues(alpha: 
-                  (0.4 + 0.15 * _orchestrator.pulseAnim.value).clamp(0.0, 1.0),
+                color: TColors.primary.withValues(
+                  alpha: (0.4 + 0.15 * _orchestrator.pulseAnim.value).clamp(
+                    0.0,
+                    1.0,
+                  ),
                 ),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
@@ -405,10 +405,10 @@ class _LoginScreenState extends State<LoginScreen>
                         'Access Secure Vault',
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: TColors.white,
-                          letterSpacing: 0.5,
+                          letterSpacing: 0.4,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -448,8 +448,10 @@ class _LoginScreenState extends State<LoginScreen>
                 'No account? ',
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 13,
-                  color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+                  fontSize: 12,
+                  color: isDark
+                      ? TColors.textDarkTertiary
+                      : TColors.textLightTertiary,
                 ),
               ),
               GestureDetector(
@@ -458,10 +460,10 @@ class _LoginScreenState extends State<LoginScreen>
                   'Register as Voter',
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 13,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: TColors.secondary,
-                    letterSpacing: 0.2,
+                    letterSpacing: 0.1,
                   ),
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
-import '../home/accent_tag.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/accent_tag.dart';
 import 'live_badge.dart';
 import 'status_chip.dart';
 import 'mini_stat.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
-import '../home/accent_tag.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/accent_tag.dart';
 import 'dart:math' as math;
 
 class SearchField extends StatelessWidget {
@@ -53,6 +53,10 @@ class SearchField extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
                 hintText: 'Search candidates, parties, regions…',
                 hintStyle: TextStyle(
                   fontFamily: 'Inter',

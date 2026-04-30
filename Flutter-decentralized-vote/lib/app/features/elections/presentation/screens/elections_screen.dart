@@ -9,12 +9,12 @@ import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
 // Election Specific Widgets
-import 'widgets/elections/elections_data.dart';
-import 'widgets/elections/filter_chip_row.dart';
-import 'widgets/elections/hero_card.dart';
-import 'widgets/elections/election_list_card.dart';
-import 'widgets/elections/sticky_header.dart';
-import 'widgets/elections/sort_sheet.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/elections_data.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/filter_chip_row.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/hero_card.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/election_list_card.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/sticky_header.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/widgets/sort_sheet.dart';
 
 class ElectionsScreen extends StatefulWidget {
   const ElectionsScreen({super.key});
@@ -618,10 +618,14 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: 'Search elections, regions…',
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  hintText: 'Search elections...',
                   hintStyle: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 11,
+                    fontSize: 11.5,
                     color: isDark
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary,

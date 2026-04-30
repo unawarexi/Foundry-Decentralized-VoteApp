@@ -6,15 +6,15 @@ import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // ── Extracted widgets ─────────────────────────────────────────
-import 'widgets/forums/data_models.dart';
-import 'widgets/forums/atomic_widgets.dart';
-import 'widgets/forums/sheets.dart';
-import 'widgets/forums/forum_question_card.dart';
-import 'widgets/forums/sticky_header.dart';
-import 'widgets/forums/scoreboard_strip.dart';
-import 'widgets/forums/forum_empty_state.dart';
-import 'widgets/forums/forum_background.dart';
-import 'widgets/forums/ask_question_fab.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/data_models.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/atomic_widgets.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/sheets.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/forum_question_card.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/sticky_header.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/scoreboard_strip.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/forum_empty_state.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/forum_background.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/widgets/ask_question_fab.dart';
 
 /// VoteSecure — Forum Screen (Tab 4)
 ///

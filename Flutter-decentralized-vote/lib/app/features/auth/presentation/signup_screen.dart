@@ -58,7 +58,6 @@ class _SignUpScreenState extends State<SignUpScreen>
   // Current step: 0 = personal, 1 = security, 2 = verify
   int _step = 0;
 
-
   final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
   final _passwordFocus = FocusNode();
@@ -148,7 +147,6 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   @override
   void dispose() {
-
     _orchestrator.dispose();
     _nameController.dispose();
     _emailController.dispose();
@@ -214,7 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                       _buildSubmitButton(),
                       const SizedBox(height: TSizes.lg),
                       _buildFooter(isDark),
-                      // Removed extra bottom space
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
@@ -611,11 +609,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               borderRadius: BorderRadius.circular(4),
             ),
             child: _agreedToTerms
-                ? const Icon(
-                    Icons.check,
-                    color: TColors.secondary,
-                    size: 13,
-                  )
+                ? const Icon(Icons.check, color: TColors.secondary, size: 13)
                 : null,
           ),
           const SizedBox(width: 12),
@@ -625,7 +619,9 @@ class _SignUpScreenState extends State<SignUpScreen>
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
-                  color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
+                  color: isDark
+                      ? TColors.textDarkSecondary
+                      : TColors.textLightSecondary,
                   height: 1.5,
                 ),
                 children: [
@@ -640,7 +636,8 @@ class _SignUpScreenState extends State<SignUpScreen>
                     style: TextStyle(color: TColors.secondary),
                   ),
                   const TextSpan(
-                    text: '. My data is protected under Zero-Knowledge standards.',
+                    text:
+                        '. My data is protected under Zero-Knowledge standards.',
                   ),
                 ],
               ),
@@ -766,7 +763,7 @@ class _SignUpScreenState extends State<SignUpScreen>
           const AuthDivider(),
           const SizedBox(height: TSizes.lg),
           const WalletConnectButton(),
-          const SizedBox(height: TSizes.sectionSpacing),
+          const SizedBox(height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -278,7 +278,7 @@ class _OptionCard extends StatelessWidget {
                             ? const Color(0xFFE0E0E0).withValues(alpha: 0.05)
                             : const Color(0xFF9E9E9E).withValues(alpha: 0.1)),
                   child: Ink(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isDark ? TColors.darkCard : TColors.lightCard,
                       borderRadius: BorderRadius.circular(16),
@@ -308,7 +308,7 @@ class _OptionCard extends StatelessWidget {
                           title,
                           style: TextStyle(
                             fontFamily: 'IBMPlexSerif',
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: isDark ? TColors.white : TColors.primary,
                           ),
@@ -318,21 +318,21 @@ class _OptionCard extends StatelessWidget {
                           description,
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 13,
+                            fontSize: 12,
                             color: isDark
                                 ? TColors.textDarkSecondary
                                 : TColors.textLightSecondary,
-                            height: 1.6,
+                            height: 1.5,
                           ),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             Text(
                               'Select Role',
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 13,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w600,
                                 color: primaryColor,
                                 letterSpacing: 0.5,
@@ -342,7 +342,7 @@ class _OptionCard extends StatelessWidget {
                             Icon(
                               Icons.arrow_forward_rounded,
                               color: primaryColor,
-                              size: 16,
+                              size: 14,
                             ),
                           ],
                         ),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/elections_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/candidates_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/profile_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/forums_screen.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/home_screen.dart';
+import 'package:flutter_frontend_vote/app/features/elections/presentation/screens/elections_screen.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/screens/candidates_screen.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/screens/profile_screen.dart';
+import 'package:flutter_frontend_vote/app/features/forums/presentation/screens/forums_screen.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/screens/home_screen.dart';
 
 // Main Bottom Navigation Widget
 class BottomNavigation extends StatefulWidget {

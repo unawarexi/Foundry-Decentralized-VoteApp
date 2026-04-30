@@ -114,7 +114,6 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
 
   @override
   void dispose() {
-
     _orchestrator.dispose();
     _nameController.dispose();
     _emailController.dispose();
@@ -175,7 +174,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                       _buildSubmitButton(),
                       const SizedBox(height: TSizes.lg),
                       _buildFooter(isDark),
-                      // Removed extra bottom space
+                      const SizedBox(height: 32),
                     ],
                   ),
                 ),
@@ -580,11 +579,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
               borderRadius: BorderRadius.circular(4),
             ),
             child: _agreedToTerms
-                ? const Icon(
-                    Icons.check,
-                    color: TColors.secondary,
-                    size: 13,
-                  )
+                ? const Icon(Icons.check, color: TColors.secondary, size: 13)
                 : null,
           ),
           const SizedBox(width: 12),
@@ -594,7 +589,9 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
-                  color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
+                  color: isDark
+                      ? TColors.textDarkSecondary
+                      : TColors.textLightSecondary,
                   height: 1.5,
                 ),
                 children: [
@@ -609,7 +606,8 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                     style: TextStyle(color: TColors.secondary),
                   ),
                   const TextSpan(
-                    text: '. My data is protected under Zero-Knowledge standards.',
+                    text:
+                        '. My data is protected under Zero-Knowledge standards.',
                   ),
                 ],
               ),
@@ -666,9 +664,9 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                     borderRadius: BorderRadius.circular(TSizes.radiusMd),
                     border: Border.all(
                       color: TColors.accent.withValues(
-                        alpha: (0.5 +
-                                0.2 * _orchestrator.bgPulseController.value)
-                            .clamp(0.0, 1.0),
+                        alpha:
+                            (0.5 + 0.2 * _orchestrator.bgPulseController.value)
+                                .clamp(0.0, 1.0),
                       ),
                       width: 1,
                     ),
@@ -676,11 +674,13 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                         ? [
                             BoxShadow(
                               color: TColors.accent.withValues(
-                                alpha: (0.3 +
-                                        0.15 *
-                                            _orchestrator
-                                                .bgPulseController.value)
-                                    .clamp(0.0, 1.0),
+                                alpha:
+                                    (0.3 +
+                                            0.15 *
+                                                _orchestrator
+                                                    .bgPulseController
+                                                    .value)
+                                        .clamp(0.0, 1.0),
                               ),
                               blurRadius: 22,
                               offset: const Offset(0, 8),
@@ -737,12 +737,12 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
           const AuthDivider(),
           const SizedBox(height: TSizes.lg),
           const WalletConnectButton(),
-          const SizedBox(height: TSizes.sectionSpacing),
+          const SizedBox(height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Need help with registration? ',
+                'Already registered? ',
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,
@@ -751,13 +751,16 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
                       : TColors.textLightTertiary,
                 ),
               ),
-              const Text(
-                'Contact Support',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: TColors.secondary,
+              GestureDetector(
+                onTap: () => context.goNamed('login'),
+                child: const Text(
+                  'Sign In',
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: TColors.secondary,
+                  ),
                 ),
               ),
             ],

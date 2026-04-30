@@ -26,7 +26,7 @@ class SecurityTab extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SecurityBadge(label: 'ENCRYPTED DATA STORAGE'),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         
         // Auto-generated Voter ID
         Text(
@@ -42,7 +42,7 @@ class SecurityTab extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
             color: isDark ? TColors.darkCard.withValues(alpha: 0.5) : TColors.lightCard,
             borderRadius: BorderRadius.circular(TSizes.radiusSm),
@@ -71,7 +71,7 @@ class SecurityTab extends StatelessWidget {
           ),
         ),
         
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         
         VSTextField(
           controller: idController,
@@ -82,7 +82,7 @@ class SecurityTab extends StatelessWidget {
           prefixIcon: const Icon(Icons.badge_outlined, size: 18),
         ),
         
-        const SizedBox(height: 28),
+        const SizedBox(height: 20),
         
         // Passport Capture UI
         Text(
@@ -100,7 +100,7 @@ class SecurityTab extends StatelessWidget {
           onTap: onCapturePassport,
           child: Container(
             width: double.infinity,
-            height: 200,
+            height: 160,
             decoration: BoxDecoration(
               color: isDark ? TColors.darkCard : TColors.lightCard,
               borderRadius: BorderRadius.circular(TSizes.radiusSm),

@@ -4,7 +4,7 @@ import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 import 'candidate_models.dart';
 import 'candidate_atomic_widgets.dart';
-import '../home/accent_tag.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/accent_tag.dart';
 
 class SpotlightCard extends StatelessWidget {
   final CandidateData candidate;

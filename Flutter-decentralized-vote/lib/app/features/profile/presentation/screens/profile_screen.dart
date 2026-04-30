@@ -10,20 +10,20 @@ import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 // Modular Widget Imports
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/hero_header.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/verification_strip.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/voter_id_card.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/profile_stats_row.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/activity_waveform.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/vote_history_tile.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/data_models.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/accent_tag.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/security_toggle_row.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/sign_out_button.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/wallet_row.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/divider_line.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/section_label.dart';
-import 'package:flutter_frontend_vote/app/screens/nav/widgets/profile/preference_selection_row.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/hero_header.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/verification_strip.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/voter_id_card.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/profile_stats_row.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/activity_waveform.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/vote_history_tile.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/data_models.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/accent_tag.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/security_toggle_row.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/sign_out_button.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/wallet_row.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/divider_line.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/section_label.dart';
+import 'package:flutter_frontend_vote/app/features/profile/presentation/widgets/preference_selection_row.dart';
 
 /*
   PROFILE SCREEN — VoteSecure Institutional Design

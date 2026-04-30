@@ -69,7 +69,7 @@ class PersonalTab extends StatelessWidget {
           isFocused: false,
           prefixIcon: const Icon(Icons.person_outline, size: 18),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         VSTextField(
           controller: emailController,
           focusNode: FocusNode(),
@@ -78,7 +78,7 @@ class PersonalTab extends StatelessWidget {
           isFocused: false,
           prefixIcon: const Icon(Icons.alternate_email, size: 18),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         Row(
           children: [
             Expanded(
@@ -103,7 +103,7 @@ class PersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         Row(
           children: [
             Expanded(
@@ -127,7 +127,7 @@ class PersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         Row(
           children: [
             Expanded(
@@ -154,12 +154,12 @@ class PersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         const Align(
           alignment: Alignment.centerLeft,
           child: AuthAccentTag(label: 'RESIDENTIAL DATA'),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         VSDropdown<String>(
           label: 'Country of Origin',
           hint: 'Select Country',
@@ -172,7 +172,7 @@ class PersonalTab extends StatelessWidget {
           ],
           onChanged: onCountryChanged,
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         Row(
           children: [
             Expanded(
@@ -196,7 +196,7 @@ class PersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         VSTextField(
           controller: addressController,
           focusNode: FocusNode(),
@@ -205,12 +205,12 @@ class PersonalTab extends StatelessWidget {
           isFocused: false,
           prefixIcon: const Icon(Icons.location_on_outlined, size: 18),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 18),
         const Align(
           alignment: Alignment.centerLeft,
           child: AuthAccentTag(label: 'SECURITY CREDENTIALS'),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         VSTextField(
           controller: passwordController,
           focusNode: FocusNode(),
@@ -229,7 +229,7 @@ class PersonalTab extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
         VSTextField(
           controller: confirmController,
           focusNode: FocusNode(),

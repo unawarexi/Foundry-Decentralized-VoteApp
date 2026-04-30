@@ -36,110 +36,139 @@ class VSTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Label
-        AnimatedDefaultTextStyle(
-          duration: const Duration(milliseconds: TSizes.animNormal),
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: isFocused
-                ? TColors.secondary
-                : (THelperFunctions.isDarkMode(context)
-                      ? TColors.textDarkTertiary
-                      : TColors.textLightTertiary),
-            letterSpacing: 1.5,
-          ),
-          child: Text(label.toUpperCase()),
-        ),
-        const SizedBox(height: TSizes.sm),
-
-        // Field container
-        AnimatedContainer(
-          duration: const Duration(milliseconds: TSizes.animNormal),
-          decoration: BoxDecoration(
-            color: THelperFunctions.isDarkMode(context)
-                ? TColors.darkCard
-                : TColors.lightCard,
-            borderRadius: BorderRadius.circular(TSizes.radiusSm),
-            border: Border.all(
-              color: isFocused
-                  ? TColors.secondary.withValues(alpha: 0.55)
-                  : (THelperFunctions.isDarkMode(context)
-                        ? TColors.darkBorder
-                        : TColors.lightBorder),
-              width: isFocused ? 1.5 : 1,
-            ),
-            boxShadow: isFocused
-                ? [
-                    BoxShadow(
-                      color: TColors.secondary.withValues(alpha: 0.08),
-                      blurRadius: 12,
-                      spreadRadius: 0,
-                    ),
-                  ]
-                : [],
-          ),
-          child: TextFormField(
-            controller: controller,
-            focusNode: focusNode,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            validator: validator,
-            maxLines: maxLines,
-            style: TextStyle(
-              fontFamily: 'Inter',
-              fontSize: 14,
-              color: THelperFunctions.isDarkMode(context)
-                  ? TColors.textDarkPrimary
-                  : TColors.textLightPrimary,
-            ),
-            decoration: InputDecoration(
-              hintText: hint,
-              hintStyle: TextStyle(
-                fontFamily: 'Inter',
-                fontSize: 13,
-                color: THelperFunctions.isDarkMode(context)
-                    ? TColors.textDarkTertiary
-                    : TColors.textLightTertiary,
-              ),
-              prefixIcon: prefixIcon != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(left: 14, right: 10),
-                      child: prefixIcon,
-                    )
-                  : null,
-              prefixIconConstraints: const BoxConstraints(
-                minWidth: 0,
-                minHeight: 0,
-              ),
-              suffixIcon: suffixIcon != null
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 14),
-                      child: suffixIcon,
-                    )
-                  : null,
-              suffixIconConstraints: const BoxConstraints(
-                minWidth: 0,
-                minHeight: 0,
-              ),
-              border: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: TSizes.md,
-                vertical: TSizes.md,
-              ),
-              errorStyle: const TextStyle(
+    return FormField<String>(
+      validator: validator,
+      initialValue: controller.text,
+      builder: (FormFieldState<String> state) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Label
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: TSizes.animNormal),
+              style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 11,
-                color: TColors.error,
+                fontWeight: FontWeight.w600,
+                color: state.hasError
+                    ? TColors.error
+                    : (isFocused
+                        ? TColors.secondary
+                        : (THelperFunctions.isDarkMode(context)
+                            ? TColors.textDarkTertiary
+                            : TColors.textLightTertiary)),
+                letterSpacing: 1.5,
+              ),
+              child: Text(label.toUpperCase()),
+            ),
+            const SizedBox(height: 6),
+
+            // Field container
+            AnimatedContainer(
+              duration: const Duration(milliseconds: TSizes.animNormal),
+              decoration: BoxDecoration(
+                color: THelperFunctions.isDarkMode(context)
+                    ? TColors.darkCard
+                    : TColors.lightCard,
+                borderRadius: BorderRadius.circular(TSizes.radiusSm),
+                border: Border.all(
+                  color: state.hasError
+                      ? TColors.error.withValues(alpha: 0.5)
+                      : (isFocused
+                          ? TColors.secondary.withValues(alpha: 0.55)
+                          : (THelperFunctions.isDarkMode(context)
+                              ? TColors.darkBorder
+                              : TColors.lightBorder)),
+                  width: isFocused || state.hasError ? 1.5 : 1,
+                ),
+                boxShadow: isFocused
+                    ? [
+                        BoxShadow(
+                          color: (state.hasError ? TColors.error : TColors.secondary)
+                              .withValues(alpha: 0.08),
+                          blurRadius: 12,
+                          spreadRadius: 0,
+                        ),
+                      ]
+                    : [],
+              ),
+              child: TextFormField(
+                controller: controller,
+                focusNode: focusNode,
+                obscureText: obscureText,
+                keyboardType: keyboardType,
+                onChanged: (value) {
+                  state.didChange(value);
+                },
+                maxLines: maxLines,
+                style: TextStyle(
+                  fontFamily: 'Inter',
+                  fontSize: 13,
+                  color: THelperFunctions.isDarkMode(context)
+                      ? TColors.textDarkPrimary
+                      : TColors.textLightPrimary,
+                ),
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 12,
+                    color: THelperFunctions.isDarkMode(context)
+                        ? TColors.textDarkTertiary
+                        : TColors.textLightTertiary,
+                  ),
+                  prefixIcon: prefixIcon != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(left: 12, right: 8),
+                          child: prefixIcon,
+                        )
+                      : null,
+                  prefixIconConstraints: const BoxConstraints(
+                    minWidth: 0,
+                    minHeight: 0,
+                  ),
+                  suffixIcon: suffixIcon != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 12),
+                          child: suffixIcon,
+                        )
+                      : null,
+                  suffixIconConstraints: const BoxConstraints(
+                    minWidth: 0,
+                    minHeight: 0,
+                  ),
+                  border: InputBorder.none,
+                  enabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                  errorBorder: InputBorder.none,
+                  focusedErrorBorder: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 12,
+                  ),
+                  // Hide internal error display
+                  errorStyle: const TextStyle(height: 0, fontSize: 0),
+                ),
               ),
             ),
-          ),
-        ),
-      ],
+            
+            // Custom Error Message beneath the container
+            if (state.hasError)
+              Padding(
+                padding: const EdgeInsets.only(top: 6, left: 4),
+                child: Text(
+                  state.errorText ?? '',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 11,
+                    color: TColors.error,
+                    height: 1.2,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }
@@ -422,6 +451,7 @@ class VSDropdown<T> extends StatelessWidget {
         const SizedBox(height: TSizes.sm),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14),
+          height: 48, // Reduced height for dropdown container
           decoration: BoxDecoration(
             color: isDark ? TColors.darkCard : TColors.lightCard,
             borderRadius: BorderRadius.circular(TSizes.radiusSm),
@@ -436,7 +466,7 @@ class VSDropdown<T> extends StatelessWidget {
                 hint,
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 13,
+                  fontSize: 12,
                   color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
                 ),
               ),
@@ -444,7 +474,7 @@ class VSDropdown<T> extends StatelessWidget {
               dropdownColor: isDark ? TColors.darkCard : TColors.lightCard,
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 14,
+                fontSize: 13,
                 color: isDark ? TColors.textDarkPrimary : TColors.textLightPrimary,
               ),
               items: items.map((T item) {
@@ -486,7 +516,7 @@ class VSSelectionCard extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
           color: isSelected 
               ? TColors.secondary.withValues(alpha: 0.05) 
@@ -584,7 +614,7 @@ class VSFileUpload extends StatelessWidget {
           onTap: onTap,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isDark ? TColors.darkCard : TColors.lightCard,
               borderRadius: BorderRadius.circular(TSizes.radiusSm),

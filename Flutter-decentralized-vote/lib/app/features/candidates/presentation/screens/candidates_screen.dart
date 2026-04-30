@@ -5,13 +5,13 @@ import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
 import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
 
-import 'widgets/home/accent_tag.dart';
-import 'widgets/candidates/candidate_models.dart';
-import 'widgets/candidates/candidates_header.dart';
-import 'widgets/candidates/spotlight_card.dart';
-import 'widgets/candidates/candidate_list_card.dart';
-import 'widgets/candidates/candidate_grid_card.dart';
-import 'widgets/candidates/candidate_detail_sheet.dart';
+import 'package:flutter_frontend_vote/app/features/home/presentation/widgets/accent_tag.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/candidate_models.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/candidates_header.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/spotlight_card.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/candidate_list_card.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/candidate_grid_card.dart';
+import 'package:flutter_frontend_vote/app/features/candidates/presentation/widgets/candidate_detail_sheet.dart';
 
 class CandidatesScreen extends StatefulWidget {
   const CandidatesScreen({super.key});
