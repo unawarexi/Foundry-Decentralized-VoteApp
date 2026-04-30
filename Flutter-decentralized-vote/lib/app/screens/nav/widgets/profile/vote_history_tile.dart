@@ -31,10 +31,10 @@ class VoteHistoryTile extends StatelessWidget {
     return FadeTransition(
       opacity: stagger,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: isDark ? TColors.darkCard : TColors.lightCard,
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isDark ? TColors.darkBorder : TColors.lightBorder,
           ),
@@ -43,11 +43,11 @@ class VoteHistoryTile extends StatelessWidget {
           children: [
             // Date block — Restored institutional green background as requested
             Container(
-              width: 44,
-              height: 44,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 color: TColors.primary,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(9),
                 border: Border.all(color: TColors.secondary.withOpacity(0.3)),
               ),
               child: Column(
@@ -57,7 +57,7 @@ class VoteHistoryTile extends StatelessWidget {
                     record.month,
                     style: const TextStyle(
                       fontFamily: 'Inter',
-                      fontSize: 8.5,
+                      fontSize: 8,
                       fontWeight: FontWeight.w600,
                       color: TColors.secondary,
                       letterSpacing: 1,
@@ -67,7 +67,7 @@ class VoteHistoryTile extends StatelessWidget {
                     record.day,
                     style: const TextStyle(
                       fontFamily: 'IBMPlexSerif',
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.w700,
                       color: TColors.white,
                       height: 1.1,
@@ -76,7 +76,7 @@ class VoteHistoryTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,19 +85,19 @@ class VoteHistoryTile extends StatelessWidget {
                     record.election,
                     style: TextStyle(
                       fontFamily: 'IBMPlexSerif',
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: isDark ? TColors.white : TColors.textLightPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 2),
                   Text(
                     record.region,
                     style: TextStyle(
                       fontFamily: 'Inter',
-                      fontSize: 11,
+                      fontSize: 10,
                       color: isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary,

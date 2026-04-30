@@ -303,12 +303,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 20)),
+        const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
         // ── Identity verification strip
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: VerificationStrip(
               verifyFade: _animations.verifyFade,
               verifySlide: _animations.verifySlide,
@@ -317,12 +317,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 20)),
+        const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
         // ── Voter ID card
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: VoterIDCard(
               verifyFade: _animations.verifyFade,
               verifySlide: _animations.verifySlide,
@@ -331,12 +331,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── Civic stats row
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ProfileStatsRow(
               statsFade: _animations.statsFade,
               statsSlide: _animations.statsSlide,
@@ -344,17 +344,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── Civic participation waveform
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: ActivityWaveform(contentFade: _animations.contentFade),
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── Voting history
         SliverToBoxAdapter(
@@ -367,11 +367,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             ),
           ),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
         SliverList(
           delegate: SliverChildBuilderDelegate(
             (_, i) => Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
               child: VoteHistoryTile(
                 record: voteHistory[i],
                 index: i,
@@ -382,7 +382,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── Followed candidates
         SliverToBoxAdapter(
@@ -395,10 +395,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
             ),
           ),
         ),
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
         SliverToBoxAdapter(child: _buildFollowedCandidates(isDark)),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 24)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── Expandable sections
         _buildExpandableSliver(
@@ -411,7 +411,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           isDark: isDark,
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
         _buildExpandableSliver(
           tag: 'SECURITY',
@@ -424,7 +424,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           isDark: isDark,
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
         _buildExpandableSliver(
           tag: 'PREFERENCES',
@@ -441,7 +441,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           isDark: isDark,
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
         _buildExpandableSliver(
           tag: 'ZK-PROOF',
@@ -453,7 +453,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           isDark: isDark,
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
+        const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
         _buildExpandableSliver(
           tag: 'ALERTS',
@@ -466,7 +466,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           isDark: isDark,
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 28)),
+        const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
         // ── App version + about
         SliverToBoxAdapter(
@@ -476,7 +476,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
           ),
         ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 16)),
+        const SliverToBoxAdapter(child: SizedBox(height: 12)),
 
         // ── Sign out
         SliverToBoxAdapter(
@@ -523,20 +523,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                   onTap: onToggle,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 14,
+                      horizontal: 14,
+                      vertical: 12,
                     ),
                     child: Row(
                       children: [
-                        Icon(icon, color: TColors.secondary, size: 18),
-                        const SizedBox(width: 12),
-                        AccentTag(label: tag),
+                        Icon(icon, color: TColors.secondary, size: 16),
                         const SizedBox(width: 10),
+                        AccentTag(label: tag),
+                        const SizedBox(width: 8),
                         Text(
                           title,
                           style: TextStyle(
                             fontFamily: 'IBMPlexSerif',
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w700,
                             color: isDark ? TColors.white : TColors.black,
                           ),
@@ -551,7 +551,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                             color: isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary,
-                            size: 20,
+                            size: 18,
                           ),
                         ),
                       ],

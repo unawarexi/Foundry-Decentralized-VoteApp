@@ -52,7 +52,7 @@ class _SecurityToggleRowState extends State<SecurityToggleRow> {
                   widget.label,
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 13,
+                    fontSize: 12.5,
                     fontWeight: FontWeight.w500,
                     color: isDark ? TColors.textDarkPrimary : TColors.textLightPrimary,
                   ),
@@ -61,9 +61,9 @@ class _SecurityToggleRowState extends State<SecurityToggleRow> {
                   widget.subtitle,
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 10.5,
+                    fontSize: 9.5,
                     color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
-                    height: 1.4,
+                    height: 1.3,
                   ),
                 ),
               ],
@@ -73,11 +73,11 @@ class _SecurityToggleRowState extends State<SecurityToggleRow> {
             onTap: () => setState(() => _enabled = !_enabled),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              width: 42,
-              height: 24,
+              width: 38,
+              height: 20,
               decoration: BoxDecoration(
                 color: _enabled ? TColors.primary : (isDark ? TColors.darkElevated : TColors.lightElevated),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: _enabled
                       ? TColors.secondary.withOpacity(0.4)
@@ -90,8 +90,8 @@ class _SecurityToggleRowState extends State<SecurityToggleRow> {
                     ? Alignment.centerRight
                     : Alignment.centerLeft,
                 child: Container(
-                  width: 18,
-                  height: 18,
+                  width: 14,
+                  height: 14,
                   margin: const EdgeInsets.all(3),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

@@ -298,7 +298,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
 
           SliverToBoxAdapter(child: _buildPartyFilter()),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
           if (candidates.isNotEmpty)
             SliverToBoxAdapter(
@@ -315,7 +315,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
               ),
             ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 24)),
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
           SliverToBoxAdapter(
             child: Padding(
@@ -329,7 +329,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 14)),
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
           if (_isGridView)
             _buildGridSliver(candidates)
@@ -343,7 +343,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
   }
 
   Widget _buildStickyHeader() {
-    final collapsed = (_scrollOffset / 60).clamp(0.0, 1.0);
+    final collapsed = (_scrollOffset / 54).clamp(0.0, 1.0);
 
     return FadeTransition(
       opacity: _anims.headerFade,
@@ -352,92 +352,93 @@ class _CandidatesScreenState extends State<CandidatesScreen>
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           color: (isDark ? const Color(0xFF0A0F0B) : const Color(0xFFE8F0ED))
-              .withOpacity(collapsed > 0.8 ? 1.0 : collapsed),
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 10),
-          child: Row(
-            children: [
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 220),
-                  child: _searchOpen
-                      ? SearchField(
-                          key: const ValueKey('search'),
-                          ctrl: _searchCtrl,
-                          focus: _searchFocus,
-                          onChanged: (v) => setState(() => _searchQuery = v),
-                        )
-                      : Row(
-                          key: const ValueKey('title'),
-                          children: [
-                            Flexible(
-                              child: Text(
-                                'Candidates',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontFamily: 'IBMPlexSerif',
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w700,
-                                  color: (isDark
-                                      ? TColors.white
-                                      : TColors.black),
+              .withOpacity(collapsed > 0.85 ? 1.0 : collapsed),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Row(
+              children: [
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 220),
+                    child: _searchOpen
+                        ? SearchField(
+                            key: const ValueKey('search'),
+                            ctrl: _searchCtrl,
+                            focus: _searchFocus,
+                            onChanged: (v) => setState(() => _searchQuery = v),
+                          )
+                        : Row(
+                            key: const ValueKey('title'),
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  'Candidates',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontFamily: 'IBMPlexSerif',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: (isDark
+                                        ? TColors.white
+                                        : TColors.black),
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Flexible(
-                              child: AccentTag(label: 'ALL ELECTIONS'),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-
-              const SizedBox(width: 10),
-
-              GestureDetector(
-                onTap: _toggleSearch,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: _searchOpen
-                        ? TColors.secondary.withOpacity(0.12)
-                        : (isDark ? TColors.darkCard : TColors.lightCard),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: _searchOpen
-                          ? TColors.secondary.withOpacity(0.5)
-                          : (isDark ? TColors.darkBorder : TColors.lightBorder),
-                    ),
-                  ),
-                  child: AnimatedRotation(
-                    turns: _searchOpen ? 0.125 : 0,
-                    duration: const Duration(milliseconds: 220),
-                    child: Icon(
-                      _searchOpen ? Icons.close : Icons.search_rounded,
-                      color: _searchOpen
-                          ? TColors.secondary
-                          : (isDark
-                                ? TColors.textDarkSecondary
-                                : TColors.textLightSecondary),
-                      size: 18,
-                    ),
+                              const SizedBox(width: 8),
+                              const Flexible(
+                                child: AccentTag(label: 'ALL ELECTIONS'),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
-              ),
 
-              const SizedBox(width: 8),
+                const SizedBox(width: 10),
+
+                GestureDetector(
+                  onTap: _toggleSearch,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: _searchOpen
+                          ? TColors.secondary.withOpacity(0.12)
+                          : (isDark ? TColors.darkCard : TColors.lightCard),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: _searchOpen
+                            ? TColors.secondary.withOpacity(0.5)
+                            : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                      ),
+                    ),
+                    child: AnimatedRotation(
+                      turns: _searchOpen ? 0.125 : 0,
+                      duration: const Duration(milliseconds: 220),
+                      child: Icon(
+                        _searchOpen ? Icons.close : Icons.search_rounded,
+                        color: _searchOpen
+                            ? TColors.secondary
+                            : (isDark
+                                  ? TColors.textDarkSecondary
+                                  : TColors.textLightSecondary),
+                        size: 16,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 8),
 
               GestureDetector(
                 onTap: _toggleView,
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  width: 36,
-                  height: 36,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     color: (isDark ? TColors.darkCard : TColors.lightCard),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: (isDark
                           ? TColors.darkBorder
@@ -458,7 +459,7 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                       color: (isDark
                           ? TColors.textDarkSecondary
                           : TColors.textLightSecondary),
-                      size: 18,
+                      size: 16,
                     ),
                   ),
                 ),
@@ -469,11 +470,11 @@ class _CandidatesScreenState extends State<CandidatesScreen>
               GestureDetector(
                 onTap: () => _showSortSheet(context),
                 child: Container(
-                  width: 36,
-                  height: 36,
+                  width: 32,
+                  height: 32,
                   decoration: BoxDecoration(
                     color: (isDark ? TColors.darkCard : TColors.lightCard),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color: (isDark
                           ? TColors.darkBorder
@@ -485,11 +486,12 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                     color: (isDark
                         ? TColors.textDarkSecondary
                         : TColors.textLightSecondary),
-                    size: 18,
+                    size: 16,
                   ),
                 ),
               ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -501,11 +503,11 @@ class _CandidatesScreenState extends State<CandidatesScreen>
     return FadeTransition(
       opacity: _anims.filterRowFade,
       child: SizedBox(
-        height: 34,
+        height: 30,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: parties.length,
           separatorBuilder: (_, __) => const SizedBox(width: 8),
           itemBuilder: (_, i) {
@@ -516,19 +518,19 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOut,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: 12,
                   vertical: 0,
                 ),
                 decoration: BoxDecoration(
                   color: on
                       ? TColors.primary
                       : (isDark ? TColors.darkCard : TColors.lightCard),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: on
                         ? TColors.secondary.withOpacity(0.55)
                         : (isDark ? TColors.darkBorder : TColors.lightBorder),
-                    width: on ? 1.2 : 1,
+                    width: on ? 1.0 : 1,
                   ),
                 ),
                 child: Column(
@@ -538,17 +540,17 @@ class _CandidatesScreenState extends State<CandidatesScreen>
                       parties[i],
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: on ? FontWeight.w600 : FontWeight.w400,
                         color: on
                             ? TColors.secondary
                             : (isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary),
-                        letterSpacing: 0.3,
+                        letterSpacing: 0.2,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       width: on ? 18 : 0,

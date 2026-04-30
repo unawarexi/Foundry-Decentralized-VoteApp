@@ -74,12 +74,12 @@ class _CandidateListCardState extends State<CandidateListCard>
           builder: (_, child) =>
               Transform.scale(scale: _pressCtrl.value, child: child),
           child: Container(
-            padding: const EdgeInsets.all(TSizes.cardPadding),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: (THelperFunctions.isDarkMode(context)
                   ? TColors.darkCard
                   : TColors.lightCard),
-              borderRadius: BorderRadius.circular(TSizes.candidateCardRadius),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: d.isFollowed || _followed
                     ? TColors.secondary.withOpacity(0.35)
@@ -90,17 +90,17 @@ class _CandidateListCardState extends State<CandidateListCard>
               boxShadow: [
                 BoxShadow(
                   color: TColors.primary.withOpacity(0.08),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
                 ),
               ],
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CandidateAvatar(initials: d.initials, size: 48),
+                CandidateAvatar(initials: d.initials, size: 42),
 
-                const SizedBox(width: 14),
+                const SizedBox(width: 12),
 
                 Expanded(
                   child: Column(
@@ -113,7 +113,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                               d.name,
                               style: TextStyle(
                                 fontFamily: 'IBMPlexSerif',
-                                fontSize: 15,
+                                fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: (THelperFunctions.isDarkMode(context)
                                     ? TColors.white
@@ -123,14 +123,14 @@ class _CandidateListCardState extends State<CandidateListCard>
                           ),
                           if (d.isVerified)
                             SizedBox(
-                              width: 18,
-                              height: 18,
+                              width: 16,
+                              height: 16,
                               child: CustomPaint(painter: MiniLogoPainter()),
                             ),
                         ],
                       ),
 
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 3),
 
                       Row(
                         children: [
@@ -141,7 +141,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                               d.election,
                               style: TextStyle(
                                 fontFamily: 'Inter',
-                                fontSize: 10,
+                                fontSize: 9.5,
                                 color: (THelperFunctions.isDarkMode(context)
                                     ? TColors.textDarkTertiary
                                     : TColors.textLightTertiary),
@@ -153,12 +153,12 @@ class _CandidateListCardState extends State<CandidateListCard>
                         ],
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
 
                       Row(
                         children: [
                           SizedBox(
-                            width: 100,
+                            width: 90,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(2),
                               child: TweenAnimationBuilder<double>(
@@ -189,7 +189,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                             '${d.approvalPct}%',
                             style: const TextStyle(
                               fontFamily: 'IBMPlexMono',
-                              fontSize: 10,
+                              fontSize: 9.5,
                               fontWeight: FontWeight.w600,
                               color: TColors.secondary,
                             ),
@@ -199,7 +199,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                             children: [
                               Icon(
                                 Icons.forum_outlined,
-                                size: 11,
+                                size: 10,
                                 color: (THelperFunctions.isDarkMode(context)
                                     ? TColors.textDarkTertiary
                                     : TColors.textLightTertiary),
@@ -209,7 +209,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                                 '${d.forumQuestions}',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 10,
+                                  fontSize: 9.5,
                                   color: (THelperFunctions.isDarkMode(context)
                                       ? TColors.textDarkTertiary
                                       : TColors.textLightTertiary),
@@ -220,29 +220,29 @@ class _CandidateListCardState extends State<CandidateListCard>
                         ],
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
 
                       Text(
                         d.manifestoSnippet,
                         style: TextStyle(
                           fontFamily: 'Inter',
-                          fontSize: 11,
+                          fontSize: 10.5,
                           color: (THelperFunctions.isDarkMode(context)
                               ? TColors.textDarkSecondary
                               : TColors.textLightSecondary),
-                          height: 1.5,
+                          height: 1.4,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 8),
 
                       Row(
                         children: [
                           Icon(
                             Icons.location_on_outlined,
-                            size: 11,
+                            size: 10,
                             color: (THelperFunctions.isDarkMode(context)
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary),
@@ -252,7 +252,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                             d.region,
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 10,
+                              fontSize: 9.5,
                               color: (THelperFunctions.isDarkMode(context)
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary),

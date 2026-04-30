@@ -72,12 +72,12 @@ class _CandidateGridCardState extends State<CandidateGridCard>
           builder: (_, child) =>
               Transform.scale(scale: _pressCtrl.value, child: child),
           child: Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: (THelperFunctions.isDarkMode(context)
                   ? TColors.darkCard
                   : TColors.lightCard),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: (THelperFunctions.isDarkMode(context)
                     ? TColors.darkBorder
@@ -87,15 +87,15 @@ class _CandidateGridCardState extends State<CandidateGridCard>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                CandidateAvatar(initials: d.initials, size: 52),
+                CandidateAvatar(initials: d.initials, size: 44),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
 
                 Text(
                   d.name,
                   style: TextStyle(
                     fontFamily: 'IBMPlexSerif',
-                    fontSize: 13,
+                    fontSize: 12.5,
                     fontWeight: FontWeight.w700,
                     color: (THelperFunctions.isDarkMode(context)
                         ? TColors.white
@@ -107,11 +107,11 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                   overflow: TextOverflow.ellipsis,
                 ),
 
-                const SizedBox(height: 6),
+                const SizedBox(height: 5),
 
                 PartyBadge(code: d.partyCode, color: d.partyColor),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 6),
 
                 TweenAnimationBuilder<double>(
                   tween: Tween(begin: 0, end: d.approvalPct / 100),
@@ -129,7 +129,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                           valueColor: const AlwaysStoppedAnimation(
                             TColors.secondary,
                           ),
-                          minHeight: 3,
+                          minHeight: 2.5,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -137,7 +137,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                         '${d.approvalPct}% approval',
                         style: const TextStyle(
                           fontFamily: 'IBMPlexMono',
-                          fontSize: 9.5,
+                          fontSize: 9,
                           color: TColors.secondary,
                           fontWeight: FontWeight.w600,
                         ),
@@ -152,7 +152,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                   d.region,
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 9.5,
+                    fontSize: 9,
                     color: (THelperFunctions.isDarkMode(context)
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary),

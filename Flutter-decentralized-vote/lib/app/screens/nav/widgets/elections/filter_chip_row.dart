@@ -22,11 +22,11 @@ class FilterChipRow extends StatelessWidget {
     return FadeTransition(
       opacity: filterFade,
       child: SizedBox(
-        height: 34,
+        height: 30,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: filterLabels.length,
           separatorBuilder: (_, __) => const SizedBox(width: 8),
           itemBuilder: (_, i) {
@@ -37,19 +37,19 @@ class FilterChipRow extends StatelessWidget {
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeOut,
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
+                  horizontal: 12,
                   vertical: 0,
                 ),
                 decoration: BoxDecoration(
                   color: selected
                       ? TColors.primary.withOpacity(isDark ? 0.55 : 1.0)
                       : (isDark ? TColors.darkCard : TColors.lightCard),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: selected
                         ? TColors.secondary.withOpacity(0.55)
                         : (isDark ? TColors.darkBorder : TColors.lightBorder),
-                    width: selected ? 1.2 : 1,
+                    width: selected ? 1.0 : 1,
                   ),
                 ),
                 child: Column(
@@ -59,7 +59,7 @@ class FilterChipRow extends StatelessWidget {
                       filterLabels[i],
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: selected
                             ? FontWeight.w600
                             : FontWeight.w400,
@@ -68,10 +68,10 @@ class FilterChipRow extends StatelessWidget {
                             : (isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary),
-                        letterSpacing: 0.3,
+                        letterSpacing: 0.2,
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 3),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
                       width: selected ? 18 : 0,

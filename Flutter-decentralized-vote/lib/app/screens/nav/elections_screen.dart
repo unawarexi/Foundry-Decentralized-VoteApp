@@ -221,7 +221,9 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                   child: CustomPaint(
                     size: const Size(260, 260),
                     painter: HexRingPainter(
-                      color: isDark ? TColors.secondary : TColors.primary.withOpacity(0.4),
+                      color: isDark
+                          ? TColors.secondary
+                          : TColors.primary.withOpacity(0.4),
                     ),
                   ),
                 ),
@@ -317,8 +319,8 @@ class _ElectionsScreenState extends State<ElectionsScreen>
           SliverPersistentHeader(
             pinned: true,
             delegate: StickyHeaderDelegate(
-              minHeight: 60,
-              maxHeight: 60,
+              minHeight: 54,
+              maxHeight: 54,
               child: _buildStickyHeader(isDark),
             ),
           ),
@@ -336,7 +338,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 20)),
+          const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
           // ── Featured hero card
           SliverToBoxAdapter(
@@ -351,7 +353,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             ),
           ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: 28)),
+          const SliverToBoxAdapter(child: SizedBox(height: 20)),
 
           // ── LIVE section
           if (live.isNotEmpty) ...[
@@ -367,7 +369,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   child: ElectionListCard(
                     data: live[i],
                     index: i,
@@ -379,7 +381,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 childCount: live.length,
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+            const SliverToBoxAdapter(child: SizedBox(height: 6)),
           ],
 
           // ── UPCOMING section
@@ -396,10 +398,10 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   child: ElectionListCard(
                     data: upcoming[i],
-                    index: i + live.length,
+                    index: i,
                     listAnim: _animations.listFade,
                     slideAnim: _animations.listSlide,
                     pulseAnim: _animations.pulseAnim,
@@ -408,14 +410,14 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 childCount: upcoming.length,
               ),
             ),
-            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+            const SliverToBoxAdapter(child: SizedBox(height: 6)),
           ],
 
           // ── CLOSED section
           if (closed.isNotEmpty) ...[
             SliverToBoxAdapter(
               child: _buildGroupHeader(
-                tag: 'CLOSED',
+                tag: 'RECENTLY CLOSED',
                 tagColor: isDark
                     ? TColors.textDarkTertiary
                     : TColors.textLightTertiary,
@@ -427,10 +429,10 @@ class _ElectionsScreenState extends State<ElectionsScreen>
             SliverList(
               delegate: SliverChildBuilderDelegate(
                 (_, i) => Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
                   child: ElectionListCard(
                     data: closed[i],
-                    index: i + live.length + upcoming.length,
+                    index: i,
                     listAnim: _animations.listFade,
                     slideAnim: _animations.listSlide,
                     pulseAnim: _animations.pulseAnim,
@@ -448,109 +450,128 @@ class _ElectionsScreenState extends State<ElectionsScreen>
   }
 
   Widget _buildStickyHeader(bool isDark) {
-    final collapsed = (_scrollOffset / 60).clamp(0.0, 1.0);
+    final collapsed = (_scrollOffset / 54).clamp(0.0, 1.0);
     return FadeTransition(
       opacity: _animations.headerFade,
       child: SlideTransition(
         position: _animations.headerSlide,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          color: (isDark ? const Color(0xFF080F0B) : const Color(0xFFE8F0ED))
-              .withOpacity(collapsed > 0.8 ? 1.0 : collapsed),
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Row(
-            children: [
-              // Title or search field
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 220),
-                  child: _searchOpen
-                      ? _buildSearchField(isDark)
-                      : Row(
-                          key: const ValueKey('title'),
-                          children: [
-                            Flexible(
-                              child: Text(
+          color: (isDark ? const Color(0xFF0A0F0B) : const Color(0xFFE8F0ED))
+              .withOpacity(collapsed > 0.85 ? 1.0 : collapsed),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Row(
+              children: [
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: _searchOpen
+                        ? _buildSearchField(isDark)
+                        : Row(
+                            key: const ValueKey('title'),
+                            children: [
+                              const Text(
                                 'Elections',
-                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontFamily: 'IBMPlexSerif',
-                                  fontSize: 22,
+                                  fontSize: 18,
                                   fontWeight: FontWeight.w700,
-                                  color: isDark
-                                      ? TColors.white
-                                      : TColors.primary,
+                                  color: TColors.secondary,
+                                  letterSpacing: 0.5,
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            const Flexible(child: AccentTag(label: 'GLOBAL')),
-                          ],
-                        ),
+                              const SizedBox(width: 8),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: TColors.secondary.withOpacity(0.12),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  '${allElections.length}',
+                                  style: const TextStyle(
+                                    fontFamily: 'IBMPlexMono',
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w700,
+                                    color: TColors.secondary,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                  ),
                 ),
-              ),
 
-              const SizedBox(width: 12),
+                const SizedBox(width: 12),
 
-              // Search toggle
-              GestureDetector(
-                onTap: _toggleSearch,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: _searchOpen
-                        ? TColors.secondary.withOpacity(0.12)
-                        : (isDark ? TColors.darkCard : TColors.lightCard),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
+                // Search toggle
+                GestureDetector(
+                  onTap: _toggleSearch,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
                       color: _searchOpen
-                          ? TColors.secondary.withOpacity(0.5)
-                          : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                          ? TColors.secondary.withOpacity(0.12)
+                          : (isDark ? TColors.darkCard : TColors.lightCard),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: _searchOpen
+                            ? TColors.secondary.withOpacity(0.5)
+                            : (isDark
+                                  ? TColors.darkBorder
+                                  : TColors.lightBorder),
+                      ),
+                    ),
+                    child: AnimatedRotation(
+                      turns: _searchOpen ? 0.125 : 0,
+                      duration: const Duration(milliseconds: 220),
+                      child: Icon(
+                        _searchOpen ? Icons.close : Icons.search_rounded,
+                        color: _searchOpen
+                            ? TColors.secondary
+                            : (isDark
+                                  ? TColors.textDarkSecondary
+                                  : TColors.textLightSecondary),
+                        size: 16,
+                      ),
                     ),
                   ),
-                  child: AnimatedRotation(
-                    turns: _searchOpen ? 0.125 : 0,
-                    duration: const Duration(milliseconds: 220),
+                ),
+
+                const SizedBox(width: 8),
+
+                // Filter / sort icon
+                GestureDetector(
+                  onTap: () => _showSortSheet(context),
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: isDark ? TColors.darkCard : TColors.lightCard,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: isDark
+                            ? TColors.darkBorder
+                            : TColors.lightBorder,
+                      ),
+                    ),
                     child: Icon(
-                      _searchOpen ? Icons.close : Icons.search_rounded,
-                      color: _searchOpen
-                          ? TColors.secondary
-                          : (isDark
-                                ? TColors.textDarkSecondary
-                                : TColors.textLightSecondary),
-                      size: 18,
+                      Icons.tune_rounded,
+                      color: isDark
+                          ? TColors.textDarkSecondary
+                          : TColors.textLightSecondary,
+                      size: 16,
                     ),
                   ),
                 ),
-              ),
-
-              const SizedBox(width: 10),
-
-              // Filter / sort icon
-              GestureDetector(
-                onTap: () => _showSortSheet(context),
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: isDark ? TColors.darkCard : TColors.lightCard,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: isDark ? TColors.darkBorder : TColors.lightBorder,
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.tune_rounded,
-                    color: isDark
-                        ? TColors.textDarkSecondary
-                        : TColors.textLightSecondary,
-                    size: 18,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -563,10 +584,10 @@ class _ElectionsScreenState extends State<ElectionsScreen>
       opacity: _animations.searchExpandAnim,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 38,
+        height: 34,
         decoration: BoxDecoration(
           color: isDark ? TColors.darkCard : TColors.lightCard,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(color: TColors.secondary.withOpacity(0.4)),
           boxShadow: [
             BoxShadow(
@@ -577,13 +598,13 @@ class _ElectionsScreenState extends State<ElectionsScreen>
         ),
         child: Row(
           children: [
-            const SizedBox(width: 12),
+            const SizedBox(width: 10),
             Icon(
               Icons.search_rounded,
               color: TColors.secondary.withOpacity(0.7),
-              size: 16,
+              size: 14,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Expanded(
               child: TextField(
                 controller: _searchTextController,
@@ -591,7 +612,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                 onChanged: (v) => setState(() => _searchQuery = v),
                 style: TextStyle(
                   fontFamily: 'Inter',
-                  fontSize: 13,
+                  fontSize: 12.5,
                   color: isDark
                       ? TColors.textDarkPrimary
                       : TColors.textLightPrimary,
@@ -601,7 +622,7 @@ class _ElectionsScreenState extends State<ElectionsScreen>
                   hintText: 'Search elections, regions…',
                   hintStyle: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 12,
+                    fontSize: 11,
                     color: isDark
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary,
@@ -627,16 +648,16 @@ class _ElectionsScreenState extends State<ElectionsScreen>
     return FadeTransition(
       opacity: _animations.listFade,
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
         child: Row(
           children: [
             if (pulse)
               AnimatedBuilder(
                 animation: _animations.pulseAnim,
                 builder: (_, __) => Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.only(right: 8),
+                  width: 7,
+                  height: 7,
+                  margin: const EdgeInsets.only(right: 6),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: tagColor.withOpacity(

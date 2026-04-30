@@ -18,7 +18,7 @@ class ProfileStatChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = THelperFunctions.isDarkMode(context);
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
       decoration: BoxDecoration(
         color: isDark ? TColors.darkCard : TColors.lightCard,
         borderRadius: BorderRadius.circular(12),
@@ -27,13 +27,13 @@ class ProfileStatChip extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: TColors.secondary, size: 15),
-          const SizedBox(height: 8),
+          Icon(icon, color: TColors.secondary, size: 14),
+          const SizedBox(height: 6),
           Text(
             value,
             style: TextStyle(
               fontFamily: 'IBMPlexSerif',
-              fontSize: 20,
+              fontSize: 17,
               fontWeight: FontWeight.w700,
               color: isDark ? TColors.white : TColors.textLightPrimary,
             ),

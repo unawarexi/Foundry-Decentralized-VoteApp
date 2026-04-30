@@ -24,9 +24,9 @@ class VoterIDCard extends StatelessWidget {
         child: AnimatedBuilder(
           animation: pulseAnim,
           builder: (_, __) => Container(
-            height: 130,
+            height: 110,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(14),
               gradient: const LinearGradient(
                 colors: [Color(0xFF0D2B1E), Color(0xFF12112A)],
                 begin: Alignment.topLeft,
@@ -36,15 +36,15 @@ class VoterIDCard extends StatelessWidget {
                 color: TColors.secondary.withOpacity(
                   0.28 + 0.1 * pulseAnim.value,
                 ),
-                width: 1.2,
+                width: 1.0,
               ),
               boxShadow: [
                 BoxShadow(
                   color: TColors.primary.withOpacity(
                     0.25 + 0.1 * pulseAnim.value,
                   ),
-                  blurRadius: 22,
-                  offset: const Offset(0, 8),
+                  blurRadius: 18,
+                  offset: const Offset(0, 6),
                 ),
               ],
             ),
@@ -52,7 +52,7 @@ class VoterIDCard extends StatelessWidget {
               children: [
                 Positioned.fill(
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(14),
                     child: CustomPaint(
                       painter: VoterIDCardPainter(
                         lineColor: TColors.secondary.withOpacity(0.06),
@@ -63,8 +63,8 @@ class VoterIDCard extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 20,
-                    vertical: 16,
+                    horizontal: 16,
+                    vertical: 12,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,21 +72,21 @@ class VoterIDCard extends StatelessWidget {
                       Row(
                         children: [
                           SizedBox(
-                            width: 28,
-                            height: 28,
+                            width: 22,
+                            height: 22,
                             child: CustomPaint(
                               painter: MiniLogoPainter(),
                             ),
                           ),
-                          const SizedBox(width: 10),
-                          Text(
+                          const SizedBox(width: 8),
+                          const Text(
                             'VOTESECURE',
                             style: TextStyle(
                               fontFamily: 'IBMPlexSerif',
-                              fontSize: 11,
+                              fontSize: 9,
                               fontWeight: FontWeight.w700,
                               color: TColors.white,
-                              letterSpacing: 3,
+                              letterSpacing: 2,
                             ),
                           ),
                           const Spacer(),
@@ -99,24 +99,23 @@ class VoterIDCard extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                'ADEBAYO OKONKWO',
+                              const Text(
+                                'Adebayo Okonkwo',
                                 style: TextStyle(
                                   fontFamily: 'IBMPlexSerif',
-                                  fontSize: 16,
+                                  fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                   color: TColors.white,
-                                  letterSpacing: 1,
                                 ),
                               ),
-                              const SizedBox(height: 3),
+                              const SizedBox(height: 2),
                               Text(
-                                'NG · EDO · 2024 · 7743A',
+                                'ID: 8829-0012-ZK91',
                                 style: TextStyle(
                                   fontFamily: 'IBMPlexMono',
-                                  fontSize: 11,
-                                  color: TColors.secondary,
-                                  letterSpacing: 1.5,
+                                  fontSize: 9,
+                                  color: TColors.secondary.withOpacity(0.8),
+                                  letterSpacing: 0.5,
                                 ),
                               ),
                             ],
@@ -126,33 +125,22 @@ class VoterIDCard extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'ACTIVITY',
+                                'STATUS',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 8,
-                                  color: TColors.textDarkTertiary,
-                                  letterSpacing: 1.5,
+                                  color: TColors.white.withOpacity(0.5),
+                                  letterSpacing: 1,
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              SizedBox(
-                                width: 56,
-                                height: 10,
-                                child: CustomPaint(
-                                  painter: HeatmapPainter(
-                                    values: const [
-                                      0.3,
-                                      1.0,
-                                      0.2,
-                                      0.8,
-                                      0.0,
-                                      0.6,
-                                      1.0,
-                                      0.7,
-                                    ],
-                                    activeColor: TColors.secondary,
-                                    inactiveColor: TColors.darkBorder,
-                                  ),
+                              const SizedBox(height: 2),
+                              const Text(
+                                'VERIFIED',
+                                style: TextStyle(
+                                  fontFamily: 'Inter',
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                  color: TColors.success,
                                 ),
                               ),
                             ],

@@ -38,7 +38,7 @@ class HeroCard extends StatelessWidget {
           animation: pulseAnim,
           builder: (_, __) => Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(14),
               gradient: const LinearGradient(
                 colors: [Color(0xFF0D2A1E), Color(0xFF12112A)],
                 begin: Alignment.topLeft,
@@ -48,7 +48,7 @@ class HeroCard extends StatelessWidget {
                 color: TColors.secondary.withOpacity(
                   0.3 + 0.15 * pulseAnim.value,
                 ),
-                width: 1.2,
+                width: 1.0,
               ),
               boxShadow: [
                 BoxShadow(
@@ -57,8 +57,8 @@ class HeroCard extends StatelessWidget {
                         ? 0.3 + 0.1 * pulseAnim.value
                         : 0.1 + 0.05 * pulseAnim.value,
                   ),
-                  blurRadius: 28,
-                  offset: const Offset(0, 10),
+                  blurRadius: 20,
+                  offset: const Offset(0, 8),
                 ),
               ],
             ),
@@ -66,19 +66,19 @@ class HeroCard extends StatelessWidget {
               children: [
                 // Watermark hex (top-right)
                 Positioned(
-                  top: -30,
-                  right: -30,
+                  top: -20,
+                  right: -20,
                   child: Opacity(
                     opacity: 0.07,
                     child: CustomPaint(
-                      size: const Size(160, 160),
+                      size: const Size(120, 120),
                       painter: HexRingPainter(),
                     ),
                   ),
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.all(22),
+                  padding: const EdgeInsets.all(18),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -91,51 +91,51 @@ class HeroCard extends StatelessWidget {
                         ],
                       ),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
 
                       // Election title
-                      Text(
+                      const Text(
                         'Edo State Gubernatorial\nElection 2024',
                         style: TextStyle(
                           fontFamily: 'IBMPlexSerif',
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.w700,
                           color: TColors.white,
                           height: 1.2,
                         ),
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
 
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on_outlined,
-                            size: 12,
+                            size: 11,
                             color: TColors.textDarkTertiary,
                           ),
                           const SizedBox(width: 4),
-                          Text(
+                          const Text(
                             'Benin City · Edo State · Nigeria',
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 12,
+                              fontSize: 10.5,
                               color: TColors.textDarkTertiary,
                             ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 14),
 
                       // Gold rule
                       Container(
-                        width: 36,
-                        height: 1.5,
+                        width: 30,
+                        height: 1.2,
                         color: TColors.secondary,
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 14),
 
                       // Countdown row
                       Row(
@@ -160,12 +160,12 @@ class HeroCard extends StatelessWidget {
                         ],
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 14),
 
                       // Participation bar
                       ParticipationBar(percent: 68, entranceAnim: heroFade),
 
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 12),
 
                       // Stat row: candidates · registered voters · fee · privacy
                       Row(

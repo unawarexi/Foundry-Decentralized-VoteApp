@@ -84,16 +84,16 @@ class _ElectionListCardState extends State<ElectionListCard>
             curve: Curves.easeOut,
             decoration: BoxDecoration(
               color: isDark ? TColors.darkCard : TColors.lightCard,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: _statusBorderColor(d.status, widget.pulseAnim.value, isDark),
-                width: d.status == ElectionStatus.live ? 1.2 : 1,
+                width: d.status == ElectionStatus.live ? 1.0 : 1,
               ),
               boxShadow: [
                 BoxShadow(
                   color: _statusGlowColor(d.status).withOpacity(isDark ? 0.1 : 0.06),
-                  blurRadius: 14,
-                  offset: const Offset(0, 5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
@@ -101,7 +101,7 @@ class _ElectionListCardState extends State<ElectionListCard>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -137,34 +137,34 @@ class _ElectionListCardState extends State<ElectionListCard>
                               color: isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary,
-                              size: 20,
+                              size: 18,
                             ),
                           ),
                         ],
                       ),
 
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 10),
 
                       // ── Election title
                       Text(
                         d.title,
                         style: TextStyle(
                           fontFamily: 'IBMPlexSerif',
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.w700,
                           color: isDark ? TColors.white : TColors.primary,
                           height: 1.3,
                         ),
                       ),
 
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
 
                       // ── Region + date row
                       Row(
                         children: [
                           Icon(
                             Icons.location_on_outlined,
-                            size: 11,
+                            size: 10.5,
                             color: isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary,
@@ -174,7 +174,7 @@ class _ElectionListCardState extends State<ElectionListCard>
                             d.region,
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 11,
+                              fontSize: 10,
                               color: isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary,
@@ -183,7 +183,7 @@ class _ElectionListCardState extends State<ElectionListCard>
                           const Spacer(),
                           Icon(
                             Icons.access_time_rounded,
-                            size: 11,
+                            size: 10.5,
                             color: d.status == ElectionStatus.live
                                 ? TColors.accent
                                 : (isDark
@@ -195,7 +195,7 @@ class _ElectionListCardState extends State<ElectionListCard>
                             d.timeDisplay,
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 11,
+                              fontSize: 10,
                               color: d.status == ElectionStatus.live
                                   ? TColors.accent
                                   : (isDark
@@ -209,7 +209,7 @@ class _ElectionListCardState extends State<ElectionListCard>
                         ],
                       ),
 
-                      const SizedBox(height: 14),
+                      const SizedBox(height: 12),
 
                       // ── Participation bar
                       if (d.participation > 0) ...[

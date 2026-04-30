@@ -45,27 +45,27 @@ class SpotlightCard extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(18),
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [Color(0xFF0D2A1E), Color(0xFF12112A)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: TColors.secondary.withOpacity(
                         0.25 + 0.12 * spotlightGlow.value,
                       ),
-                      width: 1.2,
+                      width: 1.0,
                     ),
                     boxShadow: [
                       BoxShadow(
                         color: TColors.primary.withOpacity(
                           0.25 + 0.12 * spotlightGlow.value,
                         ),
-                        blurRadius: 28,
-                        offset: const Offset(0, 10),
+                        blurRadius: 24,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -77,8 +77,8 @@ class SpotlightCard extends StatelessWidget {
                           AccentTag(label: 'SPOTLIGHT · ${candidate.level}'),
                           const Spacer(),
                           SizedBox(
-                            width: 22,
-                            height: 22,
+                            width: 18,
+                            height: 18,
                             child: CustomPaint(painter: MiniLogoPainter()),
                           ),
                           const SizedBox(width: 6),
@@ -86,23 +86,23 @@ class SpotlightCard extends StatelessWidget {
                             'VERIFIED',
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 9,
+                              fontSize: 8.5,
                               fontWeight: FontWeight.w700,
                               color: TColors.secondary,
-                              letterSpacing: 1.5,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 14),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CandidateAvatar(
                             initials: candidate.initials,
-                            size: 56,
+                            size: 48,
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class SpotlightCard extends StatelessWidget {
                                   candidate.name,
                                   style: TextStyle(
                                     fontFamily: 'IBMPlexSerif',
-                                    fontSize: 20,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     color: (THelperFunctions.isDarkMode(context)
                                         ? TColors.white
@@ -119,20 +119,20 @@ class SpotlightCard extends StatelessWidget {
                                     height: 1.2,
                                   ),
                                 ),
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 3),
                                 Row(
                                   children: [
                                     PartyBadge(
                                       code: candidate.partyCode,
                                       color: candidate.partyColor,
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: 6),
                                     Expanded(
                                       child: Text(
                                         candidate.election,
                                         style: TextStyle(
                                           fontFamily: 'Inter',
-                                          fontSize: 11,
+                                          fontSize: 10.5,
                                           color:
                                               (THelperFunctions.isDarkMode(
                                                 context,
@@ -146,12 +146,12 @@ class SpotlightCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 5),
                                 Row(
                                   children: [
                                     Icon(
                                       Icons.location_on_outlined,
-                                      size: 11,
+                                      size: 10,
                                       color:
                                           (THelperFunctions.isDarkMode(context)
                                           ? TColors.textDarkTertiary
@@ -162,7 +162,7 @@ class SpotlightCard extends StatelessWidget {
                                       candidate.region,
                                       style: TextStyle(
                                         fontFamily: 'Inter',
-                                        fontSize: 11,
+                                        fontSize: 10.5,
                                         color:
                                             (THelperFunctions.isDarkMode(
                                               context,
@@ -178,19 +178,19 @@ class SpotlightCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 14),
                       Container(
-                        width: 36,
-                        height: 1.5,
+                        width: 32,
+                        height: 1.2,
                         color: TColors.secondary,
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 14),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: 110,
-                            height: 110,
+                            width: 95,
+                            height: 95,
                             child: AnimatedBuilder(
                               animation: spotlightFade,
                               builder: (_, __) => CustomPaint(
@@ -207,19 +207,19 @@ class SpotlightCard extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ...radarLabels.asMap().entries.map(
                                   (e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 5),
+                                    padding: const EdgeInsets.only(bottom: 4),
                                     child: Row(
                                       children: [
                                         Container(
-                                          width: 6,
-                                          height: 6,
+                                          width: 5,
+                                          height: 5,
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             color: TColors.secondary
@@ -231,7 +231,7 @@ class SpotlightCard extends StatelessWidget {
                                           e.value,
                                           style: TextStyle(
                                             fontFamily: 'Inter',
-                                            fontSize: 10,
+                                            fontSize: 9.5,
                                             color:
                                                 (THelperFunctions.isDarkMode(
                                                   context,
@@ -245,7 +245,7 @@ class SpotlightCard extends StatelessWidget {
                                           '${(candidate.radarScores[e.key] * 100).round()}',
                                           style: const TextStyle(
                                             fontFamily: 'IBMPlexMono',
-                                            fontSize: 10,
+                                            fontSize: 9.5,
                                             color: TColors.secondary,
                                             fontWeight: FontWeight.w600,
                                           ),
@@ -254,21 +254,21 @@ class SpotlightCard extends StatelessWidget {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: 6),
                                 Row(
                                   children: [
                                     Text(
                                       'Approval',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
-                                        fontSize: 9,
+                                        fontSize: 8.5,
                                         color:
                                             (THelperFunctions.isDarkMode(
                                               context,
                                             )
                                             ? TColors.textDarkTertiary
                                             : TColors.textLightTertiary),
-                                        letterSpacing: 1,
+                                        letterSpacing: 0.8,
                                       ),
                                     ),
                                     const Spacer(),
@@ -276,16 +276,16 @@ class SpotlightCard extends StatelessWidget {
                                       '${candidate.approvalPct}%',
                                       style: const TextStyle(
                                         fontFamily: 'IBMPlexMono',
-                                        fontSize: 11,
+                                        fontSize: 10,
                                         fontWeight: FontWeight.w700,
                                         color: TColors.secondary,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 5),
+                                const SizedBox(height: 4),
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(3),
+                                  borderRadius: BorderRadius.circular(2),
                                   child: TweenAnimationBuilder<double>(
                                     tween: Tween(
                                       begin: 0,
@@ -306,7 +306,7 @@ class SpotlightCard extends StatelessWidget {
                                               const AlwaysStoppedAnimation(
                                                 TColors.secondary,
                                               ),
-                                          minHeight: 4,
+                                          minHeight: 3,
                                         ),
                                   ),
                                 ),
@@ -315,7 +315,7 @@ class SpotlightCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 14),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -325,11 +325,11 @@ class SpotlightCard extends StatelessWidget {
                                 'MANIFESTO MILESTONES',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 9,
+                                  fontSize: 8.5,
                                   color: (THelperFunctions.isDarkMode(context)
                                       ? TColors.textDarkTertiary
                                       : TColors.textLightTertiary),
-                                  letterSpacing: 1.8,
+                                  letterSpacing: 1.5,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -338,18 +338,18 @@ class SpotlightCard extends StatelessWidget {
                                 '${candidate.milestonesAchieved}/${candidate.milestonesTotal} achieved',
                                 style: const TextStyle(
                                   fontFamily: 'IBMPlexMono',
-                                  fontSize: 9,
+                                  fontSize: 8.5,
                                   color: TColors.secondary,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           AnimatedBuilder(
                             animation: spotlightFade,
                             builder: (_, __) => SizedBox(
-                              height: 40,
+                              height: 34,
                               child: CustomPaint(
                                 painter: MilestonePainter(
                                   total: candidate.milestonesTotal,
@@ -368,7 +368,7 @@ class SpotlightCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 14),
                       Row(
                         children: [
                           SpotlightMetric(
@@ -376,13 +376,13 @@ class SpotlightCard extends StatelessWidget {
                             value: '${candidate.forumQuestions}',
                             label: 'Questions',
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: 12),
                           SpotlightMetric(
                             icon: Icons.thumb_up_outlined,
                             value: '${candidate.approvalPct}%',
                             label: 'Approval',
                           ),
-                          const SizedBox(width: 14),
+                          const SizedBox(width: 12),
                           SpotlightMetric(
                             icon: Icons.how_to_reg_outlined,
                             value: '${(candidate.voteShare * 100).round()}%',
@@ -393,19 +393,19 @@ class SpotlightCard extends StatelessWidget {
                             onTap: onTap,
                             child: Container(
                               padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 9,
+                                horizontal: 12,
+                                vertical: 8,
                               ),
                               decoration: BoxDecoration(
                                 color: TColors.accent,
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
                                     color: TColors.accent.withOpacity(
                                       0.25 + 0.15 * spotlightGlow.value,
                                     ),
-                                    blurRadius: 14,
-                                    offset: const Offset(0, 5),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
                                   ),
                                 ],
                               ),
@@ -413,7 +413,7 @@ class SpotlightCard extends StatelessWidget {
                                 'Full Profile',
                                 style: TextStyle(
                                   fontFamily: 'Inter',
-                                  fontSize: 12,
+                                  fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
                                   color: (THelperFunctions.isDarkMode(context)
                                       ? TColors.white

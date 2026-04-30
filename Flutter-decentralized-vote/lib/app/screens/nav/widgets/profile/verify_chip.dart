@@ -24,7 +24,7 @@ class VerifyChip extends StatelessWidget {
     return AnimatedBuilder(
       animation: pulseAnim,
       builder: (_, __) => Container(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         decoration: BoxDecoration(
           color: active 
               ? TColors.success.withOpacity(0.06) 
@@ -40,17 +40,17 @@ class VerifyChip extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: 16,
+              size: 15,
               color: active 
                   ? TColors.success 
                   : (isDark ? TColors.textDarkTertiary : TColors.textLightTertiary),
             ),
-            const SizedBox(height: 5),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 9,
+                fontSize: 8.5,
                 color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
                 letterSpacing: 0.3,
               ),
@@ -61,7 +61,7 @@ class VerifyChip extends StatelessWidget {
               status,
               style: TextStyle(
                 fontFamily: 'Inter',
-                fontSize: 9,
+                fontSize: 8.5,
                 fontWeight: FontWeight.w600,
                 color: active ? TColors.success : TColors.error,
               ),

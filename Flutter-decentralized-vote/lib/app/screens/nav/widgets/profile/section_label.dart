@@ -28,7 +28,7 @@ class SectionLabel extends StatelessWidget {
             title,
             style: TextStyle(
               fontFamily: 'IBMPlexSerif',
-              fontSize: 17,
+              fontSize: 15,
               fontWeight: FontWeight.w700,
               color: isDark ? TColors.white : TColors.textLightPrimary,
             ),

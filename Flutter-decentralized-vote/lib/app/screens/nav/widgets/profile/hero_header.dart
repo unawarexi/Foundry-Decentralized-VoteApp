@@ -83,8 +83,8 @@ class ProfileHeroHeader extends StatelessWidget {
                               AnimatedBuilder(
                                 animation: zkRotation,
                                 builder: (_, __) => SizedBox(
-                                  width: 90,
-                                  height: 90,
+                                  width: 74,
+                                  height: 74,
                                   child: CustomPaint(
                                     painter: ZKProofCirclePainter(
                                       rotation: zkRotation.value,
@@ -94,8 +94,8 @@ class ProfileHeroHeader extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: 72,
-                                height: 72,
+                                width: 58,
+                                height: 58,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   gradient: const LinearGradient(
@@ -110,15 +110,15 @@ class ProfileHeroHeader extends StatelessWidget {
                                     color: TColors.secondary.withOpacity(
                                       0.45 + 0.15 * pulseAnim.value,
                                     ),
-                                    width: 2,
+                                    width: 1.5,
                                   ),
                                 ),
-                                child: const Center(
+                                child: Center(
                                   child: Text(
                                     'AO',
                                     style: TextStyle(
                                       fontFamily: 'IBMPlexSerif',
-                                      fontSize: 24,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w700,
                                       color: TColors.secondary,
                                     ),
@@ -129,8 +129,8 @@ class ProfileHeroHeader extends StatelessWidget {
                                 bottom: 0,
                                 right: 0,
                                 child: Container(
-                                  width: 24,
-                                  height: 24,
+                                  width: 20,
+                                  height: 20,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: isDark
@@ -141,7 +141,7 @@ class ProfileHeroHeader extends StatelessWidget {
                                     ),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(3),
+                                    padding: const EdgeInsets.all(2.5),
                                     child: CustomPaint(
                                       painter: MiniLogoPainter(),
                                     ),
@@ -150,27 +150,27 @@ class ProfileHeroHeader extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(width: 18),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 4),
+                                const SizedBox(height: 2),
                                 const Text(
                                   'Adebayo Okonkwo',
                                   style: TextStyle(
                                     fontFamily: 'IBMPlexSerif',
-                                    fontSize: 22,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w700,
                                     color: TColors.white,
                                   ),
                                 ),
-                                const SizedBox(height: 6),
+                                const SizedBox(height: 4),
                                 Row(
                                   children: const [
                                     Icon(
                                       Icons.location_on_outlined,
-                                      size: 12,
+                                      size: 11,
                                       color: TColors.textDarkTertiary,
                                     ),
                                     SizedBox(width: 3),
@@ -178,7 +178,7 @@ class ProfileHeroHeader extends StatelessWidget {
                                       'Benin City · Edo State · Nigeria',
                                       style: TextStyle(
                                         fontFamily: 'Inter',
-                                        fontSize: 12,
+                                        fontSize: 10.5,
                                         color: TColors.textDarkTertiary,
                                       ),
                                     ),
@@ -196,13 +196,13 @@ class ProfileHeroHeader extends StatelessWidget {
                             ),
                           ),
                           Container(
-                            width: 34,
-                            height: 34,
+                            width: 28,
+                            height: 28,
                             decoration: BoxDecoration(
                               color: isDark
                                   ? TColors.darkCard
                                   : TColors.lightCard,
-                              borderRadius: BorderRadius.circular(9),
+                              borderRadius: BorderRadius.circular(7),
                               border: Border.all(
                                 color: isDark
                                     ? TColors.darkBorder
@@ -214,7 +214,7 @@ class ProfileHeroHeader extends StatelessWidget {
                               color: isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary,
-                              size: 16,
+                              size: 14,
                             ),
                           ),
                         ],
