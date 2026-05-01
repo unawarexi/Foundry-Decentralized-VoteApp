@@ -1,10 +1,13 @@
-# Makefile for VeriVote Foundry Project
+## VoteSecure — Foundry Smart Contract Suite
 -include .env
+export
 
-# === CONFIGURATION ===
-RPC_URL           ?= http://localhost:8545
-PRIVATE_KEY       ?= your_private_key_here
-ETHERSCAN_API_KEY ?= your_etherscan_api_key_here
+# ── Config ────────────────────────────────────────────────────────────────────
+FORGE            ?= forge
+CAST             ?= cast
+ANVIL            ?= anvil
+RPC_LOCALHOST    ?= http://localhost:8545
+PROFILE          ?= default
 DEFAULT_ANVIL_KEY := 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
 # RPCs

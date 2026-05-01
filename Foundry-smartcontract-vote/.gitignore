@@ -1,14 +1,50 @@
-# Compiler files
+# ── Foundry build artifacts ───────────────────────────────────────────────────
 cache/
 out/
 
-# Ignores development broadcast logs
+# ── Deployment broadcast logs (keep only production; exclude local/dry-runs) ──
 !/broadcast
 /broadcast/*/31337/
 /broadcast/**/dry-run/
 
-# Docs
+# ── Environment / secrets ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ── Foundry dependencies (re-installed via `forge install`) ───────────────────
+lib/
+
+# ── Coverage & gas reports ────────────────────────────────────────────────────
+lcov.info
+.gas-snapshot
+
+# ── Hardhat / other tooling artifacts (if ever co-located) ───────────────────
+node_modules/
+artifacts/
+typechain/
+typechain-types/
+
+# ── IDE / editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverrideDirectory
+
+# ── Docs (generated) ──────────────────────────────────────────────────────────
 docs/
 
-# Dotenv file
-.env
+# ── Logs ──────────────────────────────────────────────────────────────────────
+*.log
+
+# ── Python / static-analysis tooling ─────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.slither/
+.mythril/
