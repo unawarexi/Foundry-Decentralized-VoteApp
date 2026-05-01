@@ -33,9 +33,10 @@ class _QuickActionTileState extends State<QuickActionTile>
       vsync: this,
       duration: const Duration(milliseconds: 120),
     );
-    _pressScale = Tween(begin: 1.0, end: 0.93).animate(
-      CurvedAnimation(parent: _pressCtrl, curve: Curves.easeOut),
-    );
+    _pressScale = Tween(
+      begin: 1.0,
+      end: 0.93,
+    ).animate(CurvedAnimation(parent: _pressCtrl, curve: Curves.easeOut));
   }
 
   @override
@@ -72,7 +73,7 @@ class _QuickActionTileState extends State<QuickActionTile>
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 10,
-                    color: isDark ? TColors.textDarkSecondary : TColors.textLightPrimary,
+                    color: TColors.textDarkSecondary,
                     letterSpacing: 0.2,
                   ),
                   textAlign: TextAlign.center,

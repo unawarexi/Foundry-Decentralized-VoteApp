@@ -110,7 +110,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
               Transform.scale(scale: _pressCtrl.value, child: child),
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 250),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
               color: isDark ? TColors.darkCard : TColors.lightCard,
               borderRadius: BorderRadius.circular(16),
@@ -225,14 +225,14 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                       ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 AccentTag(label: q.electionLevel),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Text(
                   q.question,
                   style: TextStyle(
                     fontFamily: 'Inter',
-                    fontSize: 14,
+                    fontSize: 13,
                     color: isDark
                         ? TColors.textDarkPrimary
                         : TColors.textLightPrimary,
@@ -274,7 +274,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                             q.answerPreview,
                             style: TextStyle(
                               fontFamily: 'Inter',
-                              fontSize: 12,
+                              fontSize: 11,
                               color: isDark
                                   ? TColors.textDarkSecondary
                                   : TColors.textLightSecondary,
@@ -288,7 +288,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                     ),
                   ),
                 ],
-                const SizedBox(height: 14),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Stack(
@@ -320,8 +320,8 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 200),
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
+                                  horizontal: 8,
+                                  vertical: 4,
                                 ),
                                 decoration: BoxDecoration(
                                   color: widget.isUpvoted
@@ -371,7 +371,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                                         key: ValueKey(widget.upvoteCount),
                                         style: TextStyle(
                                           fontFamily: 'IBMPlexMono',
-                                          fontSize: 12,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.w600,
                                           color: widget.isUpvoted
                                               ? TColors.secondary
@@ -393,8 +393,8 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                     const SizedBox(width: 10),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
+                        horizontal: 8,
+                        vertical: 4,
                       ),
                       decoration: BoxDecoration(
                         color: isDark
@@ -421,7 +421,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                             '${q.answers}',
                             style: TextStyle(
                               fontFamily: 'IBMPlexMono',
-                              fontSize: 12,
+                              fontSize: 11,
                               fontWeight: FontWeight.w600,
                               color: isDark
                                   ? TColors.textDarkTertiary
@@ -439,7 +439,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                           q.election,
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 9.5,
+                            fontSize: 9,
                             color: isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary,
@@ -451,7 +451,7 @@ class _ForumQuestionCardState extends State<ForumQuestionCard>
                           q.postedDisplay,
                           style: TextStyle(
                             fontFamily: 'Inter',
-                            fontSize: 9.5,
+                            fontSize: 9,
                             color: isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary,

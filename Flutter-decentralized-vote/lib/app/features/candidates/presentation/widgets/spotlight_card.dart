@@ -26,6 +26,7 @@ class SpotlightCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return FadeTransition(
       opacity: spotlightFade,
       child: SlideTransition(
@@ -113,9 +114,7 @@ class SpotlightCard extends StatelessWidget {
                                     fontFamily: 'IBMPlexSerif',
                                     fontSize: 18,
                                     fontWeight: FontWeight.w700,
-                                    color: (THelperFunctions.isDarkMode(context)
-                                        ? TColors.white
-                                        : TColors.black),
+                                    color: TColors.white,
                                     height: 1.2,
                                   ),
                                 ),
@@ -153,7 +152,7 @@ class SpotlightCard extends StatelessWidget {
                                       Icons.location_on_outlined,
                                       size: 10,
                                       color:
-                                          (THelperFunctions.isDarkMode(context)
+                                          (isDark
                                           ? TColors.textDarkTertiary
                                           : TColors.textLightTertiary),
                                     ),
@@ -200,7 +199,7 @@ class SpotlightCard extends StatelessWidget {
                                   fillColor: TColors.primary.withOpacity(0.35),
                                   strokeColor: TColors.secondary,
                                   gridColor:
-                                      (THelperFunctions.isDarkMode(context)
+                                      (isDark
                                       ? TColors.darkBorder
                                       : TColors.lightBorder),
                                 ),
@@ -326,7 +325,7 @@ class SpotlightCard extends StatelessWidget {
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 8.5,
-                                  color: (THelperFunctions.isDarkMode(context)
+                                  color: (isDark
                                       ? TColors.textDarkTertiary
                                       : TColors.textLightTertiary),
                                   letterSpacing: 1.5,
@@ -357,7 +356,7 @@ class SpotlightCard extends StatelessWidget {
                                   progress: spotlightFade.value,
                                   activeColor: TColors.secondary,
                                   inactiveColor:
-                                      (THelperFunctions.isDarkMode(context)
+                                      (isDark
                                       ? TColors.darkBorder
                                       : TColors.lightBorder),
                                   labels: candidate.milestoneLabels,
@@ -415,7 +414,7 @@ class SpotlightCard extends StatelessWidget {
                                   fontFamily: 'Inter',
                                   fontSize: 11.5,
                                   fontWeight: FontWeight.w600,
-                                  color: (THelperFunctions.isDarkMode(context)
+                                  color: (isDark
                                       ? TColors.white
                                       : TColors.black),
                                 ),

@@ -272,228 +272,230 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
       context: context,
       removeTop: true,
       child: CustomScrollView(
-      controller: _scrollController,
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        // ── Sticky Header (Blends with Status Bar)
-        SliverAppBar(
-          pinned: true,
-          primary: false,
-          toolbarHeight: 0,
-          expandedHeight: 0,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: isDark
-                ? Brightness.light
-                : Brightness.dark,
+        controller: _scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          // ── Sticky Header (Blends with Status Bar)
+          SliverAppBar(
+            pinned: true,
+            primary: false,
+            toolbarHeight: 0,
+            expandedHeight: 0,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            systemOverlayStyle: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: isDark
+                  ? Brightness.light
+                  : Brightness.dark,
+            ),
           ),
-        ),
 
-        // ── Hero profile header
-        SliverToBoxAdapter(
-          child: ProfileHeroHeader(
-            heroFade: _animations.heroFade,
-            heroSlide: _animations.heroSlide,
-            heroScale: _animations.heroScale,
-            heroGlow: _animations.heroGlow,
-            zkRotation: _animations.zkRotation,
-            pulseAnim: _animations.pulseAnim,
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 14)),
-
-        // ── Identity verification strip
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: VerificationStrip(
-              verifyFade: _animations.verifyFade,
-              verifySlide: _animations.verifySlide,
+          // ── Hero profile header
+          SliverToBoxAdapter(
+            child: ProfileHeroHeader(
+              heroFade: _animations.heroFade,
+              heroSlide: _animations.heroSlide,
+              heroScale: _animations.heroScale,
+              heroGlow: _animations.heroGlow,
+              zkRotation: _animations.zkRotation,
               pulseAnim: _animations.pulseAnim,
             ),
           ),
-        ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 14)),
+          const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
-        // ── Voter ID card
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: VoterIDCard(
-              verifyFade: _animations.verifyFade,
-              verifySlide: _animations.verifySlide,
-              pulseAnim: _animations.pulseAnim,
-            ),
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
-
-        // ── Civic stats row
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ProfileStatsRow(
-              statsFade: _animations.statsFade,
-              statsSlide: _animations.statsSlide,
-            ),
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
-
-        // ── Civic participation waveform
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ActivityWaveform(contentFade: _animations.contentFade),
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
-
-        // ── Voting history
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SectionLabel(
-              tag: 'VOTE RECORD',
-              title: 'Voting History',
-              contentFade: _animations.contentFade,
-            ),
-          ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (_, i) => Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-              child: VoteHistoryTile(
-                record: voteHistory[i],
-                index: i,
-                contentAnim: _animations.contentFade,
+          // ── Identity verification strip
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: VerificationStrip(
+                verifyFade: _animations.verifyFade,
+                verifySlide: _animations.verifySlide,
+                pulseAnim: _animations.pulseAnim,
               ),
             ),
-            childCount: voteHistory.length,
           ),
-        ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
+          const SliverToBoxAdapter(child: SizedBox(height: 14)),
 
-        // ── Followed candidates
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: SectionLabel(
-              tag: 'FOLLOWING',
-              title: 'Tracked Candidates',
-              contentFade: _animations.contentFade,
+          // ── Voter ID card
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: VoterIDCard(
+                verifyFade: _animations.verifyFade,
+                verifySlide: _animations.verifySlide,
+                pulseAnim: _animations.pulseAnim,
+              ),
             ),
           ),
-        ),
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-        SliverToBoxAdapter(child: _buildFollowedCandidates(isDark)),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
 
-        // ── Expandable sections
-        _buildExpandableSliver(
-          tag: 'WEB3',
-          title: 'Wallet & Tokens',
-          icon: Icons.account_balance_wallet_outlined,
-          isExpanded: _walletExpanded,
-          onToggle: () => setState(() => _walletExpanded = !_walletExpanded),
-          child: _buildWalletContent(isDark),
-          isDark: isDark,
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-        _buildExpandableSliver(
-          tag: 'SECURITY',
-          title: 'Biometric & Identity',
-          icon: Icons.security_outlined,
-          isExpanded: _securityExpanded,
-          onToggle: () =>
-              setState(() => _securityExpanded = !_securityExpanded),
-          child: _buildSecurityContent(isDark),
-          isDark: isDark,
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-        _buildExpandableSliver(
-          tag: 'PREFERENCES',
-          title: 'App Experience',
-          icon: Icons.settings_suggest_outlined,
-          isExpanded: _preferencesExpanded,
-          onToggle: () =>
-              setState(() => _preferencesExpanded = !_preferencesExpanded),
-          child: Consumer(
-            builder: (context, ref, _) {
-              return _buildPreferencesContent(ref, isDark);
-            },
-          ),
-          isDark: isDark,
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-        _buildExpandableSliver(
-          tag: 'ZK-PROOF',
-          title: 'Privacy Settings',
-          icon: Icons.shield_outlined,
-          isExpanded: _privacyExpanded,
-          onToggle: () => setState(() => _privacyExpanded = !_privacyExpanded),
-          child: _buildPrivacyContent(isDark),
-          isDark: isDark,
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-        _buildExpandableSliver(
-          tag: 'ALERTS',
-          title: 'Notifications',
-          icon: Icons.notifications_outlined,
-          isExpanded: _notificationsExpanded,
-          onToggle: () =>
-              setState(() => _notificationsExpanded = !_notificationsExpanded),
-          child: _buildNotificationsContent(isDark),
-          isDark: isDark,
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 18)),
-
-        // ── App version + about
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: _buildAboutRow(isDark),
-          ),
-        ),
-
-        const SliverToBoxAdapter(child: SizedBox(height: 12)),
-
-        // ── Sign out
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: FadeTransition(
-              opacity: _animations.contentFade,
-              child: SignOutButton(contentFade: _animations.contentFade),
+          // ── Civic stats row
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ProfileStatsRow(
+                statsFade: _animations.statsFade,
+                statsSlide: _animations.statsSlide,
+              ),
             ),
           ),
-        ),
 
-        const SliverToBoxAdapter(child: SizedBox(height: 100)),
-      ],
-    ),
-  );
-}
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+          // ── Civic participation waveform
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: ActivityWaveform(contentFade: _animations.contentFade),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+          // ── Voting history
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SectionLabel(
+                tag: 'VOTE RECORD',
+                title: 'Voting History',
+                contentFade: _animations.contentFade,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (_, i) => Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: VoteHistoryTile(
+                  record: voteHistory[i],
+                  index: i,
+                  contentAnim: _animations.contentFade,
+                ),
+              ),
+              childCount: voteHistory.length,
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+          // ── Followed candidates
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: SectionLabel(
+                tag: 'FOLLOWING',
+                title: 'Tracked Candidates',
+                contentFade: _animations.contentFade,
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+          SliverToBoxAdapter(child: _buildFollowedCandidates(isDark)),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+          // ── Expandable sections
+          _buildExpandableSliver(
+            tag: 'WEB3',
+            title: 'Wallet & Tokens',
+            icon: Icons.account_balance_wallet_outlined,
+            isExpanded: _walletExpanded,
+            onToggle: () => setState(() => _walletExpanded = !_walletExpanded),
+            child: _buildWalletContent(isDark),
+            isDark: isDark,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
+          _buildExpandableSliver(
+            tag: 'SECURITY',
+            title: 'Biometric & Identity',
+            icon: Icons.security_outlined,
+            isExpanded: _securityExpanded,
+            onToggle: () =>
+                setState(() => _securityExpanded = !_securityExpanded),
+            child: _buildSecurityContent(isDark),
+            isDark: isDark,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
+          _buildExpandableSliver(
+            tag: 'PREFERENCES',
+            title: 'App Experience',
+            icon: Icons.settings_suggest_outlined,
+            isExpanded: _preferencesExpanded,
+            onToggle: () =>
+                setState(() => _preferencesExpanded = !_preferencesExpanded),
+            child: Consumer(
+              builder: (context, ref, _) {
+                return _buildPreferencesContent(ref, isDark);
+              },
+            ),
+            isDark: isDark,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
+          _buildExpandableSliver(
+            tag: 'ZK-PROOF',
+            title: 'Privacy Settings',
+            icon: Icons.shield_outlined,
+            isExpanded: _privacyExpanded,
+            onToggle: () =>
+                setState(() => _privacyExpanded = !_privacyExpanded),
+            child: _buildPrivacyContent(isDark),
+            isDark: isDark,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 10)),
+
+          _buildExpandableSliver(
+            tag: 'ALERTS',
+            title: 'Notifications',
+            icon: Icons.notifications_outlined,
+            isExpanded: _notificationsExpanded,
+            onToggle: () => setState(
+              () => _notificationsExpanded = !_notificationsExpanded,
+            ),
+            child: _buildNotificationsContent(isDark),
+            isDark: isDark,
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 18)),
+
+          // ── App version + about
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _buildAboutRow(isDark),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 12)),
+
+          // ── Sign out
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FadeTransition(
+                opacity: _animations.contentFade,
+                child: SignOutButton(contentFade: _animations.contentFade),
+              ),
+            ),
+          ),
+
+          const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        ],
+      ),
+    );
+  }
 
   Widget _buildExpandableSliver({
     required String tag,
@@ -536,8 +538,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
                           title,
                           style: TextStyle(
                             fontFamily: 'IBMPlexSerif',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
                             color: isDark ? TColors.white : TColors.black,
                           ),
                         ),
@@ -577,7 +579,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen>
     return FadeTransition(
       opacity: _animations.contentFade,
       child: SizedBox(
-        height: 120,
+        height: 140,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),

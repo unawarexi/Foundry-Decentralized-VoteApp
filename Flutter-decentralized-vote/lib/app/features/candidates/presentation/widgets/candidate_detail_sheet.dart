@@ -51,6 +51,7 @@ class _CandidateDetailSheetState extends State<CandidateDetailSheet>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final c = widget.candidate;
     return FadeTransition(
       opacity: _sheetFade,
@@ -62,23 +63,23 @@ class _CandidateDetailSheetState extends State<CandidateDetailSheet>
           maxChildSize: 0.95,
           builder: (_, ctrl) => Container(
             decoration: BoxDecoration(
-              color: (THelperFunctions.isDarkMode(context)
+              color: (isDark
                   ? TColors.darkSurface
                   : TColors.lightSurface),
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
               border: Border(
                 top: BorderSide(
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.darkBorder
                       : TColors.lightBorder),
                 ),
                 left: BorderSide(
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.darkBorder
                       : TColors.lightBorder),
                 ),
                 right: BorderSide(
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.darkBorder
                       : TColors.lightBorder),
                 ),
@@ -92,7 +93,7 @@ class _CandidateDetailSheetState extends State<CandidateDetailSheet>
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: (THelperFunctions.isDarkMode(context)
+                      color: (isDark
                           ? TColors.darkBorder
                           : TColors.lightBorder),
                       borderRadius: BorderRadius.circular(2),
@@ -117,7 +118,7 @@ class _CandidateDetailSheetState extends State<CandidateDetailSheet>
                                 fontFamily: 'IBMPlexSerif',
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
-                                color: (THelperFunctions.isDarkMode(context)
+                                color: (isDark
                                     ? TColors.white
                                     : TColors.black),
                               ),
@@ -149,19 +150,19 @@ class _CandidateDetailSheetState extends State<CandidateDetailSheet>
                           width: 32,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: (THelperFunctions.isDarkMode(context)
+                            color: (isDark
                                 ? TColors.darkElevated
                                 : TColors.lightElevated),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(
-                              color: (THelperFunctions.isDarkMode(context)
+                              color: (isDark
                                   ? TColors.darkBorder
                                   : TColors.lightBorder),
                             ),
                           ),
                           child: Icon(
                             Icons.close,
-                            color: (THelperFunctions.isDarkMode(context)
+                            color: (isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary),
                             size: 16,

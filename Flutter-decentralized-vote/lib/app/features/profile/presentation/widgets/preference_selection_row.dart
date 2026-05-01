@@ -36,7 +36,9 @@ class PreferenceSelectionRow<T> extends StatelessWidget {
                   fontFamily: 'Inter',
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
-                  color: isDark ? TColors.textDarkPrimary : TColors.textLightPrimary,
+                  color: isDark
+                      ? TColors.textDarkPrimary
+                      : TColors.textLightPrimary,
                 ),
               ),
             ],
@@ -47,7 +49,9 @@ class PreferenceSelectionRow<T> extends StatelessWidget {
             decoration: BoxDecoration(
               color: isDark ? TColors.darkElevated : TColors.lightElevated,
               borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: isDark ? TColors.darkBorder : TColors.lightBorder),
+              border: Border.all(
+                color: isDark ? TColors.darkBorder : TColors.lightBorder,
+              ),
             ),
             child: Row(
               children: options.map((opt) {
@@ -59,7 +63,9 @@ class PreferenceSelectionRow<T> extends StatelessWidget {
                       duration: const Duration(milliseconds: 200),
                       padding: const EdgeInsets.symmetric(vertical: 8),
                       decoration: BoxDecoration(
-                        color: isSelected ? TColors.primary : Colors.transparent,
+                        color: isSelected
+                            ? TColors.primary
+                            : Colors.transparent,
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
                           color: isSelected
@@ -73,10 +79,14 @@ class PreferenceSelectionRow<T> extends StatelessWidget {
                           style: TextStyle(
                             fontFamily: 'Inter',
                             fontSize: 11,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
                             color: isSelected
                                 ? TColors.secondary
-                                : (isDark ? TColors.textDarkTertiary : TColors.textLightTertiary),
+                                : (isDark
+                                      ? TColors.textDarkTertiary
+                                      : TColors.textLightTertiary),
                           ),
                         ),
                       ),

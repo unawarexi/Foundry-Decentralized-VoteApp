@@ -47,6 +47,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final d = widget.data;
 
     final stagger = CurvedAnimation(
@@ -74,12 +75,12 @@ class _CandidateGridCardState extends State<CandidateGridCard>
           child: Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: (THelperFunctions.isDarkMode(context)
+              color: (isDark
                   ? TColors.darkCard
                   : TColors.lightCard),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: (THelperFunctions.isDarkMode(context)
+                color: (isDark
                     ? TColors.darkBorder
                     : TColors.lightBorder),
               ),
@@ -97,7 +98,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                     fontFamily: 'IBMPlexSerif',
                     fontSize: 12.5,
                     fontWeight: FontWeight.w700,
-                    color: (THelperFunctions.isDarkMode(context)
+                    color: (isDark
                         ? TColors.white
                         : TColors.black),
                     height: 1.2,
@@ -123,7 +124,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                         borderRadius: BorderRadius.circular(2),
                         child: LinearProgressIndicator(
                           value: v,
-                          backgroundColor: (THelperFunctions.isDarkMode(context)
+                          backgroundColor: (isDark
                               ? TColors.darkBorder
                               : TColors.lightBorder),
                           valueColor: const AlwaysStoppedAnimation(
@@ -153,7 +154,7 @@ class _CandidateGridCardState extends State<CandidateGridCard>
                   style: TextStyle(
                     fontFamily: 'Inter',
                     fontSize: 9,
-                    color: (THelperFunctions.isDarkMode(context)
+                    color: (isDark
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary),
                   ),

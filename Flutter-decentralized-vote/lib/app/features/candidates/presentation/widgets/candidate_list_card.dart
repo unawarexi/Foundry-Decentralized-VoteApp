@@ -50,6 +50,7 @@ class _CandidateListCardState extends State<CandidateListCard>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final d = widget.data;
     final stagger = CurvedAnimation(
       parent: widget.listAnim,
@@ -76,14 +77,14 @@ class _CandidateListCardState extends State<CandidateListCard>
           child: Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: (THelperFunctions.isDarkMode(context)
+              color: (isDark
                   ? TColors.darkCard
                   : TColors.lightCard),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: d.isFollowed || _followed
                     ? TColors.secondary.withOpacity(0.35)
-                    : (THelperFunctions.isDarkMode(context)
+                    : (isDark
                           ? TColors.darkBorder
                           : TColors.lightBorder),
               ),
@@ -115,7 +116,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                                 fontFamily: 'IBMPlexSerif',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
-                                color: (THelperFunctions.isDarkMode(context)
+                                color: (isDark
                                     ? TColors.white
                                     : TColors.black),
                               ),
@@ -142,7 +143,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                               style: TextStyle(
                                 fontFamily: 'Inter',
                                 fontSize: 9.5,
-                                color: (THelperFunctions.isDarkMode(context)
+                                color: (isDark
                                     ? TColors.textDarkTertiary
                                     : TColors.textLightTertiary),
                               ),
@@ -173,7 +174,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                                 builder: (_, v, __) => LinearProgressIndicator(
                                   value: v,
                                   backgroundColor:
-                                      (THelperFunctions.isDarkMode(context)
+                                      (isDark
                                       ? TColors.darkBorder
                                       : TColors.lightBorder),
                                   valueColor: const AlwaysStoppedAnimation(
@@ -200,7 +201,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                               Icon(
                                 Icons.forum_outlined,
                                 size: 10,
-                                color: (THelperFunctions.isDarkMode(context)
+                                color: (isDark
                                     ? TColors.textDarkTertiary
                                     : TColors.textLightTertiary),
                               ),
@@ -210,7 +211,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                                 style: TextStyle(
                                   fontFamily: 'Inter',
                                   fontSize: 9.5,
-                                  color: (THelperFunctions.isDarkMode(context)
+                                  color: (isDark
                                       ? TColors.textDarkTertiary
                                       : TColors.textLightTertiary),
                                 ),
@@ -227,7 +228,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 10.5,
-                          color: (THelperFunctions.isDarkMode(context)
+                          color: (isDark
                               ? TColors.textDarkSecondary
                               : TColors.textLightSecondary),
                           height: 1.4,
@@ -243,7 +244,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                           Icon(
                             Icons.location_on_outlined,
                             size: 10,
-                            color: (THelperFunctions.isDarkMode(context)
+                            color: (isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary),
                           ),
@@ -253,7 +254,7 @@ class _CandidateListCardState extends State<CandidateListCard>
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 9.5,
-                              color: (THelperFunctions.isDarkMode(context)
+                              color: (isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary),
                             ),

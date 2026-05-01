@@ -27,14 +27,18 @@ class UpcomingElectionTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: isDark ? TColors.darkCard : TColors.lightCard,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: isDark ? TColors.darkBorder : TColors.lightBorder),
-          boxShadow: isDark ? [] : [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.02),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          border: Border.all(
+            color: isDark ? TColors.darkBorder : TColors.lightBorder,
+          ),
+          boxShadow: isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.02),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
         ),
         child: Row(
           children: [
@@ -43,10 +47,9 @@ class UpcomingElectionTile extends StatelessWidget {
               width: 38,
               height: 38,
               decoration: BoxDecoration(
-                color: TColors.primary.withOpacity(isDark ? 0.3 : 0.15),
+                color: TColors.primary,
                 borderRadius: BorderRadius.circular(8),
-                border:
-                    Border.all(color: TColors.secondary.withOpacity(0.3)),
+                border: Border.all(color: TColors.secondary.withOpacity(0.3)),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -54,19 +57,21 @@ class UpcomingElectionTile extends StatelessWidget {
                   Text(
                     d.month,
                     style: const TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 8,
-                        color: TColors.secondary,
-                        letterSpacing: 0.8,
-                        fontWeight: FontWeight.w600),
+                      fontFamily: 'Inter',
+                      fontSize: 8,
+                      color: TColors.secondary,
+                      letterSpacing: 0.8,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   Text(
                     d.day,
                     style: TextStyle(
-                        fontFamily: 'IBMPlexSerif',
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: isDark ? TColors.white : TColors.primary),
+                      fontFamily: 'IBMPlexSerif',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: TColors.white,
+                    ),
                   ),
                 ],
               ),
@@ -82,18 +87,22 @@ class UpcomingElectionTile extends StatelessWidget {
                   Text(
                     d.title,
                     style: TextStyle(
-                        fontFamily: 'IBMPlexSerif',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: isDark ? TColors.white : TColors.primary),
+                      fontFamily: 'IBMPlexSerif',
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? TColors.white : TColors.primary,
+                    ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     d.region,
                     style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 11,
-                        color: isDark ? TColors.textDarkTertiary : TColors.textLightSecondary),
+                      fontFamily: 'Inter',
+                      fontSize: 11,
+                      color: isDark
+                          ? TColors.textDarkTertiary
+                          : TColors.textLightSecondary,
+                    ),
                   ),
                 ],
               ),

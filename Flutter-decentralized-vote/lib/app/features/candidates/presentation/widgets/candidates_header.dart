@@ -18,10 +18,11 @@ class SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Container(
       height: 38,
       decoration: BoxDecoration(
-        color: (THelperFunctions.isDarkMode(context)
+        color: (isDark
             ? TColors.darkCard
             : TColors.lightCard),
         borderRadius: BorderRadius.circular(10),
@@ -47,7 +48,7 @@ class SearchField extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 13,
-                color: (THelperFunctions.isDarkMode(context)
+                color: (isDark
                     ? TColors.textDarkPrimary
                     : TColors.textLightPrimary),
               ),
@@ -61,7 +62,7 @@ class SearchField extends StatelessWidget {
                 hintStyle: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 12,
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.textDarkTertiary
                       : TColors.textLightTertiary),
                 ),
@@ -88,6 +89,7 @@ class SortSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final options = [
       ('Popularity', Icons.trending_up_rounded),
       ('A–Z Name', Icons.sort_by_alpha_rounded),
@@ -96,23 +98,23 @@ class SortSheet extends StatelessWidget {
     ];
     return Container(
       decoration: BoxDecoration(
-        color: (THelperFunctions.isDarkMode(context)
+        color: (isDark
             ? TColors.darkSurface
             : TColors.lightSurface),
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         border: Border(
           top: BorderSide(
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.darkBorder
                 : TColors.lightBorder),
           ),
           left: BorderSide(
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.darkBorder
                 : TColors.lightBorder),
           ),
           right: BorderSide(
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.darkBorder
                 : TColors.lightBorder),
           ),
@@ -128,7 +130,7 @@ class SortSheet extends StatelessWidget {
               width: 36,
               height: 4,
               decoration: BoxDecoration(
-                color: (THelperFunctions.isDarkMode(context)
+                color: (isDark
                     ? TColors.darkBorder
                     : TColors.lightBorder),
                 borderRadius: BorderRadius.circular(2),
@@ -142,7 +144,7 @@ class SortSheet extends StatelessWidget {
               fontFamily: 'IBMPlexSerif',
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: (THelperFunctions.isDarkMode(context)
+              color: (isDark
                   ? TColors.white
                   : TColors.black),
             ),
@@ -163,7 +165,7 @@ class SortSheet extends StatelessWidget {
                   border: Border(
                     bottom: BorderSide(
                       color:
-                          (THelperFunctions.isDarkMode(context)
+                          (isDark
                                   ? TColors.darkBorder
                                   : TColors.lightBorder)
                               .withOpacity(e.key < 3 ? 1 : 0),
@@ -176,7 +178,7 @@ class SortSheet extends StatelessWidget {
                       e.value.$2,
                       color: selected
                           ? TColors.secondary
-                          : (THelperFunctions.isDarkMode(context)
+                          : (isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary),
                       size: 18,
@@ -189,7 +191,7 @@ class SortSheet extends StatelessWidget {
                         fontSize: 14,
                         color: selected
                             ? TColors.secondary
-                            : (THelperFunctions.isDarkMode(context)
+                            : (isDark
                                   ? TColors.textDarkSecondary
                                   : TColors.textLightSecondary),
                         fontWeight: selected
@@ -261,6 +263,7 @@ class CandidatesHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return FadeTransition(
       opacity: listFade,
       child: Row(
@@ -273,7 +276,7 @@ class CandidatesHeader extends StatelessWidget {
               fontFamily: 'IBMPlexSerif',
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: (THelperFunctions.isDarkMode(context)
+              color: (isDark
                   ? TColors.white
                   : TColors.black),
             ),
@@ -284,12 +287,12 @@ class CandidatesHeader extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: (THelperFunctions.isDarkMode(context)
+                color: (isDark
                     ? TColors.darkCard
                     : TColors.lightCard),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.darkBorder
                       : TColors.lightBorder),
                 ),
@@ -298,7 +301,7 @@ class CandidatesHeader extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.sort_rounded,
-                    color: (THelperFunctions.isDarkMode(context)
+                    color: (isDark
                         ? TColors.textDarkTertiary
                         : TColors.textLightTertiary),
                     size: 13,
@@ -309,7 +312,7 @@ class CandidatesHeader extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 11,
-                      color: (THelperFunctions.isDarkMode(context)
+                      color: (isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary),
                     ),

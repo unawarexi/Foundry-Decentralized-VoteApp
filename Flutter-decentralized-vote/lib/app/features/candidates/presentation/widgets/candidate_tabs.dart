@@ -12,6 +12,7 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final c = candidate;
     return ListView(
       controller: ctrl,
@@ -25,13 +26,13 @@ class ProfileTab extends StatelessWidget {
               painter: SkillRadarPainter(
                 scores: c.radarScores,
                 progress: 1.0,
-                fillColor: THelperFunctions.isDarkMode(context)
+                fillColor: isDark
                     ? TColors.primary.withOpacity(0.35)
                     : TColors.secondary.withOpacity(0.4),
-                strokeColor: THelperFunctions.isDarkMode(context)
+                strokeColor: isDark
                     ? TColors.secondary
                     : TColors.primary,
-                gridColor: THelperFunctions.isDarkMode(context)
+                gridColor: isDark
                     ? TColors.darkBorder
                     : TColors.textLightTertiary.withOpacity(0.35),
               ),
@@ -49,7 +50,7 @@ class ProfileTab extends StatelessWidget {
             painter: WaveformPainter(
               values: c.approvalHistory,
               activeColor: TColors.secondary,
-              inactiveColor: (THelperFunctions.isDarkMode(context)
+              inactiveColor: (isDark
                   ? TColors.darkBorder
                   : TColors.lightBorder),
             ),
@@ -66,7 +67,7 @@ class ProfileTab extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 13,
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.textDarkSecondary
                 : TColors.textLightSecondary),
             height: 1.65,
@@ -90,6 +91,7 @@ class ManifestoTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return ListView(
       controller: ctrl,
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
@@ -112,13 +114,13 @@ class ManifestoTab extends StatelessWidget {
                     shape: BoxShape.circle,
                     color: achieved
                         ? TColors.secondary.withOpacity(0.15)
-                        : (THelperFunctions.isDarkMode(context)
+                        : (isDark
                               ? TColors.darkElevated
                               : TColors.lightElevated),
                     border: Border.all(
                       color: achieved
                           ? TColors.secondary
-                          : (THelperFunctions.isDarkMode(context)
+                          : (isDark
                                 ? TColors.darkBorder
                                 : TColors.lightBorder),
                       width: 1.5,
@@ -136,7 +138,7 @@ class ManifestoTab extends StatelessWidget {
                             style: TextStyle(
                               fontFamily: 'Inter',
                               fontSize: 10,
-                              color: (THelperFunctions.isDarkMode(context)
+                              color: (isDark
                                   ? TColors.textDarkTertiary
                                   : TColors.textLightTertiary),
                               fontWeight: FontWeight.w600,
@@ -156,10 +158,10 @@ class ManifestoTab extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                           color: achieved
-                              ? (THelperFunctions.isDarkMode(context)
+                              ? (isDark
                                     ? TColors.white
                                     : TColors.black)
-                              : (THelperFunctions.isDarkMode(context)
+                              : (isDark
                                     ? TColors.textDarkSecondary
                                     : TColors.textLightSecondary),
                         ),
@@ -170,7 +172,7 @@ class ManifestoTab extends StatelessWidget {
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 12,
-                          color: (THelperFunctions.isDarkMode(context)
+                          color: (isDark
                               ? TColors.textDarkTertiary
                               : TColors.textLightTertiary),
                           height: 1.5,
@@ -216,6 +218,7 @@ class ForumTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return ListView.separated(
       controller: ctrl,
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
@@ -226,14 +229,14 @@ class ForumTab extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.darkCard
                 : TColors.lightCard),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: q.isUnanswered
                   ? TColors.warning.withOpacity(0.28)
-                  : (THelperFunctions.isDarkMode(context)
+                  : (isDark
                         ? TColors.darkBorder
                         : TColors.lightBorder),
             ),
@@ -285,7 +288,7 @@ class ForumTab extends StatelessWidget {
                 style: TextStyle(
                   fontFamily: 'Inter',
                   fontSize: 13,
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.textDarkPrimary
                       : TColors.textLightPrimary),
                   height: 1.5,
@@ -314,7 +317,7 @@ class ForumTab extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 10,
-                      color: (THelperFunctions.isDarkMode(context)
+                      color: (isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary),
                     ),
@@ -336,6 +339,7 @@ class HistoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return ListView.separated(
       controller: ctrl,
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
@@ -364,7 +368,7 @@ class HistoryTab extends StatelessWidget {
                   Container(
                     width: 1,
                     height: 52,
-                    color: (THelperFunctions.isDarkMode(context)
+                    color: (isDark
                         ? TColors.darkBorder
                         : TColors.lightBorder),
                   ),
@@ -394,7 +398,7 @@ class HistoryTab extends StatelessWidget {
                         fontFamily: 'IBMPlexSerif',
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: (THelperFunctions.isDarkMode(context)
+                        color: (isDark
                             ? TColors.white
                             : TColors.black),
                       ),
@@ -405,7 +409,7 @@ class HistoryTab extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Inter',
                         fontSize: 11,
-                        color: (THelperFunctions.isDarkMode(context)
+                        color: (isDark
                             ? TColors.textDarkTertiary
                             : TColors.textLightTertiary),
                         height: 1.5,

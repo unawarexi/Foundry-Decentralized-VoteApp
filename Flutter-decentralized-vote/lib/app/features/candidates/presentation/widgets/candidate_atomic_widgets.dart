@@ -15,6 +15,7 @@ class CandidateAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Container(
       width: size,
       height: size,
@@ -52,6 +53,7 @@ class PartyBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
       decoration: BoxDecoration(
@@ -113,6 +115,7 @@ class _FollowButtonState extends State<FollowButton>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return GestureDetector(
       onTap: () {
         widget.onTap();
@@ -133,7 +136,7 @@ class _FollowButtonState extends State<FollowButton>
               border: Border.all(
                 color: widget.isFollowed
                     ? TColors.secondary.withOpacity(0.5)
-                    : (THelperFunctions.isDarkMode(context)
+                    : (isDark
                           ? TColors.darkBorder
                           : TColors.lightBorder),
               ),
@@ -146,7 +149,7 @@ class _FollowButtonState extends State<FollowButton>
                 fontWeight: FontWeight.w600,
                 color: widget.isFollowed
                     ? TColors.secondary
-                    : (THelperFunctions.isDarkMode(context)
+                    : (isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary),
               ),
@@ -171,6 +174,7 @@ class SpotlightMetric extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Column(
       children: [
         Icon(icon, size: TSizes.iconXs, color: TColors.secondary),
@@ -181,9 +185,7 @@ class SpotlightMetric extends StatelessWidget {
             fontFamily: 'IBMPlexMono',
             fontSize: 12,
             fontWeight: FontWeight.w700,
-            color: (THelperFunctions.isDarkMode(context)
-                ? TColors.white
-                : TColors.black),
+            color: TColors.white,
           ),
         ),
         Text(
@@ -191,7 +193,7 @@ class SpotlightMetric extends StatelessWidget {
           style: TextStyle(
             fontFamily: 'Inter',
             fontSize: 9,
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.textDarkTertiary
                 : TColors.textLightTertiary),
           ),
@@ -207,6 +209,7 @@ class SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Row(
       children: [
         Container(width: 3, height: 14, color: TColors.secondary),
@@ -217,7 +220,7 @@ class SectionTitle extends StatelessWidget {
             fontFamily: 'IBMPlexSerif',
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.white
                 : TColors.black),
           ),
@@ -233,6 +236,7 @@ class StatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final stats = [
       ('Vote Share', '${(candidate.voteShare * 100).round()}%'),
       ('Approval', '${candidate.approvalPct}%'),
@@ -254,12 +258,12 @@ class StatsGrid extends StatelessWidget {
             (s) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               decoration: BoxDecoration(
-                color: (THelperFunctions.isDarkMode(context)
+                color: (isDark
                     ? TColors.darkCard
                     : TColors.lightCard),
                 borderRadius: BorderRadius.circular(10),
                 border: Border.all(
-                  color: (THelperFunctions.isDarkMode(context)
+                  color: (isDark
                       ? TColors.darkBorder
                       : TColors.lightBorder),
                 ),
@@ -274,7 +278,7 @@ class StatsGrid extends StatelessWidget {
                       fontFamily: 'IBMPlexMono',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: (THelperFunctions.isDarkMode(context)
+                      color: (isDark
                           ? TColors.white
                           : TColors.black),
                     ),
@@ -284,7 +288,7 @@ class StatsGrid extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 10,
-                      color: (THelperFunctions.isDarkMode(context)
+                      color: (isDark
                           ? TColors.textDarkTertiary
                           : TColors.textLightTertiary),
                     ),
@@ -312,12 +316,13 @@ class SheetTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     return Container(
       height: 44,
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: (THelperFunctions.isDarkMode(context)
+            color: (isDark
                 ? TColors.darkBorder
                 : TColors.lightBorder),
           ),
@@ -340,7 +345,7 @@ class SheetTabBar extends StatelessWidget {
                       fontWeight: on ? FontWeight.w600 : FontWeight.w400,
                       color: on
                           ? TColors.secondary
-                          : (THelperFunctions.isDarkMode(context)
+                          : (isDark
                                 ? TColors.textDarkTertiary
                                 : TColors.textLightTertiary),
                     ),
