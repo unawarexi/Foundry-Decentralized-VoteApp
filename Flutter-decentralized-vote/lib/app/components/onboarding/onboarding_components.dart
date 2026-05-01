@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
-import 'widgets/onboarding_illustrations.dart';
+import 'package:flutter_frontend_vote/app/components/onboarding/onboarding_illustrations.dart';
 
 // ──────────────────────────────────────────────────────────────
 // Accent tag pill
