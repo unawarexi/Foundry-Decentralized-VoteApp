@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
+import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
 
 enum SToastType { success, error, warning, info }
 
@@ -115,12 +116,13 @@ class _SToastWidgetState extends State<_SToastWidget>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
     final (icon, accent) = _resolveStyle(widget.type);
 
     return Positioned(
-      top: widget.topPad + TSizes.xs,
-      left: TSizes.lg,
-      right: TSizes.lg,
+      top: widget.topPad + TSizes.sm,
+      left: TSizes.md,
+      right: TSizes.md,
       child: SlideTransition(
         position: _slide,
         child: FadeTransition(
@@ -129,30 +131,53 @@ class _SToastWidgetState extends State<_SToastWidget>
             onVerticalDragEnd: (_) => _dismiss(),
             child: Center(
               child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width - (TSizes.md * 2),
+                ),
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 8,
+                  horizontal: 16,
+                  vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(TSizes.radiusFull),
-                  border: Border.all(color: accent.withValues(alpha: 0.35), width: 1.5),
+                  color: isDark ? TColors.darkCard : TColors.lightCard,
+                  borderRadius: BorderRadius.circular(TSizes.radiusMd),
+                  border: Border.all(
+                    color: isDark ? TColors.darkBorder : TColors.lightBorder,
+                    width: 1.0,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(isDark ? 0.4 : 0.08),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(icon, color: accent, size: 15),
-                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: accent.withOpacity(0.12),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(icon, color: accent, size: 14),
+                    ),
+                    const SizedBox(width: 12),
                     Flexible(
                       child: Text(
                         widget.message,
                         style: TextStyle(
-                          color: accent,
-                          fontSize: 11.5,
+                          color: isDark
+                              ? TColors.textDarkPrimary
+                              : TColors.textLightPrimary,
+                          fontSize: 13,
+                          fontFamily: 'Inter',
                           fontWeight: FontWeight.w600,
-                          height: 1.2,
+                          letterSpacing: -0.2,
                         ),
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
