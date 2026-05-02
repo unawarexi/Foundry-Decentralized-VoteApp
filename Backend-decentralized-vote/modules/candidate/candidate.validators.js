@@ -22,6 +22,9 @@ export const registerCandidateSchema = z.object({
   })).optional(),
   lifeSummary: z.string().max(2000).optional(),
   payoutAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional(),
+  // Campaign enrichment
+  logoUrl: z.string().url().optional(),
+  slogan: z.string().max(200).optional(),
 });
 
 export const updateCandidateSchema = z.object({
@@ -31,6 +34,8 @@ export const updateCandidateSchema = z.object({
   milestones: z.array(z.any()).optional(),
   lifeSummary: z.string().max(2000).optional(),
   payoutAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/).optional(),
+  logoUrl: z.string().url().optional(),
+  slogan: z.string().max(200).optional(),
 });
 
 export const approveCandidateSchema = z.object({

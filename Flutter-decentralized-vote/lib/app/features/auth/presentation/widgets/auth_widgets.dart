@@ -667,3 +667,174 @@ class VSFileUpload extends StatelessWidget {
     );
   }
 }
+
+// ============================================================================
+// VS Avatar Picker — circular profile photo / logo picker
+// ============================================================================
+
+class VSAvatarPicker extends StatelessWidget {
+  final String label;
+  final bool hasImage;
+  final VoidCallback onTap;
+  final double size;
+  final bool isRound;
+  final IconData placeholderIcon;
+
+  const VSAvatarPicker({
+    super.key,
+    required this.label,
+    required this.hasImage,
+    required this.onTap,
+    this.size = 90,
+    this.isRound = true,
+    this.placeholderIcon = Icons.person_outline_rounded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
+    return Column(
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 10),
+        GestureDetector(
+          onTap: onTap,
+          child: Stack(
+            children: [
+              Container(
+                width: size,
+                height: size,
+                decoration: BoxDecoration(
+                  color: isDark ? TColors.darkCard : TColors.lightCard,
+                  shape: isRound ? BoxShape.circle : BoxShape.rectangle,
+                  borderRadius: isRound ? null : BorderRadius.circular(TSizes.radiusSm),
+                  border: Border.all(
+                    color: hasImage
+                        ? TColors.success
+                        : TColors.secondary.withValues(alpha: 0.4),
+                    width: hasImage ? 2 : 1.5,
+                  ),
+                ),
+                child: Icon(
+                  hasImage ? Icons.check_circle_rounded : placeholderIcon,
+                  color: hasImage ? TColors.success : TColors.secondary,
+                  size: size * 0.38,
+                ),
+              ),
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  width: 26,
+                  height: 26,
+                  decoration: BoxDecoration(
+                    color: TColors.secondary,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark ? TColors.darkBackground : TColors.lightBackground,
+                      width: 2,
+                    ),
+                  ),
+                  child: const Icon(Icons.camera_alt_rounded, color: TColors.white, size: 14),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ============================================================================
+// VS Multi-Chip Selector — language / tag picker
+// ============================================================================
+
+class VSMultiChipSelector extends StatelessWidget {
+  final String label;
+  final List<String> options;
+  final List<String> selected;
+  final Function(List<String>) onChanged;
+
+  const VSMultiChipSelector({
+    super.key,
+    required this.label,
+    required this.options,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 11,
+            fontWeight: FontWeight.w600,
+            color: isDark ? TColors.textDarkTertiary : TColors.textLightTertiary,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: options.map((option) {
+            final isSelected = selected.contains(option);
+            return GestureDetector(
+              onTap: () {
+                final updated = List<String>.from(selected);
+                if (isSelected) {
+                  updated.remove(option);
+                } else {
+                  updated.add(option);
+                }
+                onChanged(updated);
+              },
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 180),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? TColors.secondary
+                      : (isDark ? TColors.darkCard : TColors.lightCard),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected
+                        ? TColors.secondary
+                        : (isDark ? TColors.darkBorder : TColors.lightBorder),
+                  ),
+                ),
+                child: Text(
+                  option,
+                  style: TextStyle(
+                    fontFamily: 'Inter',
+                    fontSize: 13,
+                    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                    color: isSelected
+                        ? TColors.white
+                        : (isDark ? TColors.textDarkSecondary : TColors.textLightSecondary),
+                  ),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}

@@ -1,12 +1,16 @@
-/// Centralized API endpoint paths matching backend routes.
-/// All paths are relative — base URL is set on the Dio client.
+/// Centralized API endpoint paths — VoteSecure backend (Express + FastAPI).
+/// All paths are relative to the base URL set on the Dio client.
 class ApiEndpoints {
   ApiEndpoints._();
 
   // ──────────── Auth ────────────
+  static const register = '/auth/register';
   static const signIn = '/auth/signin';
   static const signOut = '/auth/signout';
   static const me = '/auth/me';
+  static const verifyWallet = '/auth/verify-wallet';
+  static const registerOnChain = '/auth/register-on-chain';
+  static const bindDevice = '/auth/bind-device';
   static const deleteAccount = '/auth/account';
 
   // ──────────── Users ────────────
@@ -14,112 +18,78 @@ class ApiEndpoints {
   static const userAvatar = '/users/avatar';
   static const userDevices = '/users/devices';
   static String userDevice(String deviceId) => '/users/devices/$deviceId';
-  static const userOnlineStatus = '/users/online-status';
+  static const userVotingHistory = '/users/voting-history';
+  static String userById(String id) => '/users/$id';
 
-  // ──────────── Meetings ────────────
-  static const meetings = '/meetings';
-  static String meeting(String id) => '/meetings/$id';
-  static String joinByCode(String code) => '/meetings/join/$code';
-  static String joinMeeting(String id) => '/meetings/$id/join';
-  static String leaveMeeting(String id) => '/meetings/$id/leave';
-  static String endMeeting(String id) => '/meetings/$id/end';
-  static String lockMeeting(String id) => '/meetings/$id/lock';
-  static String unlockMeeting(String id) => '/meetings/$id/unlock';
-  static String meetingParticipants(String id) => '/meetings/$id/participants';
-  static String kickParticipant(String meetingId, String participantId) =>
-      '/meetings/$meetingId/kick/$participantId';
-  static String banParticipant(String meetingId, String userId) =>
-      '/meetings/$meetingId/ban/$userId';
-  static String unbanParticipant(String meetingId, String userId) =>
-      '/meetings/$meetingId/ban/$userId';
-  static String meetingBans(String meetingId) => '/meetings/$meetingId/bans';
-  static String meetingToken(String id) => '/meetings/$id/token';
-  static String meetingInvites(String id) => '/meetings/$id/invites';
-  static String respondToInvite(String token) => '/meetings/invite/$token/respond';
-  static String recreateMeeting(String id) => '/meetings/$id/recreate';
+  // ──────────── Elections ────────────
+  static const elections = '/elections';
+  static const activeElections = '/elections/active';
+  static String electionById(String id) => '/elections/$id';
+  static String electionResults(String id) => '/elections/$id/results';
+  static String electionsByRegion(String regionId) => '/elections/by-region/$regionId';
+  static String electionPhase(String id) => '/elections/$id/phase';
 
-  // ──────────── Meeting Materials ────────────
-  static String meetingMaterials(String meetingId) => '/meetings/$meetingId/materials';
-  static String material(String materialId) => '/meetings/materials/$materialId';
+  // ──────────── Votes ────────────
+  static const castVote = '/votes';
+  static const myVotes = '/votes/mine';
+  static String voteStatus(String electionId) => '/votes/$electionId/status';
 
-  // ──────────── Rooms ────────────
-  static const activeRooms = '/rooms/active';
-  static String roomState(String id) => '/rooms/$id';
-  static String roomSettings(String id) => '/rooms/$id/settings';
-  static String roomMuteAll(String id) => '/rooms/$id/mute-all';
+  // ──────────── Candidates ────────────
+  static const registerCandidate = '/candidates';
+  static String candidatesByElection(String electionId) => '/candidates/election/$electionId';
+  static String candidateById(String id) => '/candidates/$id';
+  static String updateCandidate(String id) => '/candidates/$id';
+  static String reviewCandidate(String id) => '/candidates/$id/review';
 
-  // ──────────── Chat ────────────
-  static const chatRooms = '/chat/rooms';
-  static String meetingChat(String meetingId) => '/chat/meeting/$meetingId';
-  static String chatMessages(String chatRoomId) => '/chat/$chatRoomId/messages';
-  static String deleteMessage(String messageId) => '/chat/messages/$messageId';
+  // ──────────── Parties ────────────
+  static const parties = '/parties';
+  static String partyById(String id) => '/parties/$id';
+  static String approveParty(String id) => '/parties/$id/approve';
+
+  // ──────────── Regions ────────────
+  static const regions = '/regions';
+  static String regionById(String id) => '/regions/$id';
+  static String regionElections(String id) => '/regions/$id/elections';
+  static String assignVoterRegion(String id) => '/regions/$id/assign-voter';
+
+  // ──────────── Forum ────────────
+  static const forumPosts = '/forum';
+  static String forumPost(String id) => '/forum/$id';
+  static String answerPost(String id) => '/forum/$id/answer';
+  static String votePost(String id) => '/forum/$id/vote';
+
+  // ──────────── Fraud ────────────
+  static const fraudReports = '/fraud';
+  static String resolveReport(String id) => '/fraud/$id/resolve';
+  static String userRiskScore(String userId) => '/fraud/risk/$userId';
 
   // ──────────── Notifications ────────────
   static const notifications = '/notifications';
-  static const notificationUnreadCount = '/notifications/unread-count';
-  static const notificationReadAll = '/notifications/read-all';
-  static const notificationPreferences = '/notifications/preferences';
   static String notificationRead(String id) => '/notifications/$id/read';
   static String notificationDelete(String id) => '/notifications/$id';
 
-  // ──────────── Recordings ────────────
-  static const recordings = '/recordings';
-  static String recording(String id) => '/recordings/$id';
-  static String recordingDownload(String id) => '/recordings/$id/download';
-  static String startRecording(String meetingId) =>
-      '/recordings/meeting/$meetingId/start';
-  static String stopRecording(String meetingId) =>
-      '/recordings/meeting/$meetingId/stop';
-
   // ──────────── Analytics ────────────
-  static const analyticsDashboard = '/analytics/dashboard';
-  static const analyticsUsage = '/analytics/usage';
-  static String meetingAnalytics(String meetingId) =>
-      '/analytics/meeting/$meetingId';
+  static const platformStats = '/analytics/platform';
+  static String electionAnalytics(String id) => '/analytics/election/$id';
+  static String turnoutByRegion(String id) => '/analytics/election/$id/turnout';
 
-  // ──────────── Billing ────────────
-  static const subscription = '/billing/subscription';
-  static const billingCheckout = '/billing/checkout';
-  static const billingPortal = '/billing/portal';
-  static const billingCancel = '/billing/cancel';
+  // ──────────── Admin ────────────
+  static const adminOverview = '/admin/overview';
+  static const adminUsers = '/admin/users';
+  static String adminSetRole(String userId) => '/admin/users/$userId/role';
+  static String adminBanUser(String userId) => '/admin/users/$userId/ban';
+  static String adminUnbanUser(String userId) => '/admin/users/$userId/unban';
+  static const adminBroadcast = '/admin/broadcast';
 
-  // ──────────── Search ────────────
-  static const search = '/search';
-  static const searchUsers = '/search/users';
-  static const searchMeetings = '/search/meetings';
+  // ──────────── Wallet ────────────
+  static const walletTransactions = '/wallet/transactions';
+  static const walletBalance = '/wallet/balance';
 
-  // ──────────── Legal ────────────
-  static const legalTerms = '/legal/terms';
-  static const legalPrivacy = '/legal/privacy';
-  static const legalAll = '/legal/all';
-
-  // ──────────── AI / Intelligence ────────────
-  static String aiTranscript(String meetingId) => '/ai/speech/transcript/$meetingId';
-  static const aiSpeechAnalyze = '/ai/speech/analyze';
-  static const aiCopilotSuggestions = '/ai/copilot/suggestions';
-  static const aiCoachingReport = '/ai/copilot/coaching-report';
-  static const aiPredictOutcome = '/ai/copilot/predict-outcome';
-  static const aiKnowledgeGaps = '/ai/copilot/knowledge-gaps';
-  static const aiMeetingSummary = '/ai/memory/summary';
-  static const aiMemoryStore = '/ai/memory/store';
-  static const aiMemoryQuery = '/ai/memory/query';
-  static const aiMemoryReplay = '/ai/memory/replay';
-  static String aiRelationship(String userId, String targetId) =>
-      '/ai/memory/relationship/$userId/$targetId';
-  static String aiMeetingEmotions(String meetingId) => '/ai/emotion/meeting/$meetingId';
-  static const aiEmotionAnalyze = '/ai/emotion/analyze';
-  static const aiVoiceCommand = '/ai/assistant/voice-command';
-  static const aiVoiceCommandConfirm = '/ai/assistant/voice-command/confirm';
-  static const aiMeetingContext = '/ai/assistant/meeting-context';
-  static const aiToolsSchema = '/ai/tools/schema';
-  static const aiToolsExecute = '/ai/tools/execute';
-  static const aiToolsExecuteMultiple = '/ai/tools/execute-multiple';
-  static const aiWorkflowPostMeeting = '/ai/workflow/post-meeting';
-  static const aiWorkflowPreMeeting = '/ai/workflow/pre-meeting';
-  static String aiWorkflowStatus(String workflowId) => '/ai/workflow/status/$workflowId';
-  static const aiWorkflowActive = '/ai/workflow/active';
-  static const aiLiveAnalysis = '/ai/agents/live-analysis';
-  static const aiPostMeetingAgent = '/ai/agents/post-meeting';
-  static String aiAgentState(String sessionId) => '/ai/agents/state/$sessionId';
-  static const aiToolExecute = '/ai/tools/execute';
+  // ──────────── AI / Identity Verification (FastAPI) ────────────
+  static const aiFaceVerify = '/ai/verify/face';
+  static const aiLivenessCheck = '/ai/verify/liveness';
+  static const aiIdScan = '/ai/verify/id';
+  static const aiAgeVerify = '/ai/verify/age';
+  static const aiFraudAnalyze = '/ai/fraud/analyze';
+  static const aiVoterRiskScore = '/ai/fraud/risk';
 }

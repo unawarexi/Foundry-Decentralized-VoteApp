@@ -52,7 +52,7 @@ export async function syncUserFromFirebase({ uid, email, displayName, photoURL }
 // Full flow: validate → sync to DB → optionally register on-chain
 // ============================================================================
 
-export async function registerVoter({ firebaseUid, email, displayName, phone, walletAddress, regionId, locale, fcmToken }) {
+export async function registerVoter({ firebaseUid, email, displayName, phone, walletAddress, regionId, locale, fcmToken, avatarUrl, logoUrl, slogan, languages, religion }) {
   // Ensure user exists in DB
   let user = await prisma.user.findUnique({ where: { firebaseUid } });
   if (!user) {
@@ -67,6 +67,11 @@ export async function registerVoter({ firebaseUid, email, displayName, phone, wa
         locale: locale || "en",
         fcmToken,
         emailVerified: true,
+        avatarUrl,
+        logoUrl,
+        slogan,
+        languages: languages || [],
+        religion,
       },
     });
   } else {
@@ -79,6 +84,11 @@ export async function registerVoter({ firebaseUid, email, displayName, phone, wa
         regionId: regionId || user.regionId,
         fcmToken: fcmToken || user.fcmToken,
         displayName: displayName || user.displayName,
+        ...(avatarUrl && { avatarUrl }),
+        ...(logoUrl && { logoUrl }),
+        ...(slogan && { slogan }),
+        ...(languages?.length && { languages }),
+        ...(religion && { religion }),
         updatedAt: new Date(),
       },
     });

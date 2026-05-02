@@ -9,25 +9,38 @@ import { createLogger } from "../../logs/logger.js";
 
 const log = createLogger("UserService");
 
+const USER_SELECT = {
+  id: true, firebaseUid: true, email: true, displayName: true, avatarUrl: true,
+  logoUrl: true, slogan: true, languages: true, religion: true, phone: true,
+  role: true, kycStatus: true, isBanned: true, isActive: true, emailVerified: true,
+  phoneVerified: true, identityHash: true, deviceId: true, fcmToken: true,
+  regionId: true, countryCode: true, locale: true, walletAddress: true,
+  lastSeenAt: true, createdAt: true, updatedAt: true,
+};
+
 export async function getProfile(userId) {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    include: { region: true },
-    omit: { biometricHash: true },
+    select: { ...USER_SELECT, region: true },
   });
   if (!user) throw new AppError("User not found", HttpStatus.NOT_FOUND, ErrorCodes.USER_NOT_FOUND);
   return user;
 }
 
-export async function updateProfile({ userId, displayName, phone, fcmToken }) {
+export async function updateProfile({ userId, displayName, phone, fcmToken, avatarUrl, logoUrl, slogan, languages, religion }) {
   return prisma.user.update({
     where: { id: userId },
     data: {
       ...(displayName && { displayName }),
       ...(phone && { phone }),
       ...(fcmToken && { fcmToken }),
+      ...(avatarUrl && { avatarUrl }),
+      ...(logoUrl && { logoUrl }),
+      ...(slogan !== undefined && { slogan }),
+      ...(languages?.length && { languages }),
+      ...(religion !== undefined && { religion }),
     },
-    omit: { biometricHash: true },
+    select: USER_SELECT,
   });
 }
 

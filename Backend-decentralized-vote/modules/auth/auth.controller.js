@@ -13,7 +13,7 @@ const log = createLogger("AuthController");
 // POST /api/v1/auth/register
 export async function register(req, res, next) {
   try {
-    const { email, displayName, phone, walletAddress, regionId, locale, fcmToken } = req.body;
+    const { email, displayName, phone, walletAddress, regionId, locale, fcmToken, avatarUrl, logoUrl, slogan, languages, religion } = req.body;
     const { uid } = req.firebaseUser;
 
     const user = await authService.registerVoter({
@@ -24,8 +24,11 @@ export async function register(req, res, next) {
       walletAddress,
       regionId,
       locale,
-      fcmToken,
-    });
+      fcmToken,      avatarUrl,
+      logoUrl,
+      slogan,
+      languages,
+      religion,    });
 
     created(res, user, "Voter registered successfully");
   } catch (err) {

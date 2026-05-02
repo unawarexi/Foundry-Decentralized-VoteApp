@@ -10,8 +10,7 @@ class PersonalTab extends StatelessWidget {
   final TextEditingController dobController;
   final TextEditingController occupationController;
   final TextEditingController addressController;
-  final TextEditingController passwordController;
-  final TextEditingController confirmController;
+  final TextEditingController sloganController;
   final bool obscurePassword;
   final bool obscureConfirm;
   final VoidCallback onTogglePassword;
@@ -22,12 +21,22 @@ class PersonalTab extends StatelessWidget {
   final String? selectedCountry;
   final String? selectedState;
   final String? selectedLGA;
+  final String? selectedReligion;
+  final List<String> selectedLanguages;
   final Function(String?) onMaritalStatusChanged;
   final Function(String?) onGenderChanged;
   final Function(String?) onFamilyRoleChanged;
   final Function(String?) onCountryChanged;
   final Function(String?) onStateChanged;
   final Function(String?) onLGAChanged;
+  final Function(String?) onReligionChanged;
+  final Function(List<String>) onLanguagesChanged;
+  // Profile picture (avatarUrl)
+  final bool hasProfilePicture;
+  final VoidCallback onUploadProfilePicture;
+  // Organisation / company logo (logoUrl on User)
+  final bool hasOrgLogo;
+  final VoidCallback onUploadOrgLogo;
 
   const PersonalTab({
     super.key,
@@ -37,8 +46,7 @@ class PersonalTab extends StatelessWidget {
     required this.dobController,
     required this.occupationController,
     required this.addressController,
-    required this.passwordController,
-    required this.confirmController,
+    required this.sloganController,
     required this.obscurePassword,
     required this.obscureConfirm,
     required this.onTogglePassword,
@@ -49,21 +57,76 @@ class PersonalTab extends StatelessWidget {
     this.selectedCountry,
     this.selectedState,
     this.selectedLGA,
+    this.selectedReligion,
+    this.selectedLanguages = const [],
     required this.onMaritalStatusChanged,
     required this.onGenderChanged,
     required this.onFamilyRoleChanged,
     required this.onCountryChanged,
     required this.onStateChanged,
     required this.onLGAChanged,
+    required this.onReligionChanged,
+    required this.onLanguagesChanged,
+    this.hasProfilePicture = false,
+    required this.onUploadProfilePicture,
+    this.hasOrgLogo = false,
+    required this.onUploadOrgLogo,
   });
+
+  static const _languages = [
+    'English', 'French', 'Arabic', 'Hausa', 'Yoruba', 'Igbo', 'Swahili',
+    'Portuguese', 'Fulani', 'Amharic', 'Spanish', 'Mandarin', 'Hindi',
+    'Pidgin English', 'Zulu', 'Shona',
+  ];
+
+  static const _religions = [
+    'Christianity', 'Islam', 'Traditional / Indigenous', 'Hinduism',
+    'Buddhism', 'Judaism', 'Atheism / No Religion', 'Other',
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // ── Profile Picture + Org Logo ────────────────────────────────────
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: AuthAccentTag(label: 'PROFILE PHOTOS'),
+        ),
+        const SizedBox(height: 14),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            VSAvatarPicker(
+              label: 'Profile Photo',
+              hasImage: hasProfilePicture,
+              onTap: onUploadProfilePicture,
+              size: 90,
+              isRound: true,
+              placeholderIcon: Icons.person_outline_rounded,
+            ),
+            VSAvatarPicker(
+              label: 'Org / Company Logo',
+              hasImage: hasOrgLogo,
+              onTap: onUploadOrgLogo,
+              size: 90,
+              isRound: false,
+              placeholderIcon: Icons.business_outlined,
+            ),
+          ],
+        ),
+        const SizedBox(height: 22),
+
+        // ── Personal Identification ───────────────────────────────────────
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: AuthAccentTag(label: 'PERSONAL IDENTITY'),
+        ),
+        const SizedBox(height: 14),
         VSTextField(
           controller: nameController,
-          focusNode: FocusNode(), // Simplified for now
+          focusNode: FocusNode(),
           label: 'Full Legal Names',
           hint: 'Surname First Name Middle Name',
           isFocused: false,
@@ -97,7 +160,7 @@ class PersonalTab extends StatelessWidget {
                 label: 'Gender',
                 hint: 'Select',
                 value: selectedGender,
-                items: ['Male', 'Female', 'Other'],
+                items: const ['Male', 'Female', 'Other'],
                 onChanged: onGenderChanged,
               ),
             ),
@@ -111,7 +174,7 @@ class PersonalTab extends StatelessWidget {
                 label: 'Marital Status',
                 hint: 'Select',
                 value: selectedMaritalStatus,
-                items: ['Single', 'Married', 'Divorced', 'Widowed'],
+                items: const ['Single', 'Married', 'Divorced', 'Widowed'],
                 onChanged: onMaritalStatusChanged,
               ),
             ),
@@ -121,40 +184,54 @@ class PersonalTab extends StatelessWidget {
                 label: 'Family Role',
                 hint: 'Select',
                 value: selectedFamilyRole,
-                items: ['Head of Household', 'Spouse', 'Dependent', 'Child'],
+                items: const ['Head of Household', 'Spouse', 'Dependent', 'Child'],
                 onChanged: onFamilyRoleChanged,
               ),
             ),
           ],
         ),
         const SizedBox(height: 14),
-        Row(
-          children: [
-            Expanded(
-              child: VSTextField(
-                controller: occupationController,
-                focusNode: FocusNode(),
-                label: 'Occupation',
-                hint: 'e.g. Civil Servant',
-                isFocused: false,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: VSTextField(
-                controller: TextEditingController(
-                  text: '4',
-                ), // Example family size
-                focusNode: FocusNode(),
-                label: 'Family Size',
-                hint: 'e.g. 5',
-                isFocused: false,
-                keyboardType: TextInputType.number,
-              ),
-            ),
-          ],
+        VSTextField(
+          controller: occupationController,
+          focusNode: FocusNode(),
+          label: 'Occupation',
+          hint: 'e.g. Civil Servant',
+          isFocused: false,
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 14),
+        VSTextField(
+          controller: sloganController,
+          focusNode: FocusNode(),
+          label: 'Personal Motto / Slogan',
+          hint: 'e.g. "By the people, for the people"',
+          isFocused: false,
+          prefixIcon: const Icon(Icons.format_quote_rounded, size: 18),
+        ),
+        const SizedBox(height: 22),
+
+        // ── Cultural Information ───────────────────────────────────────────
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: AuthAccentTag(label: 'CULTURAL PROFILE'),
+        ),
+        const SizedBox(height: 14),
+        VSDropdown<String>(
+          label: 'Religion',
+          hint: 'Select Religion (optional)',
+          value: selectedReligion,
+          items: _religions,
+          onChanged: onReligionChanged,
+        ),
+        const SizedBox(height: 14),
+        VSMultiChipSelector(
+          label: 'Languages Spoken',
+          options: _languages,
+          selected: selectedLanguages,
+          onChanged: onLanguagesChanged,
+        ),
+        const SizedBox(height: 22),
+
+        // ── Residential Data ──────────────────────────────────────────────
         const Align(
           alignment: Alignment.centerLeft,
           child: AuthAccentTag(label: 'RESIDENTIAL DATA'),
@@ -164,12 +241,7 @@ class PersonalTab extends StatelessWidget {
           label: 'Country of Origin',
           hint: 'Select Country',
           value: selectedCountry,
-          items: [
-            'Nigeria',
-            'United States',
-            'United Kingdom',
-            'Canada',
-          ],
+          items: const ['Nigeria', 'United States', 'United Kingdom', 'Canada', 'Ghana', 'Kenya', 'South Africa'],
           onChanged: onCountryChanged,
         ),
         const SizedBox(height: 14),
@@ -180,7 +252,7 @@ class PersonalTab extends StatelessWidget {
                 label: 'State of Origin',
                 hint: 'Select State',
                 value: selectedState,
-                items: ['Lagos', 'New York', 'London', 'Ontario'],
+                items: const ['Lagos', 'Abuja', 'Kano', 'Rivers', 'New York', 'London', 'Ontario'],
                 onChanged: onStateChanged,
               ),
             ),
@@ -190,7 +262,7 @@ class PersonalTab extends StatelessWidget {
                 label: 'LGA / Municipality',
                 hint: 'Select LGA',
                 value: selectedLGA,
-                items: ['Ikeja', 'Brooklyn', 'Westminster', 'Toronto'],
+                items: const ['Ikeja', 'Eti-Osa', 'Surulere', 'Brooklyn', 'Westminster', 'Toronto'],
                 onChanged: onLGAChanged,
               ),
             ),
@@ -205,50 +277,8 @@ class PersonalTab extends StatelessWidget {
           isFocused: false,
           prefixIcon: const Icon(Icons.location_on_outlined, size: 18),
         ),
-        const SizedBox(height: 18),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: AuthAccentTag(label: 'SECURITY CREDENTIALS'),
-        ),
-        const SizedBox(height: 14),
-        VSTextField(
-          controller: passwordController,
-          focusNode: FocusNode(),
-          label: 'Create Password',
-          hint: 'Min. 8 chars with symbols',
-          isFocused: false,
-          obscureText: obscurePassword,
-          prefixIcon: const Icon(Icons.lock_outline_rounded, size: 18),
-          suffixIcon: GestureDetector(
-            onTap: onTogglePassword,
-            child: Icon(
-              obscurePassword
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              size: 18,
-            ),
-          ),
-        ),
-        const SizedBox(height: 14),
-        VSTextField(
-          controller: confirmController,
-          focusNode: FocusNode(),
-          label: 'Confirm Password',
-          hint: 'Repeat your password',
-          isFocused: false,
-          obscureText: obscureConfirm,
-          prefixIcon: const Icon(Icons.shield_outlined, size: 18),
-          suffixIcon: GestureDetector(
-            onTap: onToggleConfirm,
-            child: Icon(
-              obscureConfirm
-                  ? Icons.visibility_off_outlined
-                  : Icons.visibility_outlined,
-              size: 18,
-            ),
-          ),
-        ),
       ],
     );
   }
 }
+

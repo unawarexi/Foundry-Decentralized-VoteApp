@@ -17,8 +17,11 @@ class CandidateTab extends StatelessWidget {
   final TextEditingController achievementsController;
   final TextEditingController careerJourneyController;
   final TextEditingController biographyController;
+  final TextEditingController campaignSloganController;
   final String? selectedRole;
   final Function(String?) onRoleChanged;
+  final bool hasPartyLogo;
+  final VoidCallback onUploadPartyLogo;
 
   final VoidCallback onUploadManifesto;
   final VoidCallback onUploadVideo;
@@ -38,8 +41,11 @@ class CandidateTab extends StatelessWidget {
     required this.achievementsController,
     required this.careerJourneyController,
     required this.biographyController,
+    required this.campaignSloganController,
     this.selectedRole,
     required this.onRoleChanged,
+    this.hasPartyLogo = false,
+    required this.onUploadPartyLogo,
     required this.onUploadManifesto,
     required this.onUploadVideo,
     required this.onUploadQualifications,
@@ -85,6 +91,24 @@ class CandidateTab extends StatelessWidget {
           focusNode: FocusNode(),
           label: 'Political Party / Organization Name',
           hint: 'Full legal name of the entity',
+        ),
+        const SizedBox(height: 14),
+
+        VSTextField(
+          controller: campaignSloganController,
+          focusNode: FocusNode(),
+          label: 'Campaign Slogan',
+          hint: 'e.g. "Progress for All"',
+          prefixIcon: const Icon(Icons.campaign_outlined, size: 18),
+        ),
+        const SizedBox(height: 14),
+
+        VSFileUpload(
+          label: 'Party / Campaign Logo',
+          hint: 'PNG/JPG – Square, min 500×500 px',
+          icon: Icons.shield_outlined,
+          hasFile: hasPartyLogo,
+          onTap: onUploadPartyLogo,
         ),
         const SizedBox(height: 14),
 

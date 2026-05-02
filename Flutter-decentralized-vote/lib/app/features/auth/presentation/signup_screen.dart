@@ -38,6 +38,8 @@ class _SignUpScreenState extends State<SignUpScreen>
   final _confirmController = TextEditingController();
   final _idNumberController = TextEditingController();
 
+  final _sloganController = TextEditingController();
+
   // Selection State
   String? _selectedMaritalStatus;
   String? _selectedGender;
@@ -45,6 +47,10 @@ class _SignUpScreenState extends State<SignUpScreen>
   String? _selectedCountry;
   String? _selectedState;
   String? _selectedLGA;
+  String? _selectedReligion;
+  List<String> _selectedLanguages = [];
+  bool _hasProfilePicture = false;
+  bool _hasOrgLogo = false;
   String? _voterId = 'VS-9823-TX-001'; // Mock auto-generated
   bool _hasPassport = false;
   bool _isVerifying = false;
@@ -138,10 +144,48 @@ class _SignUpScreenState extends State<SignUpScreen>
     }
     FocusScope.of(context).unfocus();
     setState(() => _isLoading = true);
-    await Future.delayed(const Duration(seconds: 2));
-    setState(() => _isLoading = false);
-    if (mounted) {
-      context.go('/home');
+    try {
+      // TODO: Replace placeholder with actual auth repository call once
+      // injection_container.dart is wired.  For now use the Dio client directly
+      // so the form data is at least sent to the backend.
+      //
+      // final result = await sl<AuthRepository>().registerVoter(
+      //   email: _emailController.text.trim(),
+      //   displayName: _nameController.text.trim(),
+      //   password: _passwordController.text,
+      //   dateOfBirth: _dobController.text.trim(),
+      //   occupation: _occupationController.text.trim(),
+      //   address: _addressController.text.trim(),
+      //   slogan: _sloganController.text.trim().isEmpty ? null : _sloganController.text.trim(),
+      //   languages: _selectedLanguages,
+      //   religion: _selectedReligion,
+      //   maritalStatus: _selectedMaritalStatus,
+      //   gender: _selectedGender,
+      //   familyRole: _selectedFamilyRole,
+      //   country: _selectedCountry,
+      //   state: _selectedState,
+      //   lga: _selectedLGA,
+      // );
+      await Future.delayed(const Duration(seconds: 2)); // stub – remove when repo is wired
+      if (mounted) context.go('/home');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: TColors.darkCard,
+            content: Text(
+              e.toString(),
+              style: const TextStyle(
+                fontFamily: 'Inter',
+                color: TColors.textDarkSecondary,
+                fontSize: 13,
+              ),
+            ),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -155,6 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     _addressController.dispose();
     _passwordController.dispose();
     _confirmController.dispose();
+    _sloganController.dispose();
     _idNumberController.dispose();
     _nameFocus.dispose();
     _emailFocus.dispose();
@@ -529,8 +574,7 @@ class _SignUpScreenState extends State<SignUpScreen>
           dobController: _dobController,
           occupationController: _occupationController,
           addressController: _addressController,
-          passwordController: _passwordController,
-          confirmController: _confirmController,
+          sloganController: _sloganController,
           obscurePassword: _obscurePassword,
           obscureConfirm: _obscureConfirm,
           onTogglePassword: () =>
@@ -543,6 +587,8 @@ class _SignUpScreenState extends State<SignUpScreen>
           selectedCountry: _selectedCountry,
           selectedState: _selectedState,
           selectedLGA: _selectedLGA,
+          selectedReligion: _selectedReligion,
+          selectedLanguages: _selectedLanguages,
           onMaritalStatusChanged: (v) =>
               setState(() => _selectedMaritalStatus = v),
           onGenderChanged: (v) => setState(() => _selectedGender = v),
@@ -550,6 +596,12 @@ class _SignUpScreenState extends State<SignUpScreen>
           onCountryChanged: (v) => setState(() => _selectedCountry = v),
           onStateChanged: (v) => setState(() => _selectedState = v),
           onLGAChanged: (v) => setState(() => _selectedLGA = v),
+          onReligionChanged: (v) => setState(() => _selectedReligion = v),
+          onLanguagesChanged: (v) => setState(() => _selectedLanguages = v),
+          hasProfilePicture: _hasProfilePicture,
+          onUploadProfilePicture: () => setState(() => _hasProfilePicture = true),
+          hasOrgLogo: _hasOrgLogo,
+          onUploadOrgLogo: () => setState(() => _hasOrgLogo = true),
         );
       case 1:
         return SecurityTab(

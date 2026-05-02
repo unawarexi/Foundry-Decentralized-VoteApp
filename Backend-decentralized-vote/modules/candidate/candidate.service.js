@@ -14,7 +14,7 @@ import {
 
 const log = createLogger("CandidateService");
 
-export async function registerCandidate({ userId, electionId, partyId, regionId, profileBio, manifestoUrl, achievements, milestones, lifeSummary, payoutAddress }) {
+export async function registerCandidate({ userId, electionId, partyId, regionId, profileBio, manifestoUrl, achievements, milestones, lifeSummary, payoutAddress, logoUrl, slogan }) {
   // Check election exists and accepts candidates
   const election = await prisma.election.findUnique({ where: { id: electionId } });
   if (!election) throw new AppError("Election not found", HttpStatus.NOT_FOUND, ErrorCodes.ELECTION_NOT_FOUND);
@@ -60,6 +60,8 @@ export async function registerCandidate({ userId, electionId, partyId, regionId,
       milestones,
       lifeSummary,
       payoutAddress,
+      logoUrl,
+      slogan,
       status: "PENDING",
     },
     include: {

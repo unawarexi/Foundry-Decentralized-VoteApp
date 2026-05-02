@@ -15,6 +15,12 @@ export const registerVoterSchema = z.object({
   regionId: z.string().uuid("Invalid region ID").optional(),
   locale: z.string().length(2).default("en").optional(),
   fcmToken: z.string().optional(),
+  // Profile enrichment
+  avatarUrl: z.string().url().optional(),
+  logoUrl: z.string().url().optional(),
+  slogan: z.string().max(200).optional(),
+  languages: z.array(z.string().min(2).max(50)).max(20).optional(),
+  religion: z.string().max(100).optional(),
 });
 
 export const verifyWalletSchema = z.object({
@@ -36,6 +42,10 @@ export const updateProfileSchema = z.object({
   displayName: z.string().min(2).max(100).optional(),
   phone: z.string().regex(/^\+?[1-9]\d{7,14}$/).optional(),
   avatarUrl: z.string().url().optional(),
+  logoUrl: z.string().url().optional(),
+  slogan: z.string().max(200).optional(),
+  languages: z.array(z.string().min(2).max(50)).max(20).optional(),
+  religion: z.string().max(100).optional(),
   fcmToken: z.string().optional(),
   locale: z.string().length(2).optional(),
 });

@@ -166,6 +166,11 @@ model User {
   regionId         String?
   countryCode      String?
   locale           String?    @default("en")
+  // ── Profile enrichment fields ──────────────────────────────────────────────
+  logoUrl          String?    // company / organisation logo URL
+  slogan           String?    // personal motto or tagline
+  languages        String[]   @default([])
+  religion         String?
   lastSeenAt       DateTime?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
@@ -351,6 +356,9 @@ model Candidate {
   milestones       Json?           // [{milestone, targetDate, status}]
   lifeSummary      String?
   payoutAddress    String?         // ETH address for fee release
+  // ── Campaign-specific enrichment ──────────────────────────────────────────
+  logoUrl          String?         // party / campaign logo URL
+  slogan           String?         // campaign slogan
   totalVotesFor    Int             @default(0)
   slaBreaches      Int             @default(0)
   approvedBy       String?

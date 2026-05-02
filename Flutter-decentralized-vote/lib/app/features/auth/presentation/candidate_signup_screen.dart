@@ -43,6 +43,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
   final _achievementsController = TextEditingController();
   final _careerJourneyController = TextEditingController();
   final _biographyController = TextEditingController();
+  final _campaignSloganController = TextEditingController();
   String? _selectedRoleCategory;
 
   // Selection State
@@ -52,6 +53,10 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
   String? _selectedCountry;
   String? _selectedState;
   String? _selectedLGA;
+  String? _selectedReligion;
+  List<String> _selectedLanguages = [];
+  bool _hasProfilePicture = false;
+  bool _hasOrgLogo = false;
   String? _voterId = 'CAN-7721-NG-091'; // Candidate prefix
   bool _hasPassport = false;
   bool _isVerifying = false;
@@ -62,6 +67,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
   bool _hasVideoIntro = false;
   bool _hasQualifications = false;
   bool _hasPictures = false;
+  bool _hasPartyLogo = false;
 
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
@@ -129,6 +135,7 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
     _achievementsController.dispose();
     _careerJourneyController.dispose();
     _biographyController.dispose();
+    _campaignSloganController.dispose();
     super.dispose();
   }
 
@@ -486,14 +493,21 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
           dobController: _dobController,
           occupationController: _occupationController,
           addressController: _addressController,
-          passwordController: _passwordController,
-          confirmController: _confirmController,
+          sloganController: _campaignSloganController,
           obscurePassword: _obscurePassword,
           obscureConfirm: _obscureConfirm,
           onTogglePassword: () =>
               setState(() => _obscurePassword = !_obscurePassword),
           onToggleConfirm: () =>
               setState(() => _obscureConfirm = !_obscureConfirm),
+          selectedMaritalStatus: _selectedMaritalStatus,
+          selectedGender: _selectedGender,
+          selectedFamilyRole: _selectedFamilyRole,
+          selectedCountry: _selectedCountry,
+          selectedState: _selectedState,
+          selectedLGA: _selectedLGA,
+          selectedReligion: _selectedReligion,
+          selectedLanguages: _selectedLanguages,
           onMaritalStatusChanged: (v) =>
               setState(() => _selectedMaritalStatus = v),
           onGenderChanged: (v) => setState(() => _selectedGender = v),
@@ -501,6 +515,12 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
           onCountryChanged: (v) => setState(() => _selectedCountry = v),
           onStateChanged: (v) => setState(() => _selectedState = v),
           onLGAChanged: (v) => setState(() => _selectedLGA = v),
+          onReligionChanged: (v) => setState(() => _selectedReligion = v),
+          onLanguagesChanged: (v) => setState(() => _selectedLanguages = v),
+          hasProfilePicture: _hasProfilePicture,
+          onUploadProfilePicture: () => setState(() => _hasProfilePicture = true),
+          hasOrgLogo: _hasOrgLogo,
+          onUploadOrgLogo: () => setState(() => _hasOrgLogo = true),
         );
       case 1:
         return SecurityTab(
@@ -519,17 +539,20 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
           achievementsController: _achievementsController,
           careerJourneyController: _careerJourneyController,
           biographyController: _biographyController,
+          campaignSloganController: _campaignSloganController,
           selectedRole: _selectedRoleCategory,
           onRoleChanged: (v) => setState(() => _selectedRoleCategory = v),
           hasManifesto: _hasManifesto,
           hasVideoIntro: _hasVideoIntro,
           hasQualifications: _hasQualifications,
           hasPictures: _hasPictures,
+          hasPartyLogo: _hasPartyLogo,
           onUploadManifesto: () => setState(() => _hasManifesto = true),
           onUploadVideo: () => setState(() => _hasVideoIntro = true),
           onUploadQualifications: () =>
               setState(() => _hasQualifications = true),
           onUploadPictures: () => setState(() => _hasPictures = true),
+          onUploadPartyLogo: () => setState(() => _hasPartyLogo = true),
         );
       case 3:
         return Column(
