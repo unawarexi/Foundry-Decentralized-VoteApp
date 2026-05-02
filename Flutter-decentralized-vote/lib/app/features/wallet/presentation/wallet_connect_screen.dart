@@ -1,7 +1,2 @@
-import 'package:flutter/material.dart';
-
-class WalletConnectScreen extends StatelessWidget {
-  const WalletConnectScreen({super.key});
-  @override
-  Widget build(BuildContext context) => const Scaffold(body: Center(child: Text('WalletConnectScreen')));
-}
+// Re-export the canonical wallet connect screen from the auth feature.
+export 'package:flutter_frontend_vote/app/features/auth/presentation/wallet_connect_screen.dart';

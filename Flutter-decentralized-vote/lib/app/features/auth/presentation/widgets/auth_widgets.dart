@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:go_router/go_router.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
 import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
@@ -239,14 +240,14 @@ class AuthDivider extends StatelessWidget {
   }
 }
 
-/// Wallet connect CTA — secondary action
+/// Wallet connect CTA — secondary action (login screen only)
 class WalletConnectButton extends StatelessWidget {
   const WalletConnectButton({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () => context.push('/wallet-connect'),
       child: Container(
         width: double.infinity,
         height: TSizes.inputHeight,

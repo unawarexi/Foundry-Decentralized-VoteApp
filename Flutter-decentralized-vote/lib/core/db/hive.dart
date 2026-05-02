@@ -11,6 +11,7 @@ class HiveService {
   static const _meetingCacheBox = 'meeting_cache';
   static const _userCacheBox = 'user_cache';
   static const _notificationCacheBox = 'notification_cache';
+  static const _electionCacheBox = 'election_cache';
   static const _settingsBox = 'settings';
   static const _cacheTTLBox = 'cache_ttl';
 
@@ -20,6 +21,7 @@ class HiveService {
       Hive.openBox(_meetingCacheBox),
       Hive.openBox(_userCacheBox),
       Hive.openBox(_notificationCacheBox),
+      Hive.openBox(_electionCacheBox),
       Hive.openBox(_settingsBox),
       Hive.openBox(_cacheTTLBox),
     ]);
@@ -28,6 +30,7 @@ class HiveService {
   static Box get meetingCache => Hive.box(_meetingCacheBox);
   static Box get userCache => Hive.box(_userCacheBox);
   static Box get notificationCache => Hive.box(_notificationCacheBox);
+  static Box get electionCache => Hive.box(_electionCacheBox);
   static Box get settings => Hive.box(_settingsBox);
   static Box get _ttlBox => Hive.box(_cacheTTLBox);
 

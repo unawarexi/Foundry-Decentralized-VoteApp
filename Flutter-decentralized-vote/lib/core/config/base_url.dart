@@ -15,7 +15,7 @@ import 'package:flutter_frontend_vote/core/config/environment.dart';
 class AppBaseUrl {
   AppBaseUrl._();
 
-  static const String _productionUrl = 'https://api.speakup.app';
+  static const String _productionUrl = 'https://api.votesecure.app';
   static const int _devPort = 3000;
   static const String _apiPrefix = '/api/v1';
 

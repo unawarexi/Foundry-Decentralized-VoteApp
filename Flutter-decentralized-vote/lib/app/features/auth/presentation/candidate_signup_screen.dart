@@ -759,8 +759,6 @@ class _CandidateSignUpScreenState extends State<CandidateSignUpScreen>
         children: [
           const AuthDivider(),
           const SizedBox(height: TSizes.lg),
-          const WalletConnectButton(),
-          const SizedBox(height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

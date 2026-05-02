@@ -11,6 +11,7 @@ import 'package:flutter_frontend_vote/app/features/auth/presentation/signup_scre
 import 'package:flutter_frontend_vote/app/features/auth/presentation/login_screen.dart';
 import 'package:flutter_frontend_vote/app/features/auth/presentation/option_screen.dart';
 import 'package:flutter_frontend_vote/app/features/auth/presentation/candidate_signup_screen.dart';
+import 'package:flutter_frontend_vote/app/features/auth/presentation/wallet_connect_screen.dart';
 
 // ── Elections ──
 import 'package:flutter_frontend_vote/app/features/elections/presentation/screens/elections_screen.dart';
@@ -103,6 +104,12 @@ final GoRouter appRouter = GoRouter(
       path: '/candidate-signup',
       name: 'candidate-signup',
       builder: (context, state) => const CandidateSignUpScreen(),
+    ),
+    GoRoute(
+      path: '/wallet-connect',
+      name: 'wallet-connect',
+      parentNavigatorKey: rootNavigatorKey,
+      builder: (context, state) => const WalletConnectScreen(),
     ),
 
     // ──────────── Main App (Bottom Nav) ────────────

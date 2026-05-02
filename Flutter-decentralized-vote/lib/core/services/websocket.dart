@@ -123,25 +123,31 @@ class WebSocketService {
     }
   }
 
-  /// Join a meeting room via WebSocket.
-  void joinMeetingRoom(String meetingId) {
-    emit('meeting:join', {'meetingId': meetingId});
+  // ── Election room management ─────────────────────────────────────────────────
+
+  void subscribeElection(String electionId) {
+    emit('election:subscribe', {'electionId': electionId});
+    _log.i('[WS] Subscribed to election: $electionId');
   }
 
-  /// Leave a meeting room via WebSocket.
-  void leaveMeetingRoom(String meetingId) {
-    emit('meeting:leave', {'meetingId': meetingId});
+  void unsubscribeElection(String electionId) {
+    emit('election:unsubscribe', {'electionId': electionId});
+    _log.i('[WS] Unsubscribed from election: $electionId');
   }
 
-  /// Join a chat room for real-time messages.
-  void joinChatRoom(String chatRoomId) {
-    emit('chat:join', {'chatRoomId': chatRoomId});
-  }
+  // ── Typed event streams ───────────────────────────────────────────────────
 
-  /// Leave a chat room.
-  void leaveChatRoom(String chatRoomId) {
-    emit('chat:leave', {'chatRoomId': chatRoomId});
-  }
+  /// Emitted by backend when a vote is cast: { electionId, candidateId, totalVotes }
+  Stream<dynamic> get voteCastEvents => stream('vote:cast');
+
+  /// Emitted by backend when election status / phase changes: { electionId, status }
+  Stream<dynamic> get electionUpdates => stream('election:update');
+
+  /// Emitted by backend when fraud is detected: { electionId, type, details }
+  Stream<dynamic> get fraudAlerts => stream('fraud:alert');
+
+  /// Personal notification pushed to the authenticated user’s room.
+  Stream<dynamic> get newNotifications => stream('notification:new');
 
   void dispose() {
     disconnect();
