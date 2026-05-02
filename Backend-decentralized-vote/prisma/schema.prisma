@@ -1,0 +1,536 @@
+// ============================================================================
+// VoteSecure — PostgreSQL Schema (Prisma)
+// Production-grade decentralized voting platform
+// ============================================================================
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+enum UserRole {
+  VOTER
+  CANDIDATE
+  PARTY_ADMIN
+  REGION_ADMIN
+  ELECTION_ADMIN
+  MODERATOR
+  FRAUD_ORACLE
+  SUPER_ADMIN
+}
+
+enum KYCStatus {
+  NONE
+  EMAIL_VERIFIED
+  PHONE_VERIFIED
+  DOCUMENT_SUBMITTED
+  BIOMETRIC_VERIFIED
+  FULLY_VERIFIED
+  REJECTED
+  SUSPENDED
+}
+
+enum ElectionType {
+  SCHOOL
+  UNIVERSITY
+  COMPANY
+  LOCAL_GOVERNMENT
+  MAYORAL
+  GUBERNATORIAL
+  NATIONAL
+  UNION
+  COOPERATIVE
+  CUSTOM
+}
+
+enum ElectionStatus {
+  DRAFT
+  PENDING
+  ACTIVE
+  PAUSED
+  TALLYING
+  FINALIZED
+  CANCELLED
+}
+
+enum CandidateStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  DISQUALIFIED
+  WITHDRAWN
+}
+
+enum PartyStatus {
+  PENDING
+  ACTIVE
+  SUSPENDED
+  DISSOLVED
+}
+
+enum ForumPostStatus {
+  OPEN
+  ANSWERED
+  EXPIRED_UNANSWERED
+  CLOSED
+  REMOVED
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FraudStatus {
+  PENDING
+  UNDER_REVIEW
+  CONFIRMED
+  DISMISSED
+}
+
+enum PaymentToken {
+  USDT
+  USDC
+  ETH
+  BTC
+}
+
+enum TransactionType {
+  VOTE_FEE
+  REFUND
+  DONATION
+  WITHDRAWAL
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  REFUNDED
+}
+
+enum NotificationType {
+  ELECTION_STARTED
+  ELECTION_ENDED
+  ELECTION_RESULT
+  VOTE_CONFIRMED
+  VOTE_FEE_REFUNDED
+  CANDIDATE_APPROVED
+  CANDIDATE_DISQUALIFIED
+  FORUM_QUESTION_RECEIVED
+  FORUM_SLA_WARNING
+  FORUM_SLA_BREACH
+  FRAUD_FLAGGED
+  FRAUD_BANNED
+  KYC_APPROVED
+  KYC_REJECTED
+  GENERAL
+}
+
+// ============================================================================
+// MODELS
+// ============================================================================
+
+model User {
+  id               String     @id @default(uuid())
+  firebaseUid      String     @unique
+  walletAddress    String?    @unique
+  email            String     @unique
+  displayName      String?
+  avatarUrl        String?
+  phone            String?    @unique
+  role             UserRole   @default(VOTER)
+  kycStatus        KYCStatus  @default(NONE)
+  isBanned         Boolean    @default(false)
+  banReason        String?
+  bannedAt         DateTime?
+  bannedBy         String?    // admin user id
+  isActive         Boolean    @default(true)
+  emailVerified    Boolean    @default(false)
+  phoneVerified    Boolean    @default(false)
+  biometricHash    String?    // hashed biometric template — never raw
+  identityHash     String?    // keccak256(userId + region + verifiedFlag)
+  deviceId         String?    // Secure Enclave / TPM device fingerprint
+  fcmToken         String?    // Firebase Cloud Messaging token
+  regionId         String?
+  countryCode      String?
+  locale           String?    @default("en")
+  lastSeenAt       DateTime?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+
+  // Relations
+  region           Region?              @relation(fields: [regionId], references: [id])
+  candidateProfile Candidate?
+  votes            Vote[]
+  forumPosts       ForumPost[]
+  fraudReports     FraudReport[]        @relation("reporter")
+  fraudFlags       FraudReport[]        @relation("flagged")
+  notifications    Notification[]
+  walletTxs        WalletTransaction[]
+  kycRecords       KYCRecord[]
+  devices          UserDevice[]
+  sessions         UserSession[]
+
+  @@index([firebaseUid])
+  @@index([walletAddress])
+  @@index([regionId])
+  @@index([kycStatus])
+  @@index([isBanned])
+  @@map("users")
+}
+
+model UserDevice {
+  id             String   @id @default(uuid())
+  userId         String
+  deviceId       String   @unique
+  deviceType     String   // android, ios, web, kiosk
+  deviceModel    String?
+  osVersion      String?
+  appVersion     String?
+  fcmToken       String?
+  lastActiveAt   DateTime @default(now())
+  isTrusted      Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_devices")
+}
+
+model UserSession {
+  id           String   @id @default(uuid())
+  userId       String
+  firebaseUid  String
+  ipAddress    String?
+  userAgent    String?
+  regionCode   String?
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_sessions")
+}
+
+model KYCRecord {
+  id              String    @id @default(uuid())
+  userId          String
+  status          KYCStatus
+  faceScore       Float?    // AI face match score
+  livenessScore   Float?    // anti-spoof liveness score
+  idVerified      Boolean   @default(false)
+  ageVerified     Boolean   @default(false)
+  documentType    String?
+  documentCountry String?
+  rejectionReason String?
+  reviewedBy      String?   // admin or AI service
+  aiRequestId     String?   // FastAPI job ID
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@map("kyc_records")
+}
+
+model Region {
+  id           String   @id @default(uuid())
+  name         String
+  countryCode  String   // ISO 3166-1 alpha-2
+  stateCode    String?
+  level        String   // NATIONAL, STATE, LOCAL
+  onChainId    String?  // bytes32 on-chain region ID
+  geoJson      Json?    // GeoJSON polygon for map visualization
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  users        User[]
+  elections    Election[]
+  candidates   Candidate[]
+
+  @@unique([countryCode, stateCode, name])
+  @@index([countryCode])
+  @@map("regions")
+}
+
+model Party {
+  id             String      @id @default(uuid())
+  name           String
+  slug           String      @unique
+  logoUrl        String?
+  manifestoHash  String?     // keccak256 of manifesto — actual doc on IPFS
+  manifestoUrl   String?     // IPFS CID or URL
+  ideology       String?
+  foundedYear    Int?
+  status         PartyStatus @default(PENDING)
+  onChainId      String?     // bytes32 on-chain party ID
+  approvedBy     String?
+  approvedAt     DateTime?
+  createdBy      String      // userId of party admin
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  // Relations
+  candidates     Candidate[]
+
+  @@index([status])
+  @@index([slug])
+  @@map("parties")
+}
+
+model Election {
+  id               String         @id @default(uuid())
+  title            String
+  description      String?
+  type             ElectionType
+  regionId         String
+  onChainId        String?        // bytes32 election ID on-chain
+  status           ElectionStatus @default(DRAFT)
+  startDate        DateTime
+  endDate          DateTime
+  registrationEnd  DateTime?
+  voteFeeCents     Int            @default(100) // $1.00
+  feeToken         PaymentToken   @default(USDT)
+  minCandidates    Int            @default(2)
+  maxCandidates    Int            @default(100)
+  resultHash       String?        // IPFS CID of final results PDF
+  winnerCandidateId String?
+  totalVotes       Int            @default(0)
+  createdBy        String         // admin userId
+  cancelReason     String?
+  cancelledAt      DateTime?
+  finalizedAt      DateTime?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Relations
+  region           Region         @relation(fields: [regionId], references: [id])
+  candidates       Candidate[]
+  votes            Vote[]
+  forumPosts       ForumPost[]
+  walletTxs        WalletTransaction[]
+
+  @@index([status])
+  @@index([regionId])
+  @@index([type])
+  @@index([startDate, endDate])
+  @@map("elections")
+}
+
+model Candidate {
+  id               String          @id @default(uuid())
+  userId           String          @unique
+  electionId       String
+  partyId          String?
+  regionId         String?
+  onChainId        String?         // bytes32 on-chain candidate ID
+  status           CandidateStatus @default(PENDING)
+  popularityScore  Int             @default(0)
+  manifestoHash    String?         // keccak256 — actual doc on IPFS
+  manifestoUrl     String?
+  profileBio       String?
+  achievements     Json?           // [{title, date, verifiedUrl}]
+  milestones       Json?           // [{milestone, targetDate, status}]
+  lifeSummary      String?
+  payoutAddress    String?         // ETH address for fee release
+  totalVotesFor    Int             @default(0)
+  slaBreaches      Int             @default(0)
+  approvedBy       String?
+  approvedAt       DateTime?
+  disqualifyReason String?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  // Relations
+  user             User            @relation(fields: [userId], references: [id])
+  election         Election        @relation(fields: [electionId], references: [id])
+  party            Party?          @relation(fields: [partyId], references: [id])
+  region           Region?         @relation(fields: [regionId], references: [id])
+  forumAnswers     ForumAnswer[]
+
+  @@unique([userId, electionId])
+  @@index([electionId])
+  @@index([status])
+  @@index([popularityScore])
+  @@map("candidates")
+}
+
+model Vote {
+  id             String   @id @default(uuid())
+  electionId     String
+  voterId        String
+  nullifierHash  String   @unique // commitment on-chain — no voter-candidate link off-chain
+  txHash         String?  // on-chain tx hash
+  blockNumber    BigInt?
+  feeToken       PaymentToken @default(USDT)
+  feePaid        Decimal  @default(0)
+  isRevote       Boolean  @default(false)
+  prevNullifier  String?
+  createdAt      DateTime @default(now())
+
+  // Relations
+  election       Election @relation(fields: [electionId], references: [id])
+  voter          User     @relation(fields: [voterId], references: [id])
+
+  @@index([electionId])
+  @@index([voterId])
+  @@index([nullifierHash])
+  @@map("votes")
+}
+
+model ForumPost {
+  id             String          @id @default(uuid())
+  electionId     String
+  candidateId    String?
+  authorId       String          // voter userId
+  contentHash    String          // IPFS CID — actual question text stored off-chain
+  content        String          // question text (stored for search/indexing)
+  upvotes        Int             @default(0)
+  downvotes      Int             @default(0)
+  status         ForumPostStatus @default(OPEN)
+  slaDeadline    DateTime        // 24 hours after post created
+  slaBreach      Boolean         @default(false)
+  featuredAt     DateTime?
+  removedReason  String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  // Relations
+  election       Election        @relation(fields: [electionId], references: [id])
+  author         User            @relation(fields: [authorId], references: [id])
+  answers        ForumAnswer[]
+  votes          ForumVote[]
+
+  @@index([electionId])
+  @@index([candidateId])
+  @@index([status])
+  @@index([slaDeadline])
+  @@map("forum_posts")
+}
+
+model ForumAnswer {
+  id          String      @id @default(uuid())
+  postId      String
+  candidateId String
+  content     String
+  contentHash String?
+  score       Int?        // moderator score 1-5
+  upvotes     Int         @default(0)
+  downvotes   Int         @default(0)
+  isOfficial  Boolean     @default(true) // candidate official answer
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  post        ForumPost   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  candidate   Candidate   @relation(fields: [candidateId], references: [id])
+
+  @@unique([postId, candidateId])
+  @@index([postId])
+  @@index([candidateId])
+  @@map("forum_answers")
+}
+
+model ForumVote {
+  id        String    @id @default(uuid())
+  postId    String
+  userId    String
+  value     Int       // 1 = upvote, -1 = downvote
+  createdAt DateTime  @default(now())
+
+  post      ForumPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@map("forum_votes")
+}
+
+model FraudReport {
+  id              String        @id @default(uuid())
+  reporterId      String
+  flaggedUserId   String
+  electionId      String?
+  severity        FraudSeverity @default(LOW)
+  status          FraudStatus   @default(PENDING)
+  evidenceHash    String?       // IPFS CID of evidence
+  description     String
+  aiRiskScore     Float?
+  resolvedBy      String?
+  resolvedAt      DateTime?
+  resolution      String?
+  onChainFlagId   String?       // if escalated to blockchain
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  reporter        User          @relation("reporter", fields: [reporterId], references: [id])
+  flaggedUser     User          @relation("flagged", fields: [flaggedUserId], references: [id])
+
+  @@index([flaggedUserId])
+  @@index([severity])
+  @@index([status])
+  @@map("fraud_reports")
+}
+
+model Notification {
+  id         String           @id @default(uuid())
+  userId     String
+  type       NotificationType
+  title      String
+  body       String
+  data       Json?            // extra payload
+  isRead     Boolean          @default(false)
+  readAt     DateTime?
+  sentAt     DateTime?        // FCM delivery timestamp
+  createdAt  DateTime         @default(now())
+
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([type])
+  @@map("notifications")
+}
+
+model WalletTransaction {
+  id           String            @id @default(uuid())
+  userId       String
+  electionId   String?
+  type         TransactionType
+  amount       Decimal
+  token        PaymentToken      @default(USDT)
+  txHash       String?           @unique
+  blockNumber  BigInt?
+  fromAddress  String?
+  toAddress    String?
+  status       TransactionStatus @default(PENDING)
+  failReason   String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  user         User              @relation(fields: [userId], references: [id])
+  election     Election?         @relation(fields: [electionId], references: [id])
+
+  @@index([userId])
+  @@index([txHash])
+  @@index([status])
+  @@index([type])
+  @@map("wallet_transactions")
+}

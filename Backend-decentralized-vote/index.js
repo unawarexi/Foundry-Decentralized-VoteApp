@@ -1,7 +1,7 @@
 
 // ============================================================================
-// SPEAKUP — MAIN ENTRY POINT
-// Video conferencing platform backend
+// VOTESECURE — MAIN ENTRY POINT
+// Decentralized Voting Platform Backend
 // ============================================================================
 
 import express from "express";
@@ -9,7 +9,7 @@ import http from "http";
 import compression from "compression";
 
 // Configuration
-import { env, validateEnv, isProduction } from "./config/env.config.js";
+import { env, validateEnv } from "./config/env.config.js";
 import { HttpStatus } from "./config/constants.js";
 import { prisma, disconnectPrisma } from "./config/prisma.js";
 import logger, { createLogger } from "./logs/logger.js";
@@ -36,23 +36,25 @@ import { initKafka, disconnectKafka } from "./services/kafka.service.js";
 import { initQueues, disconnectBullMQ } from "./services/bullmq.service.js";
 import { initWebSocket, disconnectWebSocket } from "./services/websocket.service.js";
 import { verifyMailer } from "./services/mailer.service.js";
-import { initLiveKit } from "./services/livekit.service.js";
-import { initBilling } from "./services/billing.service.js";
+import { initBlockchain } from "./services/blockchain/blockchain.service.js";
+import { initPaymentService } from "./services/payment/payment.service.js";
 import { startWorkers } from "./services/workers.js";
 import { initAIConsumer, disconnectAIConsumer } from "./services/ai-consumer.service.js";
 
 // Module routes
 import authRoutes from "./modules/auth/auth.routes.js";
 import userRoutes from "./modules/user/user.routes.js";
-import meetingRoutes from "./modules/meeting/meeting.routes.js";
-import roomRoutes from "./modules/room/room.routes.js";
-import chatRoutes from "./modules/chat/chat.routes.js";
+import electionRoutes from "./modules/election/election.routes.js";
+import voteRoutes from "./modules/vote/vote.routes.js";
+import candidateRoutes from "./modules/candidate/candidate.routes.js";
+import partyRoutes from "./modules/party/party.routes.js";
+import regionRoutes from "./modules/region/region.routes.js";
+import forumRoutes from "./modules/forum/forum.routes.js";
+import fraudRoutes from "./modules/fraud/fraud.routes.js";
 import notificationRoutes from "./modules/notification/notification.routes.js";
-import recordingRoutes from "./modules/recording/recording.routes.js";
 import analyticsRoutes from "./modules/analytics/analytics.routes.js";
-import billingRoutes from "./modules/billing/billing.routes.js";
-import searchRoutes from "./modules/search/search.routes.js";
-import legalRoutes from "./modules/legal/legal.routes.js";
+import adminRoutes from "./modules/admin/admin.routes.js";
+import walletRoutes from "./modules/wallet/wallet.routes.js";
 
 const log = createLogger("Server");
 
@@ -116,34 +118,38 @@ const API = "/api/v1";
 
 app.use(`${API}/auth`, authRoutes);
 app.use(`${API}/users`, userRoutes);
-app.use(`${API}/meetings`, meetingRoutes);
-app.use(`${API}/rooms`, roomRoutes);
-app.use(`${API}/chat`, chatRoutes);
+app.use(`${API}/elections`, electionRoutes);
+app.use(`${API}/votes`, voteRoutes);
+app.use(`${API}/candidates`, candidateRoutes);
+app.use(`${API}/parties`, partyRoutes);
+app.use(`${API}/regions`, regionRoutes);
+app.use(`${API}/forum`, forumRoutes);
+app.use(`${API}/fraud`, fraudRoutes);
 app.use(`${API}/notifications`, notificationRoutes);
-app.use(`${API}/recordings`, recordingRoutes);
 app.use(`${API}/analytics`, analyticsRoutes);
-app.use(`${API}/billing`, billingRoutes);
-app.use(`${API}/search`, searchRoutes);
-app.use(`${API}/legal`, legalRoutes);
+app.use(`${API}/admin`, adminRoutes);
+app.use(`${API}/wallet`, walletRoutes);
 
 // API info
 app.get(API, (_req, res) => {
   res.status(HttpStatus.OK).json({
-    name: "SpeakUp API",
+    name: "VoteSecure API",
     version: "1.0.0",
-    description: "Video Conferencing Platform API",
+    description: "Decentralized Voting Platform API",
     endpoints: {
       auth: `${API}/auth`,
       users: `${API}/users`,
-      meetings: `${API}/meetings`,
-      rooms: `${API}/rooms`,
-      chat: `${API}/chat`,
+      elections: `${API}/elections`,
+      votes: `${API}/votes`,
+      candidates: `${API}/candidates`,
+      parties: `${API}/parties`,
+      regions: `${API}/regions`,
+      forum: `${API}/forum`,
+      fraud: `${API}/fraud`,
       notifications: `${API}/notifications`,
-      recordings: `${API}/recordings`,
       analytics: `${API}/analytics`,
-      billing: `${API}/billing`,
-      search: `${API}/search`,
-      legal: `${API}/legal`,
+      admin: `${API}/admin`,
+      wallet: `${API}/wallet`,
     },
     health: "/health",
     metrics: "/metrics",
@@ -199,16 +205,18 @@ async function startServer() {
     initWebSocket(server);
     log.info("WebSocket initialized");
 
-    // Start AI Kafka consumer (relay AI results to WebSocket clients)
+    // Start AI Kafka consumer
     if (env.KAFKA_BROKERS) {
       await initAIConsumer();
       log.info("AI Kafka consumer initialized");
     }
 
-    // Initialize third-party services
-    initLiveKit();
-    initBilling();
-    log.info("LiveKit & Stripe initialized");
+    // Initialize blockchain + payment
+    await initBlockchain();
+    log.info("Blockchain service initialized");
+
+    await initPaymentService();
+    log.info("Payment service initialized");
 
     // Verify SMTP (non-blocking)
     verifyMailer().catch((err) => log.warn("SMTP verification failed", { error: err }));
@@ -218,7 +226,7 @@ async function startServer() {
 
     server.listen(PORT, () => {
       log.info("=".repeat(56));
-      log.info("  SPEAKUP BACKEND SERVER");
+      log.info("  VOTESECURE BACKEND SERVER");
       log.info("=".repeat(56));
       log.info(`  Environment : ${env.NODE_ENV}`);
       log.info(`  Port        : ${PORT}`);

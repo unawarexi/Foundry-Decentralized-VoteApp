@@ -1,5 +1,5 @@
 // ============================================================================
-// SpeakUp — Application Constants
+// VoteSecure — Application Constants
 // ============================================================================
 
 // ============================================================================
@@ -9,13 +9,16 @@
 export const HttpStatus = {
   OK: 200,
   CREATED: 201,
+  ACCEPTED: 202,
   NO_CONTENT: 204,
   BAD_REQUEST: 400,
   UNAUTHORIZED: 401,
+  PAYMENT_REQUIRED: 402,
   FORBIDDEN: 403,
   NOT_FOUND: 404,
   CONFLICT: 409,
   UNPROCESSABLE_ENTITY: 422,
+  LOCKED: 423,
   TOO_MANY_REQUESTS: 429,
   INTERNAL_SERVER_ERROR: 500,
   SERVICE_UNAVAILABLE: 503,
@@ -26,7 +29,7 @@ export const HttpStatus = {
 // ============================================================================
 
 export const ErrorCodes = {
-  // Auth
+  // Auth & Identity
   UNAUTHORIZED: "E1001",
   TOKEN_INVALID: "E1002",
   FORBIDDEN: "E1003",
@@ -34,33 +37,64 @@ export const ErrorCodes = {
   ACCOUNT_SUSPENDED: "E1005",
   ACCOUNT_DEACTIVATED: "E1006",
   FIREBASE_AUTH_FAILED: "E1007",
+  KYC_REQUIRED: "E1008",
+  BIOMETRIC_MISMATCH: "E1009",
+  WALLET_NOT_CONNECTED: "E1010",
+  DEVICE_NOT_FOUND: "E1011",
+  WALLET_ALREADY_LINKED: "E1011",
 
   // Validation
   VALIDATION_ERROR: "E2001",
   INVALID_INPUT: "E2002",
   MISSING_FIELD: "E2003",
+  INVALID_WALLET_ADDRESS: "E2004",
+  INVALID_SIGNATURE: "E2005",
+  INVALID_CHAIN_ID: "E2006",
 
   // Resources
   USER_NOT_FOUND: "E3001",
   USER_ALREADY_EXISTS: "E3002",
-  MEETING_NOT_FOUND: "E3003",
-  ROOM_NOT_FOUND: "E3004",
-  RECORDING_NOT_FOUND: "E3005",
-  MESSAGE_NOT_FOUND: "E3006",
-  NOTIFICATION_NOT_FOUND: "E3007",
-  SUBSCRIPTION_NOT_FOUND: "E3008",
+  ELECTION_NOT_FOUND: "E3003",
+  CANDIDATE_NOT_FOUND: "E3004",
+  REGION_NOT_FOUND: "E3005",
+  PARTY_NOT_FOUND: "E3006",
+  VOTE_NOT_FOUND: "E3007",
+  NOTIFICATION_NOT_FOUND: "E3008",
+  FORUM_POST_NOT_FOUND: "E3009",
+  FRAUD_REPORT_NOT_FOUND: "E3010",
 
-  // Business Logic
-  MEETING_FULL: "E4001",
-  MEETING_ALREADY_ENDED: "E4002",
-  MEETING_PASSWORD_REQUIRED: "E4003",
-  MEETING_PASSWORD_INCORRECT: "E4004",
-  NOT_MEETING_HOST: "E4005",
-  ALREADY_IN_MEETING: "E4006",
-  RECORDING_IN_PROGRESS: "E4007",
-  RECORDING_NOT_STARTED: "E4008",
-  SUBSCRIPTION_EXPIRED: "E4009",
-  BANNED_FROM_MEETING: "E4010",
+  // Voting Business Logic
+  VOTER_NOT_REGISTERED: "E4001",
+  VOTER_BANNED: "E4002",
+  REGION_MISMATCH: "E4003",
+  ELECTION_NOT_ACTIVE: "E4004",
+  ALREADY_VOTED: "E4005",
+  INVALID_CANDIDATE: "E4006",
+  INSUFFICIENT_FEE: "E4007",
+  CANDIDATE_NOT_APPROVED: "E4008",
+  PARTY_NOT_ACTIVE: "E4009",
+  ELECTION_REGISTRATION_CLOSED: "E4010",
+  ELECTION_PHASE_ERROR: "E4011",
+  DUPLICATE_CANDIDATE_ENTRY: "E4012",
+  SLA_BREACH: "E4013",
+  FORUM_POST_EXPIRED: "E4014",
+  FORUM_ALREADY_ANSWERED: "E4015",
+  FRAUD_FLAG_SUBMITTED: "E4016",
+  FRAUD_ALREADY_REPORTED: "E4017",
+
+  // Blockchain
+  BLOCKCHAIN_TX_FAILED: "E5001",
+  BLOCKCHAIN_REVERT: "E5002",
+  BLOCKCHAIN_TIMEOUT: "E5003",
+  ON_CHAIN_REGISTRATION_FAILED: "E5004",
+  NULLIFIER_ALREADY_USED: "E5005",
+  CONTRACT_CALL_FAILED: "E5006",
+
+  // Payment
+  PAYMENT_NOT_CONFIRMED: "E6001",
+  PAYMENT_INSUFFICIENT: "E6002",
+  PAYMENT_TOKEN_UNSUPPORTED: "E6003",
+  REFUND_FAILED: "E6004",
 
   // Rate Limiting
   RATE_LIMIT_EXCEEDED: "E8001",
@@ -68,22 +102,91 @@ export const ErrorCodes = {
   // Server
   INTERNAL_ERROR: "E9001",
   SERVICE_UNAVAILABLE: "E9002",
+  AI_SERVICE_DOWN: "E9003",
+  BLOCKCHAIN_SERVICE_DOWN: "E9004",
 };
 
 // ============================================================================
-// MEETING CONFIGURATION
+// ELECTION CONFIGURATION
 // ============================================================================
 
-export const MeetingConfig = {
-  DEFAULT_MAX_PARTICIPANTS: 100,
-  MAX_PARTICIPANTS_FREE: 50,
-  MAX_PARTICIPANTS_PRO: 300,
-  MAX_PARTICIPANTS_ENTERPRISE: 1000,
-  CODE_LENGTH: 10,
-  SCHEDULED_ADVANCE_MINUTES: 15,
-  MAX_DURATION_FREE_MINUTES: 60,
-  MAX_DURATION_PRO_MINUTES: 480,
-  INACTIVITY_TIMEOUT_MINUTES: 5,
+export const ElectionConfig = {
+  MIN_CANDIDATES: 2,
+  MAX_CANDIDATES: 500,
+  SLA_HOURS: 24,          // candidate must answer forum questions within 24h
+  SLA_WARNING_HOURS: 18,  // warning sent at 18h
+  MAX_DESCRIPTION_LENGTH: 5000,
+  DEFAULT_VOTE_FEE_CENTS: 100, // $1.00
+  RESULT_HASH_ALGO: "keccak256",
+};
+
+// ============================================================================
+// VOTE CONFIGURATION
+// ============================================================================
+
+export const VoteConfig = {
+  FEE_CONFIRMATION_BLOCKS: 6,
+  TX_TIMEOUT_MS: 90000, // 90 seconds to confirm tx
+  NULLIFIER_PREFIX: "vsec-vote-",
+};
+
+// ============================================================================
+// FORUM CONFIGURATION
+// ============================================================================
+
+export const ForumConfig = {
+  MAX_QUESTION_LENGTH: 1000,
+  MAX_ANSWER_LENGTH: 5000,
+  VOTE_DEBOUNCE_MS: 1000, // prevent rapid up/down voting
+};
+
+// ============================================================================
+// FRAUD CONFIGURATION
+// ============================================================================
+
+export const FraudConfig = {
+  AI_RISK_THRESHOLD_MEDIUM: 0.5,
+  AI_RISK_THRESHOLD_HIGH: 0.75,
+  AI_RISK_THRESHOLD_CRITICAL: 0.9,
+  AUTO_BAN_THRESHOLD: 0.95, // auto-ban if AI score above this
+};
+
+// ============================================================================
+// BLOCKCHAIN CONFIGURATION
+// ============================================================================
+
+export const BlockchainConfig = {
+  CONFIRMATION_BLOCKS: 3,
+  GAS_LIMIT_VOTE: 200000,
+  GAS_LIMIT_REGISTER: 300000,
+  GAS_LIMIT_ELECTION: 500000,
+  RETRY_ATTEMPTS: 3,
+  RETRY_DELAY_MS: 2000,
+};
+
+// ============================================================================
+// PAYMENT CONFIGURATION
+// ============================================================================
+
+export const PaymentConfig = {
+  SUPPORTED_TOKENS: ["USDT", "USDC", "ETH"],
+  CONFIRMATION_BLOCKS: 6,
+  ESCROW_TIMEOUT_MS: 300000, // 5 minutes to complete payment
+  MIN_FEE_CENTS: 50,   // $0.50
+  MAX_FEE_CENTS: 10000, // $100
+};
+
+// ============================================================================
+// KYC LEVELS
+// ============================================================================
+
+export const KYCLevel = {
+  NONE: 0,
+  EMAIL_VERIFIED: 1,
+  PHONE_VERIFIED: 2,
+  DOCUMENT_SUBMITTED: 3,
+  BIOMETRIC_VERIFIED: 4,
+  FULLY_VERIFIED: 5,
 };
 
 // ============================================================================
@@ -91,14 +194,14 @@ export const MeetingConfig = {
 // ============================================================================
 
 export const RateLimits = {
-  API: { windowMs: 15 * 60 * 1000, max: 100 },
-  AUTH: { windowMs: 15 * 60 * 1000, max: 30 },
-  MEETING_CREATE: { windowMs: 60 * 1000, max: 10 },
-  MEETING_JOIN: { windowMs: 60 * 1000, max: 30 },
-  CHAT_MESSAGE: { windowMs: 60 * 1000, max: 60 },
-  RECORDING: { windowMs: 60 * 1000, max: 5 },
-  UPLOAD: { windowMs: 60 * 1000, max: 20 },
-  BILLING: { windowMs: 60 * 1000, max: 10 },
+  API: { windowMs: 15 * 60 * 1000, max: 200 },
+  AUTH: { windowMs: 15 * 60 * 1000, max: 20 },
+  VOTE_CAST: { windowMs: 60 * 1000, max: 3 },
+  CANDIDATE_REGISTER: { windowMs: 60 * 60 * 1000, max: 5 },
+  FORUM_POST: { windowMs: 60 * 1000, max: 10 },
+  FRAUD_REPORT: { windowMs: 60 * 60 * 1000, max: 5 },
+  UPLOAD: { windowMs: 60 * 1000, max: 10 },
+  WALLET: { windowMs: 60 * 1000, max: 20 },
   NOTIFICATION: { windowMs: 60 * 1000, max: 30 },
 };
 
@@ -107,16 +210,17 @@ export const RateLimits = {
 // ============================================================================
 
 export const CacheTTL = {
-  USER_PROFILE: 300,       // 5 min
-  MEETING_DETAILS: 30,     // 30 sec (near real-time)
-  MEETING_LIST: 60,        // 1 min
-  PARTICIPANTS: 10,        // 10 sec (real-time)
-  ROOM_STATE: 5,           // 5 sec
-  CHAT_MESSAGES: 60,       // 1 min
-  NOTIFICATIONS: 120,      // 2 min
-  SUBSCRIPTION: 3600,      // 1 hour
-  ANALYTICS: 300,           // 5 min
-  APP_SETTINGS: 3600,      // 1 hour
+  USER_PROFILE: 300,         // 5 min
+  ELECTION_LIST: 60,         // 1 min
+  ELECTION_DETAIL: 120,      // 2 min
+  ELECTION_RESULTS: 3600,    // 1 hour (immutable after finalized)
+  CANDIDATE_LIST: 120,
+  PARTY_LIST: 600,
+  REGION_LIST: 3600,         // 1 hour (rarely changes)
+  ANALYTICS: 300,            // 5 min
+  FORUM_POSTS: 60,
+  NOTIFICATIONS: 30,
+  BLOCKCHAIN_STATUS: 30,
 };
 
 // ============================================================================
@@ -129,72 +233,40 @@ export const SocketEvents = {
   DISCONNECT: "disconnect",
   ERROR: "error",
 
-  // Room management
-  JOIN_ROOM: "room:join",
-  LEAVE_ROOM: "room:leave",
-  ROOM_STATE: "room:state",
+  // Election real-time
+  ELECTION_STARTED: "election:started",
+  ELECTION_ENDED: "election:ended",
+  ELECTION_PHASE_CHANGED: "election:phase_changed",
+  ELECTION_RESULTS_LIVE: "election:results_live",
+  VOTE_CAST: "vote:cast",
+  VOTE_COUNT_UPDATED: "vote:count_updated",
 
-  // Meeting flow
-  MEETING_CREATED: "meeting:created",
-  MEETING_STARTED: "meeting:started",
-  MEETING_ENDED: "meeting:ended",
-  MEETING_UPDATED: "meeting:updated",
-  MEETING_LOCKED: "meeting:locked",
-  MEETING_UNLOCKED: "meeting:unlocked",
+  // Forum real-time
+  FORUM_NEW_QUESTION: "forum:new_question",
+  FORUM_QUESTION_ANSWERED: "forum:question_answered",
+  FORUM_SLA_WARNING: "forum:sla_warning",
+  FORUM_SLA_BREACH: "forum:sla_breach",
 
-  // Participant events
-  PARTICIPANT_JOINED: "participant:joined",
-  PARTICIPANT_LEFT: "participant:left",
-  PARTICIPANT_MUTED: "participant:muted",
-  PARTICIPANT_UNMUTED: "participant:unmuted",
-  PARTICIPANT_VIDEO_ON: "participant:video_on",
-  PARTICIPANT_VIDEO_OFF: "participant:video_off",
-  PARTICIPANT_SCREEN_SHARE_ON: "participant:screen_share_on",
-  PARTICIPANT_SCREEN_SHARE_OFF: "participant:screen_share_off",
-  PARTICIPANT_HAND_RAISED: "participant:hand_raised",
-  PARTICIPANT_HAND_LOWERED: "participant:hand_lowered",
-  PARTICIPANT_ROLE_CHANGED: "participant:role_changed",
-  PARTICIPANT_KICKED: "participant:kicked",
-  PARTICIPANT_BANNED: "participant:banned",
-
-  // Chat
-  CHAT_MESSAGE: "chat:message",
-  CHAT_MESSAGE_DELETED: "chat:message_deleted",
-  CHAT_TYPING: "chat:typing",
-  CHAT_STOP_TYPING: "chat:stop_typing",
-
-  // Recording
-  RECORDING_STARTED: "recording:started",
-  RECORDING_STOPPED: "recording:stopped",
-  RECORDING_READY: "recording:ready",
+  // Fraud real-time
+  FRAUD_FLAG_RAISED: "fraud:flag_raised",
+  FRAUD_USER_BANNED: "fraud:user_banned",
 
   // Notifications
   NOTIFICATION: "notification:received",
   NOTIFICATION_READ: "notification:read",
 
-  // Room settings
-  ROOM_SETTINGS_UPDATED: "room:settings_updated",
-  ALL_MUTED: "room:all_muted",
+  // Blockchain confirmations
+  TX_PENDING: "tx:pending",
+  TX_CONFIRMED: "tx:confirmed",
+  TX_FAILED: "tx:failed",
 
-  // Presence
+  // User presence
   USER_ONLINE: "user:online",
   USER_OFFLINE: "user:offline",
 
-  // AI Intelligence (FastAPI → Express → Clients)
-  AI_TRANSCRIPTION: "ai:transcription",
-  AI_LIVE_INSIGHTS: "ai:live_insights",
-  AI_EMOTION_SIGNALS: "ai:emotion_signals",
-  AI_COACHING_HINTS: "ai:coaching_hints",
-  AI_COPILOT_SUGGESTIONS: "ai:copilot_suggestions",
-  AI_MEETING_SUMMARY: "ai:meeting_summary",
-  AI_ACTION_ITEMS: "ai:action_items",
-  AI_CV_ANALYSIS: "ai:cv_analysis",
-
-  // AI client controls (Client → Express → FastAPI)
-  AI_TOGGLE_COPILOT: "ai:toggle_copilot",
-  AI_TOGGLE_TRANSCRIPTION: "ai:toggle_transcription",
-  AI_TOGGLE_COACHING: "ai:toggle_coaching",
-  AI_REQUEST_SUMMARY: "ai:request_summary",
+  // Admin
+  ADMIN_BROADCAST: "admin:broadcast",
+  ADMIN_ELECTION_UPDATE: "admin:election_update",
 
   // Voice Assistant (Client ↔ Express ↔ FastAPI)
   AI_VOICE_COMMAND: "ai:voice_command",

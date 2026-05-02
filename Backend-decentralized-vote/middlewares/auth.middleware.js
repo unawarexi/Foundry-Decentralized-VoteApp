@@ -32,7 +32,7 @@ export async function authenticate(req, res, next) {
     // Find user in PostgreSQL — do NOT auto-create
     const user = await prisma.user.findUnique({
       where: { firebaseUid: decodedToken.uid },
-      include: { accounts: true },
+      include: { region: true },
     });
 
     if (!user) {

@@ -1,5 +1,5 @@
 // ============================================================================
-// SpeakUp — Environment Configuration
+// VoteSecure — Environment Configuration
 // ============================================================================
 
 import dotenv from "dotenv";
@@ -95,8 +95,8 @@ export const env = {
   // Kafka
   // --------------------------------------------------------------------------
   KAFKA_BROKERS: getEnvString("KAFKA_BROKERS", "localhost:9092"),
-  KAFKA_CLIENT_ID: getEnvString("KAFKA_CLIENT_ID", "speakup-api"),
-  KAFKA_GROUP_ID: getEnvString("KAFKA_GROUP_ID", "speakup-consumer"),
+  KAFKA_CLIENT_ID: getEnvString("KAFKA_CLIENT_ID", "votesecure-api"),
+  KAFKA_GROUP_ID: getEnvString("KAFKA_GROUP_ID", "votesecure-consumer"),
   KAFKA_SSL: getEnvBoolean("KAFKA_SSL", false),
   KAFKA_SASL_USERNAME: getEnvString("KAFKA_SASL_USERNAME", ""),
   KAFKA_SASL_PASSWORD: getEnvString("KAFKA_SASL_PASSWORD", ""),
@@ -107,27 +107,11 @@ export const env = {
   BULLMQ_REDIS_URL: getEnvString("BULLMQ_REDIS_URL", ""),
 
   // --------------------------------------------------------------------------
-  // AWS S3 (Recordings / Uploads)
-  // --------------------------------------------------------------------------
-  AWS_REGION: getEnvString("AWS_REGION", "us-east-1"),
-  AWS_ACCESS_KEY_ID: getEnvString("AWS_ACCESS_KEY_ID", ""),
-  AWS_SECRET_ACCESS_KEY: getEnvString("AWS_SECRET_ACCESS_KEY", ""),
-  AWS_S3_BUCKET: getEnvString("AWS_S3_BUCKET", ""),
-
-  // --------------------------------------------------------------------------
-  // Cloudinary (Avatars / Images)
+  // Cloudinary (Avatars / Campaign Images)
   // --------------------------------------------------------------------------
   CLOUDINARY_CLOUD_NAME: getEnvString("CLOUDINARY_CLOUD_NAME", ""),
   CLOUDINARY_API_KEY: getEnvString("CLOUDINARY_API_KEY", ""),
   CLOUDINARY_API_SECRET: getEnvString("CLOUDINARY_API_SECRET", ""),
-
-  // --------------------------------------------------------------------------
-  // Stripe (Billing)
-  // --------------------------------------------------------------------------
-  STRIPE_SECRET_KEY: getEnvString("STRIPE_SECRET_KEY", ""),
-  STRIPE_WEBHOOK_SECRET: getEnvString("STRIPE_WEBHOOK_SECRET", ""),
-  STRIPE_PRO_PRICE_ID: getEnvString("STRIPE_PRO_PRICE_ID", ""),
-  STRIPE_ENTERPRISE_PRICE_ID: getEnvString("STRIPE_ENTERPRISE_PRICE_ID", ""),
 
   // --------------------------------------------------------------------------
   // SMTP / Email
@@ -136,7 +120,7 @@ export const env = {
   SMTP_PORT: getEnvNumber("SMTP_PORT", 587),
   SMTP_USER: getEnvString("SMTP_USER", ""),
   SMTP_PASS: getEnvString("SMTP_PASS", ""),
-  SMTP_FROM: getEnvString("SMTP_FROM", "noreply@speakup.app"),
+  SMTP_FROM: getEnvString("SMTP_FROM", "noreply@votesecure.app"),
 
   // --------------------------------------------------------------------------
   // Observability
@@ -146,23 +130,62 @@ export const env = {
   PROMETHEUS_METRICS_ENABLED: getEnvBoolean("PROMETHEUS_METRICS_ENABLED", true),
 
   // --------------------------------------------------------------------------
-  // WebRTC (TURN/STUN)
+  // JWT (internal service tokens)
   // --------------------------------------------------------------------------
-  TURN_SERVER_URL: getEnvString("TURN_SERVER_URL", ""),
-  TURN_SERVER_USERNAME: getEnvString("TURN_SERVER_USERNAME", ""),
-  TURN_SERVER_PASSWORD: getEnvString("TURN_SERVER_PASSWORD", ""),
+  JWT_SECRET: getEnvString("JWT_SECRET", "change-me-in-production"),
+  JWT_EXPIRY: getEnvString("JWT_EXPIRY", "7d"),
 
   // --------------------------------------------------------------------------
-  // Cloudflare
+  // Blockchain (Ethereum / Polygon / zkSync)
   // --------------------------------------------------------------------------
-  CLOUDFLARE_ZONE_ID: getEnvString("CLOUDFLARE_ZONE_ID", ""),
-  CLOUDFLARE_API_TOKEN: getEnvString("CLOUDFLARE_API_TOKEN", ""),
+  BLOCKCHAIN_RPC_URL: getEnvString("BLOCKCHAIN_RPC_URL", ""),
+  BLOCKCHAIN_RPC_URL_POLYGON: getEnvString("BLOCKCHAIN_RPC_URL_POLYGON", ""),
+  BLOCKCHAIN_RPC_URL_ZKSYNC: getEnvString("BLOCKCHAIN_RPC_URL_ZKSYNC", ""),
+  BLOCKCHAIN_PRIVATE_KEY: getEnvString("BLOCKCHAIN_PRIVATE_KEY", ""),
+  BLOCKCHAIN_CHAIN_ID: getEnvNumber("BLOCKCHAIN_CHAIN_ID", 1),
+  ALCHEMY_API_KEY: getEnvString("ALCHEMY_API_KEY", ""),
+  INFURA_API_KEY: getEnvString("INFURA_API_KEY", ""),
 
   // --------------------------------------------------------------------------
-  // AI Service (FastAPI Intelligence Plane)
+  // Smart Contract Addresses (UUPS Proxies — deployed by Foundry)
+  // --------------------------------------------------------------------------
+  CONTRACT_IDENTITY_REGISTRY: getEnvString("CONTRACT_IDENTITY_REGISTRY", ""),
+  CONTRACT_REGION_REGISTRY: getEnvString("CONTRACT_REGION_REGISTRY", ""),
+  CONTRACT_ELECTION_FACTORY: getEnvString("CONTRACT_ELECTION_FACTORY", ""),
+  CONTRACT_VOTE_PROTOCOL: getEnvString("CONTRACT_VOTE_PROTOCOL", ""),
+  CONTRACT_VOTE_FEE_ESCROW: getEnvString("CONTRACT_VOTE_FEE_ESCROW", ""),
+  CONTRACT_CANDIDATE_REGISTRY: getEnvString("CONTRACT_CANDIDATE_REGISTRY", ""),
+  CONTRACT_PARTY_REGISTRY: getEnvString("CONTRACT_PARTY_REGISTRY", ""),
+  CONTRACT_FORUM_GOVERNANCE: getEnvString("CONTRACT_FORUM_GOVERNANCE", ""),
+  CONTRACT_FRAUD_DETECTION: getEnvString("CONTRACT_FRAUD_DETECTION", ""),
+  CONTRACT_ZK_VERIFIER: getEnvString("CONTRACT_ZK_VERIFIER", ""),
+
+  // --------------------------------------------------------------------------
+  // Payment / Crypto Escrow
+  // --------------------------------------------------------------------------
+  VOTE_FEE_USD_CENTS: getEnvNumber("VOTE_FEE_USD_CENTS", 100), // $1.00 default
+  SUPPORTED_PAYMENT_TOKENS: getEnvString("SUPPORTED_PAYMENT_TOKENS", "USDT,USDC,ETH"),
+  USDT_CONTRACT_ADDRESS: getEnvString("USDT_CONTRACT_ADDRESS", ""),
+  USDC_CONTRACT_ADDRESS: getEnvString("USDC_CONTRACT_ADDRESS", ""),
+
+  // --------------------------------------------------------------------------
+  // AI / FastAPI Intelligence Plane
   // --------------------------------------------------------------------------
   AI_SERVICE_URL: getEnvString("AI_SERVICE_URL", "http://localhost:8000/api/v1"),
   AI_INTERNAL_API_KEY: getEnvString("AI_INTERNAL_API_KEY", ""),
+
+  // --------------------------------------------------------------------------
+  // IPFS / Filecoin (Manifesto & Evidence Storage)
+  // --------------------------------------------------------------------------
+  IPFS_API_URL: getEnvString("IPFS_API_URL", ""),
+  IPFS_GATEWAY_URL: getEnvString("IPFS_GATEWAY_URL", "https://ipfs.io/ipfs"),
+  WEB3_STORAGE_TOKEN: getEnvString("WEB3_STORAGE_TOKEN", ""),
+
+  // --------------------------------------------------------------------------
+  // GeoIP
+  // --------------------------------------------------------------------------
+  GEOIP_DB_PATH: getEnvString("GEOIP_DB_PATH", ""),
+  ENFORCE_REGION_LOCK: getEnvBoolean("ENFORCE_REGION_LOCK", true),
 };
 
 // ============================================================================
@@ -182,8 +205,19 @@ export function isTest() {
 }
 
 export function validateEnv() {
-  const required = ["DATABASE_URL"];
-  const recommended = ["FIREBASE_SERVICE_ACCOUNT", "REDIS_HOST", "LIVEKIT_API_KEY"];
+  const required = ["DATABASE_URL", "JWT_SECRET"];
+  const recommended = [
+    "FIREBASE_SERVICE_ACCOUNT",
+    "REDIS_HOST",
+    "BLOCKCHAIN_RPC_URL",
+    "CONTRACT_IDENTITY_REGISTRY",
+    "CONTRACT_ELECTION_FACTORY",
+    "CONTRACT_VOTE_PROTOCOL",
+    "CONTRACT_VOTE_FEE_ESCROW",
+    "AI_SERVICE_URL",
+    "AI_INTERNAL_API_KEY",
+  ];
+
   const missing = required.filter((key) => !process.env[key]);
   const missingRecommended = recommended.filter((key) => !process.env[key]);
 

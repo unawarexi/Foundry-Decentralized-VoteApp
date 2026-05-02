@@ -17,7 +17,7 @@ const AI_TIMEOUT = 30000; // 30s default
 // HTTP CLIENT
 // ============================================================================
 
-async function aiRequest(method, path, body = null, options = {}) {
+export async function aiRequest(method, path, body = null, options = {}) {
   const url = `${AI_BASE_URL}${path}`;
   const timeout = options.timeout || AI_TIMEOUT;
 
