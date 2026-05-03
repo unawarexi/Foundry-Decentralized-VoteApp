@@ -1,8 +1,7 @@
 import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_frontend_vote/core/auth/google_signin.dart';
+import 'package:flutter_frontend_vote/core/auth/wallet_service.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
 import 'package:flutter_frontend_vote/core/db/hive.dart';
@@ -89,10 +88,7 @@ class AccountGuard {
 
   static Future<void> _forceSignOut() async {
     try {
-      await FirebaseAuth.instance.signOut();
-    } catch (_) {}
-    try {
-      await GoogleSignInService.signOut();
+      await WalletService.instance.disconnect();
     } catch (_) {}
     try {
       await SecureStorageService.clearAll();

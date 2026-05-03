@@ -24,7 +24,7 @@ class LocalAuthService {
   }
 
   /// Enable biometric authentication.
-  /// Should only be called after a successful Google/GitHub sign-in.
+  /// Should only be called after a successful sign-in (wallet or email).
   static Future<bool> enable() async {
     final available = await isAvailable();
     if (!available) return false;

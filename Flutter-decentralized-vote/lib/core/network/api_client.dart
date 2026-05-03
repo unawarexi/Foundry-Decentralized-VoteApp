@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_frontend_vote/core/services/storage_service.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_frontend_vote/core/config/base_url.dart';
 import 'package:flutter_frontend_vote/core/network/account_guard.dart';
@@ -138,24 +138,16 @@ class _ConnectivityInterceptor extends Interceptor {
   }
 }
 
-/// Attaches Firebase ID token to every request.
+/// Attaches JWT to every request.
 class _AuthInterceptor extends Interceptor {
   @override
   void onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      try {
-        final token = await user.getIdToken();
-        if (token != null) {
-          options.headers['Authorization'] = 'Bearer $token';
-        }
-      } catch (_) {
-        // Token fetch failed — proceed without auth header.
-        // The backend will return 401, which is fine.
-      }
+    final token = await SecureStorageService.getToken();
+    if (token != null && token.isNotEmpty) {
+      options.headers['Authorization'] = 'Bearer $token';
     }
     handler.next(options);
   }
@@ -174,23 +166,7 @@ class _AuthInterceptor extends Interceptor {
     }
 
     if (statusCode == 401) {
-      // Force refresh the Firebase token and retry once
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        try {
-          final newToken = await user.getIdToken(true);
-          if (newToken != null) {
-            err.requestOptions.headers['Authorization'] = 'Bearer $newToken';
-            final retryResponse = await Dio().fetch(err.requestOptions);
-            return handler.resolve(retryResponse);
-          }
-        } catch (_) {
-          // Token refresh failed — account likely deleted or disabled
-          AccountGuard.trigger();
-          return handler.next(err);
-        }
-      }
-      // No Firebase user but got 401 — session is invalid
+      // JWT expired — clear session and force re-login
       AccountGuard.trigger();
     }
 
