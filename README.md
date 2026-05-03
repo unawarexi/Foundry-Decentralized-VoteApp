@@ -85,9 +85,9 @@ The gallery below follows the current UI journey from splash and onboarding thro
 | Col 1 | Col 2 | Col 3 | Col 4 | Col 5 |
 | --- | --- | --- | --- | --- |
 | ![Splash](pictures/splash.png) | ![Slide 1](pictures/slide1.png) | ![Slide 2](pictures/slide2.png) | ![Slide 3](pictures/slide3.png) | ![Slide 4](pictures/slide4.png) |
-| ![Slide 5](pictures/slide5.png) | ![Options](pictures/options.png) | ![Login](pictures/login.png) | ![SignupC](pictures/signupC.png) | ![Signup](pictures/signup.png) |
-| ![Home](pictures/home.png) | ![Elections](pictures/elections.png) | ![Candidates](pictures/candiates.png) | ![Forums](pictures/forums.png) | ![Profile](pictures/profile.png) |
-|  |  |  |  |  |
+| ![Slide 5](pictures/slide5.png) | ![Options](pictures/options.png) | ![Login](pictures/login.png) | ![Wallets](pictures/wallets.png) | ![SignupC](pictures/signupC.png)|
+| ![Signup](pictures/signup.png) | ![Home](pictures/home.png) | ![Elections](pictures/elections.png) | ![Candidates](pictures/candiates.png) | ![Details](pictures/detail.png) |
+|![Forums](pictures/forums.png) | ![Question](pictures/question.png) | ![Response](pictures/response.png) | ![Profile](pictures/profile.png) |  |
 |  |  |  |  |  |
 
 ## Current Positioning
