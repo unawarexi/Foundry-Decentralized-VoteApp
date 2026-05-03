@@ -1,6 +1,6 @@
 
 # ============================================================================
-# SpeakUp — Main Infrastructure (VPC + EKS)
+# VoteSecure — Main Infrastructure (VPC + EKS)
 # ============================================================================
 
 # --------------------------------------------------------------------------
@@ -80,8 +80,8 @@ module "eks" {
 
   # Managed node groups
   eks_managed_node_groups = {
-    speakup_workers = {
-      name           = "speakup-workers"
+    votesecure_workers = {
+      name           = "votesecure-workers"
       instance_types = var.node_instance_types
       
       min_size     = var.node_min_size
@@ -130,10 +130,10 @@ module "ebs_csi_irsa" {
 # --------------------------------------------------------------------------
 # Security Group for Backend API pods
 # --------------------------------------------------------------------------
-resource "aws_security_group" "speakup_api" {
+resource "aws_security_group" "votesecure_api" {
   name_prefix = "${var.project_name}-api-"
   vpc_id      = module.vpc.vpc_id
-  description = "Security group for SpeakUp API pods"
+  description = "Security group for VoteSecure API pods"
 
   # Allow inbound from ALB
   ingress {

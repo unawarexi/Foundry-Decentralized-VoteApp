@@ -1,6 +1,6 @@
 
 # ============================================================================
-# SpeakUp — Terraform Variables
+# VoteSecure — Terraform Variables
 # ============================================================================
 
 # --------------------------------------------------------------------------
@@ -19,7 +19,7 @@ variable "environment" {
 variable "project_name" {
   description = "Project name used for resource naming"
   type        = string
-  default     = "speakup"
+  default     = "votesecure"
 }
 
 # --------------------------------------------------------------------------
@@ -49,7 +49,7 @@ variable "availability_zones" {
 variable "cluster_name" {
   description = "Name of the EKS cluster"
   type        = string
-  default     = "speakup-cluster"
+  default     = "votesecure-cluster"
 }
 
 variable "cluster_version" {
@@ -106,13 +106,13 @@ variable "db_max_allocated_storage" {
 variable "db_name" {
   description = "PostgreSQL database name"
   type        = string
-  default     = "speakup"
+  default     = "votesecure"
 }
 
 variable "db_username" {
   description = "Master database username"
   type        = string
-  default     = "speakup_admin"
+  default     = "votesecure_admin"
   sensitive   = true
 }
 
@@ -154,5 +154,5 @@ variable "cloudflare_zone_id" {
 variable "domain_name" {
   description = "Primary domain name"
   type        = string
-  default     = "speakup.app"
+  default     = "votesecure.app"
 }

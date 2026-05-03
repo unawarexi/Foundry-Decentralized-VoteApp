@@ -1,36 +1,36 @@
 # ============================================================================
-# SpeakUp — Kubernetes Service
+# VoteSecure — Kubernetes Service
 # ClusterIP service for internal communication
 # ============================================================================
 apiVersion: v1
 kind: Service
 metadata:
-  name: speakup-api
-  namespace: speakup
+  name: votesecure-api
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
 spec:
   type: ClusterIP
   selector:
-    app: speakup-api
+    app: votesecure-api
   ports:
     - name: http
       port: 80
-      targetPort: 3000
+      targetPort: 5000
       protocol: TCP
 
 ---
 # ============================================================================
-# SpeakUp — Kubernetes Ingress
+# VoteSecure — Kubernetes Ingress
 # Nginx Ingress with TLS
 # ============================================================================
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: speakup-api-ingress
-  namespace: speakup
+  name: votesecure-api-ingress
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
@@ -41,44 +41,44 @@ metadata:
     nginx.ingress.kubernetes.io/rate-limit: "100"
     nginx.ingress.kubernetes.io/rate-limit-window: "1m"
     # WebSocket support for ride tracking
-    nginx.ingress.kubernetes.io/websocket-services: "speakup-api"
+    nginx.ingress.kubernetes.io/websocket-services: "votesecure-api"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "86400"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "86400"
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   tls:
     - hosts:
-        - api.speakup.app
-      secretName: speakup-api-tls
+        - api.votesecure.app
+      secretName: votesecure-api-tls
   rules:
-    - host: api.speakup.app
+    - host: api.votesecure.app
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: speakup-api
+                name: votesecure-api
                 port:
                   number: 80
 
 ---
 # ============================================================================
-# SpeakUp — Horizontal Pod Autoscaler
+# VoteSecure — Horizontal Pod Autoscaler
 # Auto-scale based on CPU/Memory
 # ============================================================================
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: speakup-api-hpa
-  namespace: speakup
+  name: votesecure-api-hpa
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: speakup-api
+    name: votesecure-api
   minReplicas: 3
   maxReplicas: 15
   metrics:
@@ -114,18 +114,18 @@ spec:
 
 ---
 # ============================================================================
-# SpeakUp — Pod Disruption Budget
+# VoteSecure — Pod Disruption Budget
 # Ensure minimum availability during disruptions
 # ============================================================================
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: speakup-api-pdb
-  namespace: speakup
+  name: votesecure-api-pdb
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
 spec:
   minAvailable: 2
   selector:
     matchLabels:
-      app: speakup-api
+      app: votesecure-api

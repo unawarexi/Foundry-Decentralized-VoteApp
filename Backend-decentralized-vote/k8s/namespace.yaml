@@ -1,11 +1,11 @@
 # ============================================================================
-# SpeakUp — Kubernetes Namespace
+# VoteSecure — Kubernetes Namespace
 # ============================================================================
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: speakup
+  name: votesecure
   labels:
-    app: speakup-api
-    project: speakup-conference
+    app: votesecure-api
+    project: votesecure-decentralized-vote
     environment: production

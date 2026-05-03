@@ -1,5 +1,5 @@
 # ============================================================================
-# SpeakUp — Dockerfile (Node.js Runtime)
+# VoteSecure — Dockerfile (Node.js Runtime)
 # ============================================================================
 
 # --------------------------------------------------------------------------
@@ -35,8 +35,8 @@ FROM node:22-alpine AS production
 WORKDIR /app
 
 # Security: run as non-root user
-RUN addgroup --system speakup && \
-    adduser --system --ingroup speakup speakup
+RUN addgroup --system votesecure && \
+    adduser --system --ingroup votesecure votesecure
 
 # Copy production dependencies
 COPY --from=deps /app/node_modules ./node_modules
@@ -52,9 +52,9 @@ COPY . .
 RUN rm -rf .git .github terraform k8s nginx .env* *.md
 
 # Set ownership
-RUN chown -R speakup:speakup /app
+RUN chown -R votesecure:votesecure /app
 
-USER speakup
+USER votesecure
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \

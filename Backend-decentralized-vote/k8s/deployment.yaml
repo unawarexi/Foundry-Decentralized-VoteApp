@@ -1,21 +1,21 @@
 # ============================================================================
-# SpeakUp — Kubernetes Deployment
+# VoteSecure — Kubernetes Deployment
 # Production-ready deployment configuration
 # ============================================================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: speakup-api
-  namespace: speakup
+  name: votesecure-api
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
     version: v1
 spec:
   replicas: 3
   revisionHistoryLimit: 5
   selector:
     matchLabels:
-      app: speakup-api
+      app: votesecure-api
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -24,14 +24,14 @@ spec:
   template:
     metadata:
       labels:
-        app: speakup-api
+        app: votesecure-api
         version: v1
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "3000"
+        prometheus.io/port: "5000"
         prometheus.io/path: "/metrics"
     spec:
-      serviceAccountName: speakup-api
+      serviceAccountName: votesecure-api
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -39,119 +39,119 @@ spec:
         fsGroup: 1001
 
       imagePullSecrets:
-        - name: speakup-registry-secret
+        - name: votesecure-registry-secret
 
       containers:
-        - name: speakup-api
-          image: ghcr.io/speakup/speakup-api:latest
+        - name: votesecure-api
+          image: ghcr.io/votesecure/votesecure-api:latest
           imagePullPolicy: Always
 
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: 5000
               protocol: TCP
 
           # Environment from ConfigMap
           envFrom:
             - configMapRef:
-                name: speakup-api-config
+                name: votesecure-api-config
 
           # Environment from Secrets
           env:
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: DATABASE_URL
             - name: REDIS_URL
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: REDIS_URL
-            - name: FIREBASE_PROJECT_ID
+            - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: FIREBASE_PROJECT_ID
-            - name: FIREBASE_CLIENT_EMAIL
+                  name: votesecure-api-secrets
+                  key: JWT_SECRET
+            - name: ENCRYPTION_KEY
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: FIREBASE_CLIENT_EMAIL
-            - name: FIREBASE_PRIVATE_KEY
+                  name: votesecure-api-secrets
+                  key: ENCRYPTION_KEY
+            - name: WALLETCONNECT_PROJECT_ID
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: FIREBASE_PRIVATE_KEY
-            - name: LIVEKIT_API_KEY
+                  name: votesecure-api-secrets
+                  key: WALLETCONNECT_PROJECT_ID
+            - name: BLOCKCHAIN_RPC_URL
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: LIVEKIT_API_KEY
-            - name: LIVEKIT_API_SECRET
+                  name: votesecure-api-secrets
+                  key: BLOCKCHAIN_RPC_URL
+            - name: SMART_CONTRACT_ADDRESS
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: LIVEKIT_API_SECRET
-            - name: LIVEKIT_HOST
+                  name: votesecure-api-secrets
+                  key: SMART_CONTRACT_ADDRESS
+            - name: CONTRACT_DEPLOYER_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
-                  key: LIVEKIT_HOST
+                  name: votesecure-api-secrets
+                  key: CONTRACT_DEPLOYER_PRIVATE_KEY
             - name: CLOUDINARY_CLOUD_NAME
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: CLOUDINARY_CLOUD_NAME
             - name: CLOUDINARY_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: CLOUDINARY_API_KEY
             - name: CLOUDINARY_API_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: CLOUDINARY_API_SECRET
             - name: STRIPE_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: STRIPE_SECRET_KEY
             - name: STRIPE_WEBHOOK_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: STRIPE_WEBHOOK_SECRET
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SENTRY_DSN
             - name: SMTP_HOST
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SMTP_HOST
             - name: SMTP_PORT
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SMTP_PORT
             - name: SMTP_USER
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SMTP_USER
             - name: SMTP_PASS
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SMTP_PASS
             - name: SMTP_FROM
               valueFrom:
                 secretKeyRef:
-                  name: speakup-api-secrets
+                  name: votesecure-api-secrets
                   key: SMTP_FROM
 
           # Resource limits
@@ -223,7 +223,7 @@ spec:
               podAffinityTerm:
                 labelSelector:
                   matchLabels:
-                    app: speakup-api
+                    app: votesecure-api
                 topologyKey: kubernetes.io/hostname
 
       # Tolerations
@@ -235,12 +235,12 @@ spec:
 
 ---
 # ============================================================================
-# SpeakUp — Service Account
+# VoteSecure — Service Account
 # ============================================================================
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: speakup-api
-  namespace: speakup
+  name: votesecure-api
+  namespace: votesecure
   labels:
-    app: speakup-api
+    app: votesecure-api
