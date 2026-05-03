@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_frontend_vote/app/domain/models/user_model.dart';
 import 'package:flutter_frontend_vote/app/domain/repositories/auth_repository.dart';
 import 'package:flutter_frontend_vote/store/user_provider.dart';
@@ -14,15 +13,11 @@ import 'package:flutter_frontend_vote/core/services/websocket.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) => AuthRepository());
 
-// ── Firebase auth stream ────────────────────────────────────────────────────
+// ── Session state ───────────────────────────────────────────────────────────
 
-final authStateProvider = StreamProvider<User?>((ref) {
-  return ref.watch(authRepositoryProvider).authStateChanges;
-});
-
-/// True once a Firebase session exists — gates wallet binding and biometrics.
+/// True once a user session exists (JWT cached in Hive).
 final hasSessionProvider = Provider<bool>((ref) {
-  return ref.watch(authStateProvider).valueOrNull != null;
+  return ref.watch(currentUserProvider).valueOrNull != null;
 });
 
 // ── Current user ───────────────────────────────────────────────────────────────
@@ -59,14 +54,14 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
           .read(authRepositoryProvider)
           .signInWithEmail(email: email, password: password);
       state = AsyncValue.data(user);
-      _registerFcmToken();
+      _registerPushToken();
       _connectWebSocket(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
     }
   }
 
-  // ── Wallet sign-in (verified accounts only) ────────────────────────────
+  // ── Wallet sign-in ────────────────────────────────────────────────────────
 
   Future<void> signInWithWallet({
     required String walletAddress,
@@ -81,7 +76,7 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
             message: message,
           );
       state = AsyncValue.data(user);
-      _registerFcmToken();
+      _registerPushToken();
       _connectWebSocket(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -115,7 +110,7 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
             idNumber: fields['idNumber'] as String?,
           );
       state = AsyncValue.data(user);
-      _registerFcmToken();
+      _registerPushToken();
       _connectWebSocket(user);
     } catch (e, st) {
       state = AsyncValue.error(e, st);
@@ -156,7 +151,7 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
 
   // ── Private helpers ─────────────────────────────────────────────────────────
 
-  Future<void> _registerFcmToken() async {
+  Future<void> _registerPushToken() async {
     try {
       final token = await NotificationService.instance.getToken();
       if (token != null) {
@@ -165,18 +160,8 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
               platform: Platform.isIOS ? 'ios' : 'android',
             );
       }
-      NotificationService.instance.onTokenRefresh.listen((newToken) async {
-        try {
-          await _ref.read(userRepositoryProvider).registerDevice(
-                fcmToken: newToken,
-                platform: Platform.isIOS ? 'ios' : 'android',
-              );
-        } catch (e) {
-          debugPrint('[FCM] Token refresh re-register failed: $e');
-        }
-      });
     } catch (e) {
-      debugPrint('[FCM] Registration failed: $e');
+      debugPrint('[Push] Token registration failed: $e');
     }
   }
 
@@ -186,3 +171,4 @@ class CurrentUserNotifier extends StateNotifier<AsyncValue<UserModel?>> {
     ws.connect().then((_) => ws.setUserId(user.id));
   }
 }
+

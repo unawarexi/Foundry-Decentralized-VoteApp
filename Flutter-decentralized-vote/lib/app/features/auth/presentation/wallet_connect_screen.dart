@@ -2,65 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:reown_appkit/reown_appkit.dart';
+import 'package:flutter_frontend_vote/core/auth/wallet_service.dart';
 import 'package:flutter_frontend_vote/store/auth_provider.dart';
 import 'package:flutter_frontend_vote/core/constants/colors.dart';
 import 'package:flutter_frontend_vote/core/constants/sizes.dart';
-
-// ── Wallet definition ───────────────────────────────────────────────────────
-
-class _WalletApp {
-  final String name;
-  final String iconAsset;
-  final String deepLink; // scheme to open the wallet
-  final String description;
-
-  const _WalletApp({
-    required this.name,
-    required this.iconAsset,
-    required this.deepLink,
-    required this.description,
-  });
-}
-
-const _wallets = [
-  _WalletApp(
-    name: 'MetaMask',
-    iconAsset: 'assets/icons/metamask.png',
-    deepLink: 'metamask://wc',
-    description: 'The most popular Web3 wallet',
-  ),
-  _WalletApp(
-    name: 'Trust Wallet',
-    iconAsset: 'assets/icons/trust_wallet.png',
-    deepLink: 'trust://wc',
-    description: 'Multi-chain crypto wallet',
-  ),
-  _WalletApp(
-    name: 'Rainbow',
-    iconAsset: 'assets/icons/rainbow.png',
-    deepLink: 'rainbow://wc',
-    description: 'Ethereum wallet & gateway',
-  ),
-  _WalletApp(
-    name: 'Coinbase Wallet',
-    iconAsset: 'assets/icons/coinbase_wallet.png',
-    deepLink: 'cbwallet://wc',
-    description: 'Your key to the open web',
-  ),
-  _WalletApp(
-    name: 'Phantom',
-    iconAsset: 'assets/icons/phantom.png',
-    deepLink: 'phantom://wc',
-    description: 'Multichain crypto wallet',
-  ),
-  _WalletApp(
-    name: 'imToken',
-    iconAsset: 'assets/icons/imtoken.png',
-    deepLink: 'imtokenv2://wc',
-    description: 'Trusted blockchain wallet',
-  ),
-];
+import 'package:flutter_frontend_vote/core/constants/responsive.dart';
+import 'package:flutter_frontend_vote/core/utils/helper_functions.dart';
+import 'package:flutter_frontend_vote/core/animations/screen_animations.dart';
+import 'package:flutter_frontend_vote/app/components/shapes/decorative_painters.dart';
+import 'package:flutter_frontend_vote/app/features/auth/presentation/widgets/auth_widgets.dart';
 
 // ── Screen ──────────────────────────────────────────────────────────────────
 
@@ -72,477 +23,507 @@ class WalletConnectScreen extends ConsumerStatefulWidget {
       _WalletConnectScreenState();
 }
 
-class _WalletConnectScreenState extends ConsumerState<WalletConnectScreen> {
-  bool _isConnecting = false;
-  String? _connectingWallet;
+class _WalletConnectScreenState extends ConsumerState<WalletConnectScreen>
+    with TickerProviderStateMixin {
+  bool _isSigning = false;
+  bool _initialized = false;
   String? _errorMessage;
 
-  Future<void> _connectWallet(_WalletApp wallet) async {
+  late final LoginOrchestrator _orchestrator;
+
+  // ── Lifecycle ───────────────────────────────────────────────────────────────
+
+  @override
+  void initState() {
+    super.initState();
+    _orchestrator = LoginOrchestrator(vsync: this);
+    _runEntrance();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initAndOpen());
+  }
+
+  Future<void> _runEntrance() async {
+    await Future.delayed(const Duration(milliseconds: 80));
+    _orchestrator.forward();
+  }
+
+  @override
+  void dispose() {
+    _orchestrator.dispose();
+    WalletService.instance.modal?.onModalDisconnect.unsubscribeAll();
+    super.dispose();
+  }
+
+  // ── Init ────────────────────────────────────────────────────────────────────
+
+  Future<void> _initAndOpen() async {
+    try {
+      await WalletService.instance.init(context);
+      if (mounted) setState(() => _initialized = true);
+      _attachListeners();
+      await WalletService.instance.openModal();
+    } catch (e) {
+      if (mounted) setState(() => _errorMessage = e.toString());
+    }
+  }
+
+  void _attachListeners() {
+    final modal = WalletService.instance.modal;
+    if (modal == null) return;
+    modal.onModalConnect.subscribe((_) async {
+      if (!mounted) return;
+      await _handleWalletConnected();
+    });
+  }
+
+  // ── Connect → sign → auth ──────────────────────────────────────────────────
+
+  Future<void> _handleWalletConnected() async {
+    if (_isSigning) return;
     setState(() {
-      _isConnecting = true;
-      _connectingWallet = wallet.name;
+      _isSigning = true;
       _errorMessage = null;
     });
 
     try {
-      // Build a challenge message for the wallet to sign.
-      // In production this nonce should come from the backend (GET /auth/wallet-nonce).
-      final nonce = DateTime.now().millisecondsSinceEpoch.toString();
-      final message =
-          'VoteSecure Sign-In\n\nClick "Sign" to authenticate.\n\nNonce: $nonce';
+      final (:message, :signature) =
+          await WalletService.instance.requestSignature();
+      final address = WalletService.instance.address!;
 
-      // Attempt to deep-link into the wallet app.
-      final uri = Uri.parse('${wallet.deepLink}?message=${Uri.encodeComponent(message)}');
-      final canOpen = await canLaunchUrl(uri);
+      await ref.read(currentUserProvider.notifier).signInWithWallet(
+            walletAddress: address,
+            signature: signature,
+            message: message,
+          );
 
-      if (!canOpen) {
+      final authState = ref.read(currentUserProvider);
+      if (authState.hasValue && authState.valueOrNull != null && mounted) {
+        context.go('/home');
+      } else if (authState.hasError && mounted) {
         setState(() {
-          _errorMessage =
-              '${wallet.name} is not installed on this device. Please install it and try again.';
-          _isConnecting = false;
-          _connectingWallet = null;
+          _errorMessage = authState.error.toString().contains('E4001') ||
+                  authState.error.toString().contains('wallet not linked')
+              ? 'No verified account is linked to this wallet.\n'
+                  'Please sign up or link your wallet in Settings.'
+              : 'Authentication failed. Please try again.';
         });
-        return;
       }
-
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-
-      // ── Note ──────────────────────────────────────────────────────────────
-      // After the wallet signs the message and returns via deep-link callback
-      // (votesecure://wallet-callback?address=0x...&signature=0x...), the router
-      // will call WalletCallbackHandler which reads the query params and calls:
-      //   ref.read(currentUserProvider.notifier).signInWithWallet(...)
-      //
-      // For now we wait for the user to return manually — the result is handled
-      // in the GoRouter redirect for '/wallet-callback'.
-      // ──────────────────────────────────────────────────────────────────────
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to open ${wallet.name}: ${e.toString()}';
-      });
-    } finally {
       if (mounted) {
-        setState(() {
-          _isConnecting = false;
-          _connectingWallet = null;
-        });
+        setState(() => _errorMessage = 'Signing failed: ${e.toString()}');
       }
+    } finally {
+      if (mounted) setState(() => _isSigning = false);
     }
   }
 
-  // Manual entry for advanced users
-  Future<void> _pasteAndConnect() async {
-    final data = await Clipboard.getData('text/plain');
-    final address = data?.text?.trim() ?? '';
-    if (address.isEmpty || !address.startsWith('0x')) {
-      setState(() => _errorMessage = 'Invalid wallet address in clipboard.');
-      return;
-    }
-    _showManualSignSheet(address);
-  }
+  // ── Build ───────────────────────────────────────────────────────────────────
 
-  void _showManualSignSheet(String address) {
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _ManualSignSheet(
-        walletAddress: address,
-        onSigned: (signature, message) async {
-          Navigator.of(context).pop();
-          await ref.read(currentUserProvider.notifier).signInWithWallet(
-                walletAddress: address,
-                signature: signature,
-                message: message,
-              );
-          final state = ref.read(currentUserProvider);
-          if (state.hasValue && state.valueOrNull != null && mounted) {
-            context.go('/home');
-          } else if (state.hasError && mounted) {
-            setState(() => _errorMessage = state.error.toString());
-          }
+  @override
+  Widget build(BuildContext context) {
+    final isDark = THelperFunctions.isDarkMode(context);
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+      ),
+    );
+
+    ref.listen(currentUserProvider, (_, next) {
+      if (next.hasValue && next.valueOrNull != null && mounted) {
+        context.go('/home');
+      }
+    });
+
+    return Scaffold(
+      backgroundColor:
+          isDark ? TColors.darkBackground : TColors.lightBackground,
+      resizeToAvoidBottomInset: true,
+      body: AnimatedBuilder(
+        animation: _orchestrator.entranceController,
+        builder: (context, _) {
+          return Stack(
+            children: [
+              // ── Gold grid background (matches login) ──────────────────────
+              CustomPaint(
+                size: MediaQuery.sizeOf(context),
+                painter: AuthGridPainter(
+                  color:
+                      TColors.secondary.withValues(alpha: isDark ? 0.10 : 0.13),
+                ),
+              ),
+
+              // ── Dark mode gradient overlay ─────────────────────────────────
+              if (isDark)
+                Container(
+                  width: MediaQuery.sizeOf(context).width,
+                  height: MediaQuery.sizeOf(context).height,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        TColors.darkBackground.withValues(alpha: 0.92),
+                        Colors.transparent,
+                        TColors.secondary.withValues(alpha: 0.10),
+                        Colors.transparent,
+                        TColors.darkBackground.withValues(alpha: 0.85),
+                      ],
+                      stops: const [0.0, 0.18, 0.5, 0.82, 1.0],
+                    ),
+                  ),
+                ),
+
+              // ── Corner hex ring accent ─────────────────────────────────────
+              Positioned(
+                top: -60,
+                right: -60,
+                child: Opacity(
+                  opacity:
+                      (0.07 * _orchestrator.logoAnim.value).clamp(0.0, 1.0),
+                  child: CustomPaint(
+                    size: const Size(220, 220),
+                    painter: HexRingPainter(),
+                  ),
+                ),
+              ),
+
+              // ── Horizontal shimmer sweep ───────────────────────────────────
+              AnimatedBuilder(
+                animation: _orchestrator.shimmerPos,
+                builder: (_, __) => Positioned.fill(
+                  child: IgnorePointer(
+                    child: Transform.translate(
+                      offset: Offset(
+                        SResponsive.width(context) *
+                            (_orchestrator.shimmerPos.value - 0.5) *
+                            2,
+                        0,
+                      ),
+                      child: Container(
+                        width: 100,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              TColors.secondary.withValues(alpha: 0.05),
+                              TColors.secondary.withValues(alpha: 0.09),
+                              TColors.secondary.withValues(alpha: 0.05),
+                              Colors.transparent,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // ── Main scrollable content ────────────────────────────────────
+              SafeArea(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.sizeOf(context).height -
+                          MediaQuery.paddingOf(context).top -
+                          MediaQuery.paddingOf(context).bottom,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: TSizes.lg),
+                          _buildTopBar(isDark),
+                          const SizedBox(height: 40),
+                          _buildHeader(isDark),
+                          const SizedBox(height: 40),
+                          _buildBody(isDark),
+                          const Spacer(),
+                          const SizedBox(height: TSizes.xl),
+                          _buildFooter(isDark),
+                          const SizedBox(height: TSizes.xl),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
         },
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bg = isDark ? TColors.darkBackground : TColors.lightBackground;
-    final surface = isDark ? TColors.darkSurface : TColors.lightSurface;
+  // ── Top bar ────────────────────────────────────────────────────────────────
 
-    // Watch for successful sign-in
-    ref.listen(currentUserProvider, (_, next) {
-      if (next.hasValue && next.valueOrNull != null && mounted) {
-        context.go('/home');
-      }
-      if (next.hasError && mounted) {
-        final err = next.error.toString();
-        setState(() => _errorMessage =
-            err.contains('E4001') || err.contains('wallet not linked')
-                ? 'No verified account is linked to this wallet.\nPlease sign in with email first and link your wallet in Settings.'
-                : 'Authentication failed. Please try again.');
-      }
-    });
-
-    return Scaffold(
-      backgroundColor: bg,
-      appBar: AppBar(
-        backgroundColor: bg,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded,
-              size: 20,
-              color: isDark ? TColors.textDarkPrimary : TColors.textLightPrimary),
-          onPressed: () => context.pop(),
-        ),
-        title: Text(
-          'Connect Wallet',
-          style: TextStyle(
-            fontFamily: 'Inter',
-            fontSize: 17,
-            fontWeight: FontWeight.w600,
-            color: isDark ? TColors.textDarkPrimary : TColors.textLightPrimary,
+  Widget _buildTopBar(bool isDark) {
+    return FadeTransition(
+      opacity: _orchestrator.logoAnim,
+      child: Row(
+        children: [
+          // Back chevron
+          GestureDetector(
+            onTap: () => context.pop(),
+            child: Icon(
+              Icons.arrow_back_ios_new_rounded,
+              size: 18,
+              color: isDark ? TColors.textDarkSecondary : TColors.textLightSecondary,
+            ),
           ),
-        ),
-        centerTitle: true,
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 28,
+            height: 28,
+            child: CustomPaint(painter: MiniLogoPainter()),
+          ),
+          const SizedBox(width: 10),
+          Text(
+            'VOTESECURE',
+            style: TextStyle(
+              fontFamily: 'IBMPlexSerif',
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: isDark ? TColors.white : TColors.primary,
+              letterSpacing: 2.5,
+            ),
+          ),
+        ],
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 8),
-              // Header
-              Center(
-                child: Column(
+    );
+  }
+
+  // ── Header ─────────────────────────────────────────────────────────────────
+
+  Widget _buildHeader(bool isDark) {
+    return FadeTransition(
+      opacity: _orchestrator.headerAnim,
+      child: SlideTransition(
+        position: _orchestrator.headerSlide,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const AuthAccentTag(label: 'WALLET AUTH'),
+            const SizedBox(height: 18),
+            Text(
+              'Connect\nWallet.',
+              style: TextStyle(
+                fontFamily: 'IBMPlexSerif',
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+                color: isDark ? TColors.white : TColors.primary,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(height: TSizes.md),
+            Container(width: 40, height: 2, color: TColors.secondary),
+            const SizedBox(height: 14),
+            Text(
+              'WalletConnect v2 auto-detects all\nwallets installed on your device.',
+              style: TextStyle(
+                fontFamily: 'Inter',
+                fontSize: 13,
+                color: isDark
+                    ? TColors.textDarkSecondary
+                    : TColors.textLightSecondary,
+                height: 1.5,
+                letterSpacing: 0.1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ── Body (connect button + states) ─────────────────────────────────────────
+
+  Widget _buildBody(bool isDark) {
+    return FadeTransition(
+      opacity: _orchestrator.formAnim,
+      child: SlideTransition(
+        position: _orchestrator.formSlide,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Error banner
+            if (_errorMessage != null)
+              Container(
+                margin: const EdgeInsets.only(bottom: 20),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: TColors.error.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(TSizes.radiusSm),
+                  border: Border.all(
+                    color: TColors.error.withValues(alpha: 0.35),
+                  ),
+                ),
+                child: Row(
                   children: [
-                    Container(
-                      width: 64,
-                      height: 64,
-                      decoration: BoxDecoration(
-                        color: TColors.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Icon(Icons.account_balance_wallet_rounded,
-                          size: 32, color: TColors.primary),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Sign in with your Wallet',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
-                        color: isDark
-                            ? TColors.textDarkPrimary
-                            : TColors.textLightPrimary,
+                    const Icon(Icons.error_outline,
+                        color: TColors.error, size: 18),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Text(
+                        _errorMessage!,
+                        style: const TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 12,
+                          color: TColors.error,
+                          height: 1.4,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    GestureDetector(
+                      onTap: () => setState(() => _errorMessage = null),
+                      child: const Icon(Icons.close,
+                          color: TColors.error, size: 16),
+                    ),
+                  ],
+                ),
+              ),
+
+            // Signing status
+            if (_isSigning) ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(
+                      color: TColors.secondary,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Sign the message in your wallet…',
+                    style: TextStyle(
+                      fontFamily: 'Inter',
+                      fontSize: 13,
+                      color: isDark
+                          ? TColors.textDarkSecondary
+                          : TColors.textLightSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
+
+            // Primary connect button
+            AnimatedBuilder(
+              animation: _orchestrator.pulseAnim,
+              builder: (_, __) {
+                if (!_initialized) {
+                  return Container(
+                    height: 58,
+                    decoration: BoxDecoration(
+                      color: TColors.primary,
+                      borderRadius: BorderRadius.circular(TSizes.radiusSm),
+                      border: Border.all(
+                        color: TColors.secondary.withValues(
+                          alpha: (0.18 +
+                                  0.18 * _orchestrator.pulseAnim.value)
+                              .clamp(0.0, 1.0),
+                        ),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: TColors.primary.withValues(
+                            alpha: (0.4 +
+                                    0.15 * _orchestrator.pulseAnim.value)
+                                .clamp(0.0, 1.0),
+                          ),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: const Center(child: LoadingDots()),
+                  );
+                }
+                return AppKitModalConnectButton(
+                  appKit: WalletService.instance.modal!,
+                );
+              },
+            ),
+            const SizedBox(height: TSizes.lg),
+
+            // QR fallback
+            const AuthDivider(),
+            const SizedBox(height: TSizes.lg),
+            GestureDetector(
+              onTap: () async {
+                setState(() => _errorMessage = null);
+                try {
+                  await WalletService.instance.openModal();
+                } catch (e) {
+                  if (mounted) setState(() => _errorMessage = e.toString());
+                }
+              },
+              child: Container(
+                height: TSizes.inputHeight,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(TSizes.radiusSm),
+                  border: Border.all(
+                    color: isDark ? TColors.darkBorder : TColors.lightBorder,
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.qr_code_rounded,
+                      size: 18,
+                      color: isDark
+                          ? TColors.textDarkSecondary
+                          : TColors.textLightSecondary,
+                    ),
+                    const SizedBox(width: 10),
                     Text(
-                      'Only verified voters with a linked wallet\ncan use this sign-in method.',
-                      textAlign: TextAlign.center,
+                      'Open wallet picker / scan QR',
                       style: TextStyle(
                         fontFamily: 'Inter',
-                        fontSize: 13,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
                         color: isDark
-                            ? TColors.textDarkTertiary
-                            : TColors.textLightTertiary,
-                        height: 1.5,
+                            ? TColors.textDarkSecondary
+                            : TColors.textLightSecondary,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 32),
-
-              // Error banner
-              if (_errorMessage != null)
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16),
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.shade50,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.red.shade200),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.red, size: 18),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 12,
-                            color: Colors.red,
-                            height: 1.4,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => setState(() => _errorMessage = null),
-                        child: const Icon(Icons.close,
-                            color: Colors.red, size: 16),
-                      ),
-                    ],
-                  ),
-                ),
-
-              // Wallet grid
-              Text(
-                'Choose your wallet',
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: isDark
-                      ? TColors.textDarkSecondary
-                      : TColors.textLightSecondary,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: 12),
-              Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.85,
-                  ),
-                  itemCount: _wallets.length,
-                  itemBuilder: (context, index) {
-                    final wallet = _wallets[index];
-                    final isLoading =
-                        _isConnecting && _connectingWallet == wallet.name;
-                    return GestureDetector(
-                      onTap: _isConnecting ? null : () => _connectWallet(wallet),
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 150),
-                        decoration: BoxDecoration(
-                          color: surface,
-                          borderRadius: BorderRadius.circular(14),
-                          border: Border.all(
-                            color: isDark
-                                ? TColors.darkBorder
-                                : TColors.lightBorder,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(isDark ? 0.2 : 0.05),
-                              blurRadius: 6,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (isLoading)
-                              const SizedBox(
-                                width: 40,
-                                height: 40,
-                                child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: TColors.primary),
-                              )
-                            else
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.asset(
-                                  wallet.iconAsset,
-                                  width: 44,
-                                  height: 44,
-                                  errorBuilder: (_, __, ___) => Container(
-                                    width: 44,
-                                    height: 44,
-                                    decoration: BoxDecoration(
-                                      color: TColors.primary.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(
-                                        Icons.account_balance_wallet_outlined,
-                                        size: 24,
-                                        color: TColors.primary),
-                                  ),
-                                ),
-                              ),
-                            const SizedBox(height: 8),
-                            Text(
-                              wallet.name,
-                              textAlign: TextAlign.center,
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontFamily: 'Inter',
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: isDark
-                                    ? TColors.textDarkPrimary
-                                    : TColors.textLightPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-
-              const SizedBox(height: 16),
-              // Manual / paste address option
-              GestureDetector(
-                onTap: _pasteAndConnect,
-                child: Container(
-                  width: double.infinity,
-                  height: 52,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(TSizes.radiusSm),
-                    border: Border.all(
-                      color: isDark ? TColors.darkBorder : TColors.lightBorder,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.content_paste_rounded,
-                          size: 18,
-                          color: isDark
-                              ? TColors.textDarkSecondary
-                              : TColors.textLightSecondary),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Paste wallet address',
-                        style: TextStyle(
-                          fontFamily: 'Inter',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: isDark
-                              ? TColors.textDarkSecondary
-                              : TColors.textLightSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
-}
 
-// ── Manual sign bottom sheet ─────────────────────────────────────────────────
+  // ── Footer ─────────────────────────────────────────────────────────────────
 
-class _ManualSignSheet extends StatefulWidget {
-  final String walletAddress;
-  final void Function(String signature, String message) onSigned;
-
-  const _ManualSignSheet({
-    required this.walletAddress,
-    required this.onSigned,
-  });
-
-  @override
-  State<_ManualSignSheet> createState() => _ManualSignSheetState();
-}
-
-class _ManualSignSheetState extends State<_ManualSignSheet> {
-  final _signatureCtrl = TextEditingController();
-  final _message =
-      'VoteSecure Sign-In\n\nNonce: ${DateTime.now().millisecondsSinceEpoch}';
-
-  @override
-  void dispose() {
-    _signatureCtrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 20,
-        left: 24,
-        right: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildFooter(bool isDark) {
+    return FadeTransition(
+      opacity: _orchestrator.footerAnim,
+      child: const Column(
         children: [
-          Center(
-            child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
-                    borderRadius: BorderRadius.circular(2))),
-          ),
-          const SizedBox(height: 20),
-          const Text('Sign the message',
-              style: TextStyle(
-                  fontFamily: 'Inter',
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700)),
-          const SizedBox(height: 12),
-          Text('Wallet: ${widget.walletAddress}',
-              style: const TextStyle(
-                  fontFamily: 'Inter', fontSize: 12, color: Colors.grey)),
-          const SizedBox(height: 8),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade100,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: SelectableText(_message,
-                style: const TextStyle(
-                    fontFamily: 'monospace', fontSize: 12, height: 1.4)),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _signatureCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Paste signature (0x...)',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: TColors.primary,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10))),
-              onPressed: () {
-                final sig = _signatureCtrl.text.trim();
-                if (sig.isEmpty || !sig.startsWith('0x')) return;
-                widget.onSigned(sig, _message);
-              },
-              child: const Text('Verify Signature',
-                  style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white)),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SecurityBadge(label: 'SIWE'),
+              SizedBox(width: 12),
+              SecurityBadge(label: 'WC-V2'),
+              SizedBox(width: 12),
+              SecurityBadge(label: 'NON-CUSTODIAL'),
+            ],
           ),
         ],
       ),
