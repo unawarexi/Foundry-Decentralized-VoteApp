@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_frontend_vote/core/config/base_url.dart';
+import 'package:flutter_frontend_vote/core/services/storage_service.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import 'package:logger/logger.dart';
@@ -36,15 +36,11 @@ class WebSocketService {
     }
   }
 
-  /// Connect to WebSocket server with Firebase auth token.
+  /// Connect to WebSocket server with JWT auth token.
   Future<void> connect() async {
     if (isConnected) return;
 
-    String? token;
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      token = await user.getIdToken();
-    }
+    final token = await SecureStorageService.getToken();
 
     _socket = io.io(
       AppBaseUrl.wsUrl,
